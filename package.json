@@ -4,7 +4,10 @@
   "description": "Tea, e-commerce",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ts-node src/index.ts",
+    "build": "tsc",
+    "serve": "node dist/index.js",
+    "dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts"
   },
   "repository": {
     "type": "git",
@@ -17,6 +20,12 @@
   },
   "homepage": "https://github.com/VamosHuiJia/Tea-project#readme",
   "devDependencies": {
-    "nodemon": "^3.1.11"
+    "@types/node": "^25.0.9",
+    "nodemon": "^3.1.11",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "ejs": "^4.0.1"
   }
 }
