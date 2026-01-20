@@ -69,5 +69,8 @@ git clone https://github.com/VamosHuiJia/Tea_pro.git
 # Truy cập thư mục dự án
 cd Tea_pro
 
+# Cài đặt cho dự án
+npm i
+
 # Chạy dự án 
 npm run dev
