@@ -1,6 +1,6 @@
 # 🍵 Tea Shop – Website Bán Trà Cao Cấp
 
-> Website thương mại điện tử chuyên cung cấp các loại trà Ý chất lượng cao, mang phong cách tinh tế, hiện đại và đậm nét văn hóa Ý.
+> Website thương mại điện tử chuyên cung cấp các loại trà chất lượng cao, mang phong cách tinh tế, hiện đại và đậm nét văn hóa.
 
 ---
 
