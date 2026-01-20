@@ -11,7 +11,7 @@
 Dự án hướng đến:
 - Giao diện **đơn giản – tinh tế – dễ sử dụng**
 - Trải nghiệm người dùng mượt mà
-- Thể hiện phong cách sang trọng, nhẹ nhàng đúng tinh thần trà Ý
+- Thể hiện phong cách sang trọng, nhẹ nhàng đúng tinh thần trà đạo
 
 Website cho phép người dùng:
 - Xem danh sách các loại trà
