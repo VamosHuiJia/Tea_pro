@@ -4,10 +4,10 @@
   "description": "Tea, e-commerce",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "build": "tsc",
-    "serve": "node dist/index.js",
-    "dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts"
+    "dev:css": "tailwindcss -i ./css/main.css -o ./dist/output.css --watch",
+    "dev:ts": "tsc --watch",
+    "dev": "npm run dev:css & npm run dev:ts",
+    "build": "tsc && tailwindcss -i ./css/main.css -o ./dist/output.css"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,7 @@
   "homepage": "https://github.com/VamosHuiJia/Tea-project#readme",
   "devDependencies": {
     "@types/node": "^25.0.9",
-    "nodemon": "^3.1.11",
+    "concurrently": "^9.2.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
