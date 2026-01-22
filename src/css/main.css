@@ -60,6 +60,15 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+
+  /* Partner layer */
+  .sub_heading {
+    @apply text-xs font-medium uppercase font-inter text-p-900 ;
+  }
+
+  .main_heading {
+    @apply mt-2 text-2xl tracking-wide capitalize lg:text-3xl font-lobster;
+  }
 }
 
 @layer utilities {}
