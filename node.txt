@@ -11,3 +11,7 @@ justify: chiều ngang
 capitalize: viết hoa chữ đầu
 
 transparent: trong suốt
+
+xl:justify-start => căn theo lề trái (nếu vượt qua breakpoint)
+
+md: medium => màn hình vừa

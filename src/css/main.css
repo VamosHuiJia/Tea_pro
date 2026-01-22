@@ -42,24 +42,24 @@
   p {
     @apply text-sm leading-7 font-inter;
   }
-  
+
   button {
     @apply px-1 py-1 border cursor-pointer;
   }
 }
 
-@layer utilities {
+@layer components {
   .btn {
-    @apply flex items-baseline justify-center gap-2 px-4 py-2 text-sm tracking-wider text-white transition-colors duration-500 bg-gray-900 border-p-900 hover:bg-p-90-p font-inter;
+    @apply flex items-center justify-center gap-2 px-4 py-2 text-sm tracking-wider text-white transition-colors duration-300 bg-p-900 hover:bg-p-700 border-p-900 font-inter lg:py-3 lg:px-9;
   }
 
   .text-gradient {
-    background: linear-gradient(
-      to right, 
-      theme("color.p.600"),
-      theme("color.p.900")
-    );
+    background: linear-gradient(to right,
+        theme("color.p.600"),
+        theme("color.p.900"));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 }
+
+@layer utilities {}

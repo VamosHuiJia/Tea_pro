@@ -19,25 +19,28 @@
 </head>
 
 <body>
+    <!-- Introduction -->
     <section id="hero" class="h-screen max-h-[1100px] bg-gradient-to-t from-p-100 to-white overflow-y-clip">
-        <div class="container relative flex items-center justify-center w-full h-full">
-            <!-- Hình -->
-            <div class="absolute bottom-0 right-0 z-0 overflow-hidden">
+        <div class="container relative flex items-center justify-center w-full h-full xl:justify-start">
+            <!-- Ảnh BG -->
+            <div class="absolute bottom-0 right-0 z-0 overflow-hidden md:-bottom-40 xl:top-1/2 xl:-translate-y-1/2 ">
                 <img src="./public/assets/hero_img.png" alt="hero_img" class="h-full">
             </div>
 
             <!-- Body -->
-            <div class="z-10 flex flex-col items-center justify-center gap-4">
+            <div class="z-10 flex flex-col items-center justify-center gap-4 md:gap-9 xl:items-start">
                 <!-- Chữ -->
                 <div>
-                    <h2 class="mb-2 text-xs font-semibold leading-none tracking-wider text-center uppercase font-inter">
-                        Hơn một trăm vị trà
+                    <h2 class="mb-2 text-xs font-semibold leading-none tracking-wider text-center uppercase font-inter md:text-sm xl:text-start ">
+                        Hơn 
+                        <span class="text-xs text-gradient md:text-sm ">một trăm</span> 
+                        hương vị trà
                     </h2>
-                    <h1 class="text-5xl leading-none tracking-wide text-center capitalize font-lobster text-p-950">
+                    <h1 class="text-5xl leading-none tracking-wide text-center capitalize font-lobster text-p-950 md:text-6xl lg:text-7xl">
                         Trà Đặc Biệt Chế Tác
                     </h1>
                 </div>
-                <p>
+                <p class="max-w-xl px-4 text-center text-n-700 md:px-0 xl:text-start">
                     Sứ mệnh của chúng tôi là mang đến cho bạn sự yên bình và kết nối
                     thông qua các hương vị trà được chọn lọc cẩn thận và được tạo ra
                     để nâng cao trải nghiệm hàng ngày và sức khoẻ toàn diện cho bạn.
@@ -45,12 +48,19 @@
 
                 <!-- Nút -->
                 <button>
-                    <a class="btn" href="">
+                    <a class="btn" href="#products">
                         Tìm hiểu sản phẩm
                         <img src="./public/assets/right-arrow.svg" alt="right-arrow">
                     </a>
                 </button>
             </div>
+        </div>
+    </section>
+
+    <!-- Brand -->
+    <section id="partner_logos">
+        <div class="container">
+            <h2></h2>
         </div>
     </section>
 </body>
