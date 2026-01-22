@@ -15,7 +15,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
 
     <!-- Script -->
+    <script src="./src/js/jquery-3.7.1.min.js" defer></script>
     <script type="module" src="./src/js/main.js"></script>
+
 </head>
 
 <body>
@@ -32,7 +34,7 @@
                 <!-- Chữ -->
                 <div>
                     <h2
-                        class="mb-2 text-xs font-semibold leading-none tracking-wider text-center uppercase font-inter md:text-sm xl:text-start ">
+                        class="mb-2 text-xs font-semibold leading-none tracking-wider text-center uppercase font-inter md:text-sm xl:text-start">
                         Hơn
                         <span class="text-xs text-gradient md:text-sm ">một trăm</span>
                         hương vị trà
@@ -59,15 +61,40 @@
         </div>
     </section>
 
-    <!-- Partner -->
+    <!-- Partners -->
     <section id="partner_logos">
         <div class="container">
-            <div>
+            <!-- Heading -->
+            <div class="mt-10">
                 <h2 class="sub_heading">Có mặt tại</h2>
                 <h1 class="main_heading">Những nhà phân phối
                     <span class="text-gradient">uy tín</span>
                 </h1>
             </div>
+
+            <!-- Logo Partner -->
+            <div class="flex mt-9 md:mt-16 [mask-image:linear-gradient(to_right,transparent,black,transparent)]">
+                <div id="partner-logo-list" class="flex flex-none logos-wrapper gap-14 pl-14">
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products -->
+    <section id="products">
+        <div class="container">
+            <!-- Heading -->
+            <div class="flex-col gap-9">
+                <div class="mt-10">
+                    <h2 class="sub_heading">Tìm hiểu</h2>
+                    <h1 class="main_heading">Sản Phẩm
+                        <span class="text-gradient">Trà Ngon</span>
+                    </h1>
+                </div>
+            </div>
+
+            <!-- Tab -->
         </div>
     </section>
 </body>

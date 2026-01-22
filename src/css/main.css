@@ -71,4 +71,8 @@
   }
 }
 
-@layer utilities {}
+@layer utilities {
+  .logo-ticker-image {
+    @apply w-auto h-6 lg:h-9;
+  }
+}

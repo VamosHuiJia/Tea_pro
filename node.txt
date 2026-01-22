@@ -15,3 +15,5 @@ transparent: trong suốt
 xl:justify-start => căn theo lề trái (nếu vượt qua breakpoint)
 
 md: medium => màn hình vừa
+
+defer: chạy theo thứ tự
