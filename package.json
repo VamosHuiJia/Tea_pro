@@ -1,32 +1,16 @@
 {
-  "name": "tea_pro",
+  "name": "tea_project",
   "version": "1.0.0",
-  "description": "Tea, e-commerce",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:css": "tailwindcss -i ./css/main.css -o ./dist/output.css --watch",
-    "dev:ts": "tsc --watch",
-    "dev": "npm run dev:css & npm run dev:ts",
-    "build": "tsc && tailwindcss -i ./css/main.css -o ./dist/output.css"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/VamosHuiJia/Tea-project.git"
+    "build": "tailwindcss -i ./src/css/main.css -o ./dist/output.css",
+    "dev": "tailwindcss -i ./src/css/main.css -o ./dist/output.css --watch"
   },
   "author": "Gia Huy",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/VamosHuiJia/Tea-project/issues"
-  },
-  "homepage": "https://github.com/VamosHuiJia/Tea-project#readme",
-  "devDependencies": {
-    "@types/node": "^25.0.9",
-    "concurrently": "^9.2.1",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
-  },
   "dependencies": {
-    "@tailwindcss/cli": "^4.1.18",
-    "tailwindcss": "^4.1.18"
+    "@tailwindcss/cli": "^4.1.10",
+    "tailwindcss": "^4.1.10"
   }
 }

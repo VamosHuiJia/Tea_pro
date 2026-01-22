@@ -1,0 +1,13 @@
+-inline: trái - phải
+
+-block: trên - dưới
+
+leading: khoảng cách các dòng
+
+tracking: khoảng cách các chữ
+
+justify: chiều ngang
+
+capitalize: viết hoa chữ đầu
+
+transparent: trong suốt
