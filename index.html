@@ -8,6 +8,8 @@
 
     <!-- CSS -->
     <link href="./dist/output.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="./src/css/responsive-tabs.css" />
+    <link type="text/css" rel="stylesheet" href="./src/css/showHideNav.css" />
 
     <!-- Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,17 +18,42 @@
 
     <!-- Script -->
     <script src="./src/js/jquery-3.7.1.min.js" defer></script>
+
+    <script src="./src/js/jquery.responsiveTabs.js" defer></script>
+    <script src="./src/js/jquery.hidescroll.js" defer></script>
     <script type="module" src="./src/js/main.js"></script>
 
 </head>
 
 <body>
+    <!-- Navigation bar -->
+    <header class="relative z-50">
+        <div class="flex items-center justify-center navbar">
+            <div class="max-w-[1536px] w-full px-4 py-4 md:px-[72px] flex items-center justify-center">
+                <!-- Logo -->
+                <a href="./" class="flex items-center justify-center flex-none">
+                    <img src="../public/assets/logo.png" alt="logo" class="w-16 h-16">
+                    <p class="text-lg capitalize font-lobster text-p-900">Tea Shop</p>
+                </a>
+
+                <nav class="items-center justify-end hidden w-full gap-4 lg:flex lg:gap-8">
+                    <nav class="items-center justify-end hidden w-full gap-4 lg:flex lg:gap-8">
+                        <a href="./products.html" class="navLink">Sản Phẩm</a>
+                        <a href="./#story" class="navLink">Giới Thiệu</a>
+                        <a href="./#contact" class="navLink">Liên Hệ</a>
+                    </nav>
+                </nav>
+            </div>
+        </div>
+    </header>
+
     <!-- Introduction -->
     <section id="hero" class="h-screen max-h-[1100px] bg-gradient-to-t from-p-100 to-white overflow-y-clip">
         <div class="container relative flex items-center justify-center w-full h-full xl:justify-start">
             <!-- Ảnh BG -->
             <div class="absolute bottom-0 right-0 z-0 overflow-hidden md:-bottom-40 xl:top-1/2 xl:-translate-y-1/2 ">
-                <img src="./public/assets/hero_img.png" alt="hero_img" class="h-full">
+                <img src="./public/assets/hero_img.png" alt="hero_img"
+                    class="h-full 2xl:[mask-image:linear-gradient(to_left,transparent,black_10%)]">
             </div>
 
             <!-- Body -->
@@ -86,7 +113,7 @@
         <div class="container">
             <!-- Heading -->
             <div class="flex-col gap-9">
-                <div class="mt-10">
+                <div class="mb-10">
                     <h2 class="sub_heading">Tìm hiểu</h2>
                     <h1 class="main_heading">Sản Phẩm
                         <span class="text-gradient">Trà Ngon</span>
@@ -95,6 +122,135 @@
             </div>
 
             <!-- Tab -->
+            <div id="products-tabs">
+                <ul
+                    class="flex bg-p-50 px-4 md:px-10 xl:px-[200px] py-4 md:py-6 gap-4 md:gap-8 justify-center mb-9 text-center">
+                    <li>
+                        <a href="#matcha" class="tab-link"><span>Trà</span> Match</a>
+                    </li>
+                    <li>|</li>
+                    <li>
+                        <a href="#whiteTea" class="tab-link"><span>Trà</span> Trắng</a>
+                    </li>
+                    <li>|</li>
+                    <li>
+                        <a href="#oolongTea" class="tab-link"><span>Trà</span> Ô Long</a>
+                    </li>
+                    <li>|</li>
+                    <li>
+                        <a href="#blackTea" class="tab-link"><span>Trà</span> Đen</a>
+                    </li>
+                </ul>
+
+                <!-- Fake data products introduction -->
+                <div id="matcha">
+                    <div class="tabContainer">
+                        <img src="../public/assets/product_1.jpg" alt="matcha" class="productImg">
+                        <div>
+                            <h3>Matcha Magic</h3>
+                            <h4>
+                                Khám phá những lợi ích tiềm năng của "vàng xanh" từ Nhật Bản
+                            </h4>
+                            <p>
+                                Sẵn sàng nâng cao sức khỏe của bạn? Hãy làm quen với matcha,
+                                loại bột màu xanh lá cây rực rỡ đang làm khuynh đảo thế giới
+                                chăm sóc sức khỏe. Chứa đầy chất chống oxy hóa và chất dinh dưỡng,
+                                matcha cung cấp nguồn năng lượng mạnh mẽ mà không gây bồn chồn,
+                                nhờ sự kết hợp độc đáo giữa caffeine và L-theanine. <br>
+                                Loại trà này không chỉ tăng cường sự tập trung và trao đổi chất mà
+                                còn thêm hương vị thơm ngon cho sinh tố, đồ nướng và cà phê latte.
+                                Hãy đắm mình vào thế giới matcha và trải nghiệm cách siêu thực phẩm
+                                cổ xưa này có thể tiếp thêm sinh lực cho cơ thể và trí óc của bạn!
+                            </p>
+                            <button>
+                                <a href="" class="btn">Xem sản phẩm ngay
+                                    <img src="../public/assets/right-arrow.svg" alt="right-arrow">
+                                </a>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="whiteTea">
+                    <div class="tabContainer">
+                        <img src="../public/assets/product_2.jpg" alt="whiteTea" class="productImg">
+                        <div>
+                            <h3>Tinh Chất Tinh Tế Từ Trà Trắng</h3>
+                            <h4>
+                                Hành trình khám phá hương vị tinh khiết nhất từ thiên nhiên
+                            </h4>
+                            <p>
+                                Trà trắng, được tôn sùng vì sự nhẹ nhàng và tinh tế của nó,
+                                được chế biến từ lá non và nụ của cây Camellia sinensis.
+                                Với hương hoa nhẹ nhàng và vị ngọt tự nhiên, loại trà này
+                                mang đến trải nghiệm nhẹ nhàng nhưng sảng khoái. Giàu chất
+                                chống oxy hóa và ít caffeine, trà trắng không chỉ làm hài lòng
+                                khẩu vị mà còn hỗ trợ sức khỏe, khiến nó trở thành lựa chọn
+                                hoàn hảo cho những khoảnh khắc thư giãn hoặc trẻ hóa.
+                                Khám phá vẻ đẹp thanh bình của trà trắng và nâng tầm nghi
+                                thức uống trà của bạn lên một tầm cao mới.
+                            </p>
+                            <button>
+                                <a href="" class="btn">Xem sản phẩm ngay
+                                    <img src="../public/assets/right-arrow.svg" alt="right-arrow">
+                                </a>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="oolongTea">
+                    <div class="tabContainer">
+                        <img src="../public/assets/product_3.jpg" alt="oolongTea" class="productImg">
+                        <div>
+                            <h3>Cuộc Cách Mạng Trà Ô Long</h3>
+                            <h4>
+                                Mở khóa bí mật của loại trà lành mạnh nhất từ ​​thiên nhiên
+                            </h4>
+                            <p>
+                                Bạn có tò mò về bí quyết trường thọ và sống lâu không? Không cần tìm đâu xa, hãy tìm đến
+                                trà xanh! Thức uống cổ xưa này, được tôn sùng trong nhiều nền văn hóa trên thế giới,
+                                chứa đầy chất chống oxy hóa mạnh mẽ có thể thúc đẩy quá trình trao đổi chất, tăng cường
+                                chức năng não và thúc đẩy sức khỏe tim mạch. <br>
+                                Với hương vị tinh tế và vô số lợi ích cho sức khỏe, trà xanh không chỉ là một thức uống
+                                mà còn là một lựa chọn về lối sống. Hãy tham gia cuộc cách mạng trà xanh và khám phá
+                                cách thức pha chế đơn giản này có thể biến đổi sức khỏe của bạn từng ngụm một!
+                            </p>
+                            <button>
+                                <a href="" class="btn">Xem sản phẩm ngay
+                                    <img src="../public/assets/right-arrow.svg" alt="right-arrow">
+                                </a>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="blackTea">
+                    <div class="tabContainer">
+                        <img src="../public/assets/product_4.png" alt="blackTea" class="productImg">
+                        <div>
+                            <h3>Đánh Thức Các Giác Quan Của Bạn Cùng Trà Đen
+                            </h3>
+                            <h4>
+                                Hương vị đậm đà truyền thống vượt thời gian
+                            </h4>
+                            <p>
+                                Hãy thưởng thức hương vị đậm đà, mạnh mẽ của trà đen, được chế tác hoàn hảo cho khẩu vị
+                                sành điệu. Mỗi ngụm trà mang đến sự pha trộn hài hòa giữa hương vị sâu lắng và hương
+                                thơm sảng khoái, khiến đây trở thành lựa chọn lý tưởng cho cả nghi lễ buổi sáng và giờ
+                                nghỉ trưa. Trải nghiệm sự ấm áp dễ chịu và những phẩm chất tràn đầy năng lượng đã khiến
+                                trà đen trở thành thức uống cổ điển được yêu thích trong nhiều thế kỷ.
+                            </p>
+                            <button>
+                                <a href="" class="btn">Xem sản phẩm ngay
+                                    <img src="../public/assets/right-arrow.svg" alt="right-arrow">
+                                </a>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </section>
 </body>

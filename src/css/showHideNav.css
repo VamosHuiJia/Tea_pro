@@ -1,0 +1,30 @@
+
+.navbar {
+  -moz-transition: all 150ms cubic-bezier(0.165, 0.84, 0.44, 1);
+  -webkit-transition: all 150ms cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition: all 150ms cubic-bezier(0.165, 0.84, 0.44, 1);
+  width: 100vw;
+  height: 80px;
+  line-height: 80px;
+  background: transparent;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  color: #fff;
+  transform: translate(-50%);
+  text-align: center;
+}
+
+.navbar.stick {
+  height: 80px;
+  line-height: 80px;
+}
+
+.navbar.stick.visible { 
+  background-color: rgba(255, 255, 255, 0.8); 
+  backdrop-filter: blur(4px);
+}
+
+.navbar.stick.hidden { 
+  top: -80px; 
+}

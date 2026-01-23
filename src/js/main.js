@@ -15,3 +15,26 @@ $(function () {
         });
     }
 });
+
+
+// Ẩn hiện navigation
+$(function() {
+    $('.navbar').hidescroll();
+})
+
+
+// Đổi qua các tab Products
+$(function () {
+    // Active tab cho li đầu
+    $("li:first").addClass("activeTab");
+
+    // đổi màu Active tab
+    $("li").on("click", function() {
+        $("li").removeClass("activeTab");
+        $('div[id="products-tabs"] ul .r-tabs-state-active').addClass("activeTab");
+    })
+
+    $("#products-tabs").responsiveTabs({
+        animation: 'fade',
+    });
+});

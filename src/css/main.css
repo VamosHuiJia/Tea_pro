@@ -35,6 +35,10 @@
 }
 
 @layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
   body {
     @apply text-base font-inter overflow-x-clip;
   }
@@ -46,9 +50,18 @@
   button {
     @apply px-1 py-1 border cursor-pointer;
   }
+
+  li {
+    @apply text-xs font-inter lg:text-base text-n-500;
+  }
 }
 
 @layer components {
+  /* Navigation bar */
+  .navLink {
+    @apply text-base font-medium leading-none tracking-wide capitalize cursor-pointer text-n-700 hover:text-n-800;
+  }
+
   .btn {
     @apply flex items-center justify-center gap-2 px-4 py-2 text-sm tracking-wider text-white transition-colors duration-300 bg-p-900 hover:bg-p-700 border-p-900 font-inter lg:py-3 lg:px-9;
   }
@@ -63,7 +76,7 @@
 
   /* Partner layer */
   .sub_heading {
-    @apply text-xs font-medium uppercase font-inter text-p-900 ;
+    @apply text-xs font-medium uppercase font-inter text-p-900;
   }
 
   .main_heading {
@@ -72,7 +85,50 @@
 }
 
 @layer utilities {
+
+  /* Partner logo */
   .logo-ticker-image {
     @apply w-auto h-6 lg:h-9;
+  }
+
+  /* Products */
+  .tabContainer {
+    @apply flex flex-col w-full gap-8 md:flex-row md:gap-16;
+
+    >div {
+      @apply w-full my-auto;
+    }
+
+    h3 {
+      @apply text-3xl font-bold capitalize lg:text-4xl;
+    }
+
+    h4 {
+      @apply mt-4 text-xl font-semibold text-p-900 md:mt-8;
+    }
+
+    p {
+      @apply max-w-xl mt-2;
+    }
+
+    button {
+      @apply flex-none mt-4 md:mt-8;
+    }
+  }
+
+  .productImg {
+    @apply w-full md:w-1/2 h-[250px] md:h-[700px] md:rounded-tr-[80px] md:rounded-br-[80px] object-cover;
+  }
+
+  .tab-link {
+    @apply font-semibold hover:text-n-700;
+
+    span {
+      @apply hidden sm:inline;
+    }
+  }
+
+  .activeTab {
+    @apply text-p-900;
   }
 }
