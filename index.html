@@ -29,13 +29,14 @@
     <!-- Navigation bar -->
     <header class="relative z-50">
         <div class="flex items-center justify-center navbar">
-            <div class="max-w-[1536px] w-full px-4 py-4 md:px-[72px] flex items-center justify-center">
+            <div class="max-w-[1536px] w-full px-4 py-4 md:px-[72px] flex items-center justify-between">
                 <!-- Logo -->
                 <a href="./" class="flex items-center justify-center flex-none">
                     <img src="../public/assets/logo.png" alt="logo" class="w-16 h-16">
                     <p class="text-lg capitalize font-lobster text-p-900">Tea Shop</p>
                 </a>
 
+                <!-- Điều hướng trang -->
                 <nav class="items-center justify-end hidden w-full gap-4 lg:flex lg:gap-8">
                     <nav class="items-center justify-end hidden w-full gap-4 lg:flex lg:gap-8">
                         <a href="./products.html" class="navLink">Sản Phẩm</a>
@@ -43,6 +44,24 @@
                         <a href="./#contact" class="navLink">Liên Hệ</a>
                     </nav>
                 </nav>
+
+                <!-- Hambergur icon -->
+                <div id="toggle_btn" class="block cursor-pointer lg:hidden">
+                    <img src="./public/assets/Menu Icon.svg" alt="menu_icon" class="size-5">
+                </div>
+
+                <!-- Mobile Menu -->
+                <div class="dropdown-menu lg:hidden">
+                    <a href="./index.html" class="navLink mobileNavLink">
+                        Sản phẩm
+                    </a>
+                    <a href="#story" class="navLink mobileNavLink">
+                        Giới thiệu
+                    </a>
+                    <a href="#contact" class="navLink mobileNavLink">
+                        Liên hệ 
+                    </a>
+                </div>
             </div>
         </div>
     </header>
