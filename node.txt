@@ -17,3 +17,9 @@ xl:justify-start => căn theo lề trái (nếu vượt qua breakpoint)
 md: medium => màn hình vừa
 
 defer: chạy theo thứ tự
+
+overflow: kiểm soát tràn màn hình (container)
+
+loop: lặp lại
+
+inset: bám sát các cạnh theo container
