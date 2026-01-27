@@ -23,3 +23,9 @@ overflow: kiểm soát tràn màn hình (container)
 loop: lặp lại
 
 inset: bám sát các cạnh theo container
+
+order-first: chỉ định thứ tự hiển thị phần tử trong 1 container (flex/grid) 
+
+leading-loose sẽ làm cho line-height là 32px.
+
+bg-[url(/public/assets/...)]: link ảnh

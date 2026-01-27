@@ -14,7 +14,9 @@
     <!-- Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lobster&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
 
     <!-- Script -->
     <script src="./src/js/jquery-3.7.1.min.js" defer></script>
@@ -53,6 +55,9 @@
                 <!-- Mobile Menu -->
                 <div class="dropdown-menu lg:hidden">
                     <a href="./index.html" class="navLink mobileNavLink">
+                        Trang chủ
+                    </a>
+                    <a href="#products" class="navLink mobileNavLink">
                         Sản phẩm
                     </a>
                     <a href="#story" class="navLink mobileNavLink">
@@ -281,12 +286,76 @@
                 <source src="./public/assets/tea-farmer.mp4" type="video/mp4">
             </video>
 
-            <p class="px-4 text-base tracking-wide text-center text-white md:text-2xl text-shadow-[2px_2px_8px_#000000]">
+            <p
+                class="px-4 text-base tracking-wide text-center text-white md:text-2xl text-shadow-[2px_2px_8px_#000000]">
                 Chỉ những lá trà ngon nhất mới được đưa vào sản phẩm của chúng tôi, <br class="hidden lg:block">
                 đảm bảo mỗi ngụm trà đều mang hương vị tinh khiết và tuyệt hảo.
             </p>
         </div>
-        <div class="h-1/2"></div>
+    </section>
+
+    <!-- Features -->
+    <section id="features">
+        <div class="container relative m-20 text-center">
+            <!-- Hàng 1 cho large screen -->
+            <div class="flex flex-col items-center justify-center w-full gap-0 lg:gap-10 lg:flex-row">
+                <!-- Holigon 1  -->
+                <div class="feature-card group bg-[url(/public/assets/benefit_1.jpg)]">
+                    <div class="feature-filter"></div>
+
+                    <h3 class="uppercase">Nguồn cung cao cấp</h3>
+                    <p>Chúng tôi tự hào sản xuất trà ngay tại Hoa Kỳ, sử dụng nguyên liệu chất lượng cao từ các trang
+                        trại địa phương.
+                    </p>
+                </div>
+
+                <!-- Holigon 2 -->
+                <div class="order-first bg-p-50 feature-card lg:order-none lg:bg-transparent">
+                    <div>
+                        <h2 class="sub_heading">
+                            Tại sao chọn chúng tôi ?
+                        </h2>
+                        <h1 class="leading-loose text-center main_heading">Sự
+                            <span class="text-gradient">Độc Đáo</span>
+                            Từ <br>Tea Shop
+                        </h1>
+                    </div>
+                </div>
+
+                <!-- Holigon 3 -->
+                <div class="feature-card group bg-[url(/public/assets/benefit_2.jpg)]">
+                    <div class="feature-filter"></div>
+
+                    <h3 class="uppercase">Hương vị pha chế độc đáo</h3>
+                    <p>Sản phẩm độc quyền của chúng tôi gồm các loại trà được với hương vị độc đáo, được chế tác để làm
+                        hài lòng mọi khẩu vị.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Hàng 2 cho large screen -->
+            <div class="flex flex-col items-center justify-center w-full lg:-mt-16 lg:gap-10 lg:flex-row">
+                <!-- Holigon 4 -->
+                <div class="feature-card group bg-[url(/public/assets/benefit_3.jpg)]">
+                    <div class="feature-filter"></div>
+
+                    <h3 class="uppercase">Tập trung vào sức khỏe</h3>
+                    <p>Hãy thưởng thức các loại trà tốt cho sức khỏe của chúng tôi, được pha chế cẩn thận để hỗ trợ trí
+                        óc, cơ thể và tâm hồn của bạn.
+                    </p>
+                </div>
+
+                <!-- Holigon 5 -->
+                <div class="feature-card group bg-[url(/public/assets/benefit_4.jpg)]">
+                    <div class="feature-filter"></div>
+
+                    <h3 class="uppercase">Trải nghiệm cá nhân hóa</h3>
+                    <p>Trải nghiệm dịch vụ được cá nhân hóa với mọi đơn hàng, phù hợp với sở thích và nhu cầu trà riêng
+                        của bạn.
+                    </p>
+                </div>
+            </div>
+        </div>
     </section>
 </body>
 

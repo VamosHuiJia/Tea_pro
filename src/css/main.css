@@ -18,6 +18,7 @@
   /* font */
   --font-lobster: "Lobster", serif;
   --font-inter: "Inter", sans-serif;
+  --font-montserrat: "Montserrat", sans-serif;
 }
 
 @utility container {
@@ -59,11 +60,11 @@
 @layer components {
   /* Navigation bar */
   .navLink {
-    @apply text-base font-medium leading-none tracking-wide capitalize cursor-pointer text-n-700 hover:text-n-800;
+    @apply text-base leading-none tracking-wide capitalize cursor-pointer font-montserrat text-n-700 hover:text-n-800;
   }
 
   .mobileNavLink {
-    @apply text-p-50 hover:text-p-200;
+    @apply text-p-50 hover:text-p-200 font-montserrat;
   }
 
   .dropdown-menu {
@@ -144,5 +145,22 @@
 
   .activeTab {
     @apply text-p-900;
+  }
+
+  /* Features */
+  .feature-card {
+    @apply h-[400px] w-[368px] flex flex-col justify-center items-center p-[36px] gap-[36px] [clip-path:polygon(50%_0%,100%_25%,100%_75%,50%_100%,0%_75%,0%_25%)] transition-all duration-500 bg-center bg-no-repeat bg-cover;
+  }
+
+  #features h3 {
+    @apply relative z-0 text-xl font-semibold tracking-widest text-white uppercase transition-all duration-500 translate-y-16 group-hover:translate-y-4;
+  }
+
+  #features p {
+    @apply relative z-0 text-center text-white transition-all duration-500 translate-y-full opacity-0 group-hover:opacity-100 group-hover:translate-y-0;
+  }
+  
+  .feature-filter {
+    @apply absolute inset-0 transition-all duration-500 opacity-50 bg-p-700 group-hover:opacity-80 -z-10;
   }
 }
