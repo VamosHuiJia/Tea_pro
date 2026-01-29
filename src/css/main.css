@@ -157,7 +157,7 @@
 
   /* Features */
   .feature-card {
-    @apply h-[400px] w-[368px] flex flex-col justify-center items-center p-[36px] gap-[36px] [clip-path:polygon(50%_0%, 100%_25%, 100%_75%, 50%_100%, 0%_75%, 0%_25%)] transition-all duration-500 bg-center bg-no-repeat bg-cover;
+    @apply h-[400px] w-[368px] flex flex-col justify-center items-center p-[36px] gap-[36px] [clip-path:polygon(50%_0%,100%_25%,100%_75%,50%_100%,0%_75%,0%_25%)] transition-all duration-500 bg-center bg-no-repeat bg-cover;
   }
 
   #features h3 {
@@ -213,7 +213,7 @@
   /* Stats */
   .stats-item {
     h1 {
-      @apply text-6xl lg:text-8xl font-lobster text-center tracking-wider leading-none font-bold text-transparent bg-clip-text bg-[linear-gradient(24deg, rgba(255, 255, 255, 1)_40%, rgba(121, 220, 180, 1)_100%)];
+      @apply text-6xl lg:text-8xl font-lobster text-center tracking-wider leading-none font-bold text-transparent bg-clip-text bg-[linear-gradient(24deg,rgba(255,255,255,1)_40%,rgba(121,220,180,1)_100%)];
     }
 
     h2 {
@@ -238,7 +238,7 @@
     }
   }
 
-  /* tất cả sản phẩm */
+  /* Chi tiết sản phẩm */
   .product-details {
     @apply absolute top-full group-hover:top-[calc(100%-120px)] h-[120px] p-4 bg-white/70 w-full backdrop-blur-xs flex flex-col items-center justify-center transition-all duration-500 text-center;
 

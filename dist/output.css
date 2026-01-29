@@ -423,6 +423,9 @@
   .bg-p-50 {
     background-color: hsl(150, 66%, 96%);
   }
+  .bg-p-950\/95 {
+    background-color: color-mix(in oklab, hsl(160, 73%, 9%) 95%, transparent);
+  }
   .bg-gradient-to-t {
     --tw-gradient-position: to top in oklab;
     background-image: linear-gradient(var(--tw-gradient-stops));
@@ -439,6 +442,9 @@
   .bg-\[url\(\/public\/assets\/benefit_4\.jpg\)\] {
     background-image: url(/public/assets/benefit_4.jpg);
   }
+  .bg-\[url\(\/public\/assets\/statsBg\.jpg\)\] {
+    background-image: url(/public/assets/statsBg.jpg);
+  }
   .from-p-100 {
     --tw-gradient-from: hsl(150, 64%, 91%);
     --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
@@ -450,11 +456,26 @@
   .\[mask-image\:linear-gradient\(to_right\,transparent\,black\,transparent\)\] {
     mask-image: linear-gradient(to right,transparent,black,transparent);
   }
+  .bg-cover {
+    background-size: cover;
+  }
+  .bg-fixed {
+    background-attachment: fixed;
+  }
+  .bg-center {
+    background-position: center;
+  }
+  .bg-no-repeat {
+    background-repeat: no-repeat;
+  }
   .px-4 {
     padding-inline: calc(var(--spacing) * 4);
   }
   .py-4 {
     padding-block: calc(var(--spacing) * 4);
+  }
+  .py-20 {
+    padding-block: calc(var(--spacing) * 20);
   }
   .pl-14 {
     padding-left: calc(var(--spacing) * 14);
@@ -574,6 +595,11 @@
       translate: var(--tw-translate-x) var(--tw-translate-y);
     }
   }
+  .md\:flex-row {
+    @media (width >= 48rem) {
+      flex-direction: row;
+    }
+  }
   .md\:items-start {
     @media (width >= 48rem) {
       align-items: flex-start;
@@ -677,6 +703,11 @@
       gap: calc(var(--spacing) * 10);
     }
   }
+  .lg\:gap-32 {
+    @media (width >= 80rem) {
+      gap: calc(var(--spacing) * 32);
+    }
+  }
   .lg\:bg-transparent {
     @media (width >= 80rem) {
       background-color: transparent;
@@ -685,6 +716,11 @@
   .lg\:px-4 {
     @media (width >= 80rem) {
       padding-inline: calc(var(--spacing) * 4);
+    }
+  }
+  .lg\:py-28 {
+    @media (width >= 80rem) {
+      padding-block: calc(var(--spacing) * 28);
     }
   }
   .lg\:text-start {
@@ -739,11 +775,9 @@
   :root {
     --progress-number-bg: hsl(210, 20%, 93%);
     --progress-number-color: hsl(217, 20%, 58%);
-    --progressbar-fill: linear-gradient(
-      to right,
-      hsl(150, 69%, 42%),
-      hsl(160, 65%, 17%)
-    );
+    --progressbar-fill: linear-gradient(to right,
+        hsl(150, 69%, 42%),
+        hsl(160, 65%, 17%));
   }
   html {
     scroll-behavior: smooth;
@@ -868,7 +902,7 @@
     }
   }
   .text-gradient {
-    background: linear-gradient( to right, hsl(150, 74%, 30%), hsl(160, 65%, 17%) );
+    background: linear-gradient(to right, hsl(150, 74%, 30%), hsl(160, 65%, 17%));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
@@ -914,7 +948,7 @@
     @media (width >= 48rem) {
       gap: calc(var(--spacing) * 16);
     }
-    > div {
+    >div {
       margin-block: auto;
       width: 100%;
     }
@@ -1117,7 +1151,7 @@
     max-width: 600px;
     object-fit: cover;
     @media (width >= 48rem) {
-      height: 450px;
+      height: 70vh;
     }
     @media (width >= 48rem) {
       border-top-left-radius: 80px;
@@ -1132,7 +1166,7 @@
   .benefit-bars {
     margin-top: calc(var(--spacing) * 8);
   }
-  .benefit-bars > div {
+  .benefit-bars>div {
     margin-bottom: calc(var(--spacing) * 8);
     display: flex;
     flex-direction: column;
@@ -1178,7 +1212,7 @@
   }
   .contact-info {
     width: 100%;
-    > div {
+    >div {
       display: flex;
       align-items: center;
       gap: calc(var(--spacing) * 2);
