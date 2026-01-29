@@ -45,3 +45,11 @@ $(function () {
         animation: "fade",
     });
 });
+
+// Slicker sản phẩm
+$(function() {
+    $(".slider").slick({
+        autoplay: true,
+        dots: true,
+    })
+})
