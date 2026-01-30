@@ -51,6 +51,7 @@
     --default-mono-font-family: var(--font-mono);
     --font-lobster: "Lobster", serif;
     --font-inter: "Inter", sans-serif;
+    --font-montserrat: "Montserrat", sans-serif;
   }
 }
 @layer base {
@@ -217,8 +218,14 @@
   .inset-0 {
     inset: calc(var(--spacing) * 0);
   }
+  .top-1\/2 {
+    top: calc(1/2 * 100%);
+  }
   .right-0 {
     right: calc(var(--spacing) * 0);
+  }
+  .right-1\/2 {
+    right: calc(1/2 * 100%);
   }
   .bottom-0 {
     bottom: calc(var(--spacing) * 0);
@@ -320,12 +327,6 @@
     width: calc(var(--spacing) * 5);
     height: calc(var(--spacing) * 5);
   }
-  .h-1 {
-    height: calc(var(--spacing) * 1);
-  }
-  .h-1\/2 {
-    height: calc(1/2 * 100%);
-  }
   .h-16 {
     height: calc(var(--spacing) * 16);
   }
@@ -337,9 +338,6 @@
   }
   .h-screen {
     height: 100vh;
-  }
-  .max-h-\[110px\] {
-    max-height: 110px;
   }
   .max-h-\[276px\] {
     max-height: 276px;
@@ -355,6 +353,9 @@
   }
   .w-full {
     width: 100%;
+  }
+  .max-w-80 {
+    max-width: calc(var(--spacing) * 80);
   }
   .max-w-\[1536px\] {
     max-width: 1536px;
@@ -377,8 +378,16 @@
   .flex-none {
     flex: none;
   }
-  .border-collapse {
-    border-collapse: collapse;
+  .translate-x-36 {
+    --tw-translate-x: calc(var(--spacing) * 36);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+  .-translate-y-1\/2 {
+    --tw-translate-y: calc(calc(1/2 * 100%) * -1);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+  .-rotate-90 {
+    rotate: calc(90deg * -1);
   }
   .transform {
     transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
@@ -432,14 +441,11 @@
     border-style: var(--tw-border-style);
     border-width: 1px;
   }
-  .bg-\[url\] {
-    background-color: url;
-  }
   .bg-p-50 {
     background-color: hsl(150, 66%, 96%);
   }
-  .bg-p-950 {
-    background-color: hsl(160, 73%, 9%);
+  .bg-p-950\/60 {
+    background-color: color-mix(in oklab, hsl(160, 73%, 9%) 60%, transparent);
   }
   .bg-p-950\/95 {
     background-color: color-mix(in oklab, hsl(160, 73%, 9%) 95%, transparent);
@@ -447,27 +453,6 @@
   .bg-gradient-to-t {
     --tw-gradient-position: to top in oklab;
     background-image: linear-gradient(var(--tw-gradient-stops));
-  }
-  .bg-\[url\(\)\] {
-    background-image: url();
-  }
-  .bg-\[url\(\/\)\] {
-    background-image: url(/);
-  }
-  .bg-\[url\(\/public\)\] {
-    background-image: url(/public);
-  }
-  .bg-\[url\(\/public\/assets\)\] {
-    background-image: url(/public/assets);
-  }
-  .bg-\[url\(\/public\/assets\/a\)\] {
-    background-image: url(/public/assets/a);
-  }
-  .bg-\[url\(\/public\/assets\/aboutU\)\] {
-    background-image: url(/public/assets/aboutU);
-  }
-  .bg-\[url\(\/public\/assets\/aboutUs\)\] {
-    background-image: url(/public/assets/aboutUs);
   }
   .bg-\[url\(\/public\/assets\/aboutUsImg\.jpg\)\] {
     background-image: url(/public/assets/aboutUsImg.jpg);
@@ -513,6 +498,9 @@
   .p-0 {
     padding: calc(var(--spacing) * 0);
   }
+  .p-9 {
+    padding: calc(var(--spacing) * 9);
+  }
   .px-4 {
     padding-inline: calc(var(--spacing) * 4);
   }
@@ -553,6 +541,13 @@
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
   }
+  .text-\[130px\] {
+    font-size: 130px;
+  }
+  .leading-\[130px\] {
+    --tw-leading: 130px;
+    line-height: 130px;
+  }
   .leading-loose {
     --tw-leading: var(--leading-loose);
     line-height: var(--leading-loose);
@@ -560,6 +555,10 @@
   .leading-none {
     --tw-leading: 1;
     line-height: 1;
+  }
+  .font-bold {
+    --tw-font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-bold);
   }
   .font-semibold {
     --tw-font-weight: var(--font-weight-semibold);
@@ -573,11 +572,23 @@
     --tw-tracking: var(--tracking-wider);
     letter-spacing: var(--tracking-wider);
   }
+  .whitespace-nowrap {
+    white-space: nowrap;
+  }
+  .\!text-p-200 {
+    color: hsl(150, 60%, 80%) !important;
+  }
+  .text-n-200 {
+    color: hsl(210, 22%, 85%);
+  }
   .text-n-500 {
     color: hsl(217, 20%, 58%);
   }
   .text-n-700 {
     color: hsl(217, 17%, 40%);
+  }
+  .text-p-50 {
+    color: hsl(150, 66%, 96%);
   }
   .text-p-900 {
     color: hsl(160, 65%, 17%);
@@ -594,12 +605,8 @@
   .uppercase {
     text-transform: uppercase;
   }
-  .underline {
-    text-decoration-line: underline;
-  }
-  .outline {
-    outline-style: var(--tw-outline-style);
-    outline-width: 1px;
+  .opacity-20 {
+    opacity: 20%;
   }
   .blur {
     --tw-blur: blur(8px);
@@ -607,10 +614,6 @@
   }
   .filter {
     filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
-  }
-  .backdrop-filter {
-    -webkit-backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
-    backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
   }
   .transition {
     transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, visibility, content-visibility, overlay, pointer-events;
@@ -659,6 +662,11 @@
   .md\:items-start {
     @media (width >= 48rem) {
       align-items: flex-start;
+    }
+  }
+  .md\:justify-end {
+    @media (width >= 48rem) {
+      justify-content: flex-end;
     }
   }
   .md\:gap-8 {
@@ -724,6 +732,11 @@
       margin-top: calc(var(--spacing) * -16);
     }
   }
+  .lg\:ml-50 {
+    @media (width >= 80rem) {
+      margin-left: calc(var(--spacing) * 50);
+    }
+  }
   .lg\:block {
     @media (width >= 80rem) {
       display: block;
@@ -737,6 +750,11 @@
   .lg\:hidden {
     @media (width >= 80rem) {
       display: none;
+    }
+  }
+  .lg\:w-2\/3 {
+    @media (width >= 80rem) {
+      width: calc(2/3 * 100%);
     }
   }
   .lg\:flex-row {
@@ -821,6 +839,17 @@
       text-align: start;
     }
   }
+  .\32 xl\:translate-x-0 {
+    @media (width >= 96rem) {
+      --tw-translate-x: calc(var(--spacing) * 0);
+      translate: var(--tw-translate-x) var(--tw-translate-y);
+    }
+  }
+  .\32 xl\:justify-center {
+    @media (width >= 96rem) {
+      justify-content: center;
+    }
+  }
   .\32 xl\:\[mask-image\:linear-gradient\(to_left\,transparent\,black_10\%\)\] {
     @media (width >= 96rem) {
       mask-image: linear-gradient(to left,transparent,black 10%);
@@ -872,12 +901,13 @@
 @layer components {
   .navLink {
     cursor: pointer;
+    font-family: var(--font-montserrat);
     font-size: var(--text-base);
     line-height: var(--tw-leading, var(--text-base--line-height));
     --tw-leading: 1;
     line-height: 1;
-    --tw-font-weight: var(--font-weight-medium);
-    font-weight: var(--font-weight-medium);
+    --tw-font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-bold);
     --tw-tracking: var(--tracking-wide);
     letter-spacing: var(--tracking-wide);
     color: hsl(217, 17%, 40%);
@@ -1374,6 +1404,21 @@
     color: hsl(160, 65%, 17%) !important;
   }
 }
+@property --tw-translate-x {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-translate-y {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-translate-z {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
 @property --tw-rotate-x {
   syntax: "*";
   inherits: false;
@@ -1453,11 +1498,6 @@
   syntax: "*";
   inherits: false;
 }
-@property --tw-outline-style {
-  syntax: "*";
-  inherits: false;
-  initial-value: solid;
-}
 @property --tw-blur {
   syntax: "*";
   inherits: false;
@@ -1511,6 +1551,15 @@
   syntax: "*";
   inherits: false;
 }
+@property --tw-text-shadow-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-text-shadow-alpha {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
 @property --tw-backdrop-blur {
   syntax: "*";
   inherits: false;
@@ -1547,30 +1596,6 @@
   syntax: "*";
   inherits: false;
 }
-@property --tw-text-shadow-color {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-text-shadow-alpha {
-  syntax: "<percentage>";
-  inherits: false;
-  initial-value: 100%;
-}
-@property --tw-translate-x {
-  syntax: "*";
-  inherits: false;
-  initial-value: 0;
-}
-@property --tw-translate-y {
-  syntax: "*";
-  inherits: false;
-  initial-value: 0;
-}
-@property --tw-translate-z {
-  syntax: "*";
-  inherits: false;
-  initial-value: 0;
-}
 @property --tw-duration {
   syntax: "*";
   inherits: false;
@@ -1597,6 +1622,9 @@
 @layer properties {
   @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
     *, ::before, ::after, ::backdrop {
+      --tw-translate-x: 0;
+      --tw-translate-y: 0;
+      --tw-translate-z: 0;
       --tw-rotate-x: initial;
       --tw-rotate-y: initial;
       --tw-rotate-z: initial;
@@ -1615,7 +1643,6 @@
       --tw-leading: initial;
       --tw-font-weight: initial;
       --tw-tracking: initial;
-      --tw-outline-style: solid;
       --tw-blur: initial;
       --tw-brightness: initial;
       --tw-contrast: initial;
@@ -1629,6 +1656,8 @@
       --tw-drop-shadow-color: initial;
       --tw-drop-shadow-alpha: 100%;
       --tw-drop-shadow-size: initial;
+      --tw-text-shadow-color: initial;
+      --tw-text-shadow-alpha: 100%;
       --tw-backdrop-blur: initial;
       --tw-backdrop-brightness: initial;
       --tw-backdrop-contrast: initial;
@@ -1638,11 +1667,6 @@
       --tw-backdrop-opacity: initial;
       --tw-backdrop-saturate: initial;
       --tw-backdrop-sepia: initial;
-      --tw-text-shadow-color: initial;
-      --tw-text-shadow-alpha: 100%;
-      --tw-translate-x: 0;
-      --tw-translate-y: 0;
-      --tw-translate-z: 0;
       --tw-duration: initial;
       --tw-ease: initial;
       --tw-scale-x: 1;
