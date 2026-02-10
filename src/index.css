@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
+@import "./styles/showHideNav.css";
+
 
 /** Theme **/
 @theme {

@@ -1,4 +1,18 @@
+// src/components/layout/header.tsx
+import { useEffect } from "react";
+import { initHeaderInteractions } from "../../animations/toggle_HideShowNavbar";
+
 const Header = () => {
+    useEffect(() => {
+        const cleanup = initHeaderInteractions({
+            navbarSelector: ".navbar",
+            menuButtonId: "mobileMenuBtn",
+            mobileMenuId: "mobileMenu",
+            closeOnLinkClickSelector: ".mobileNavLink",
+        });
+        return cleanup;
+    }, []);
+
     return (
         <header className="relative z-50">
             <div className="flex items-center justify-center navbar">
@@ -7,7 +21,7 @@ const Header = () => {
                     {/* Logo */}
                     <a href="/" className="flex items-center justify-center flex-none">
                         <img
-                            src="/assets/logo.png"
+                            src="../../images/logo.png"
                             alt="logo"
                             className="w-16 h-16"
                         />
@@ -27,7 +41,7 @@ const Header = () => {
                     {/* Hamburger icon (mobile) */}
                     <div className="block cursor-pointer lg:hidden">
                         <img
-                            src="/assets/Menu Icon.svg"
+                            src="../../images/Menu Icon.svg"
                             alt="menu_icon"
                             className="size-5"
                         />

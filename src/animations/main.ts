@@ -3,24 +3,25 @@
 import { partnerLogos, productList, partnerLogoBasePath } from "./data";
 import $ from "jquery";
 
+
 // Hiển thị tất cả logo Partner
-$(function () {
-    const container = document.getElementById("partner-logo-list");
-    if (!container) return; 
+// $(function () {
+//     const container = document.getElementById("partner-logo-list");
+//     if (!container) return; 
 
-    for (let i = 0; i < 2; i++) {
-        partnerLogos.forEach((logo) => {
-            const img = document.createElement("img");
+//     for (let i = 0; i < 2; i++) {
+//         partnerLogos.forEach((logo) => {
+//             const img = document.createElement("img");
 
-            img.src = partnerLogoBasePath + logo.fileName;
-            img.alt = logo.alt;
-            img.classList.add("logo-ticker-image");
-            container.appendChild(img);
-        });
-    }
-});
+//             img.src = partnerLogoBasePath + logo.fileName;
+//             img.alt = logo.alt;
+//             img.classList.add("logo-ticker-image");
+//             container.appendChild(img);
+//         });
+//     }
+// });
 
-// // Navigation
+// Navigation
 // $(function () {
 //     // Ẩn hiện navigation
 //     $(".navbar").hidescroll();

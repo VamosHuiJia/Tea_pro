@@ -1,10 +1,18 @@
 import Home from "./pages/Home";
 import Header from "./components/layout/header"
+import Footer from "./components/layout/footer";
 
 function App() {
   return (
+    <>
+    <Header />
 
-    <Home />
+      <main>
+        <Home />
+      </main>
+
+      <Footer />
+    </>
   );
 }
 
