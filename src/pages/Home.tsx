@@ -16,10 +16,10 @@ const Home = () => {
       <ProductsSection />
       <SloganSection />
       <FeaturesSection />
-      <BestSellersSection />
-      {/* <StatsSection />
+      {/* <BestSellersSection /> */}
+      <StatsSection />
       <StorySection />
-      <ContactSection /> */}
+      <ContactSection />
     </div>
   );
 };

@@ -2,7 +2,7 @@ const StorySection = () => {
     return (
         <section id="story">
             <div
-                className="flex justify-end h-screen max-h-[1100px] p-0 w-full max-w-none bg-[url(./assets/images/aboutUsImg.jpg)] bg-no-repeat bg-center bg-cover">
+                className="flex justify-end h-screen max-h-[1100px] p-0 w-full max-w-none bg-[url(../../images/aboutUsImg.jpg)] bg-no-repeat bg-center bg-cover">
                 <div className="w-full h-full lg:w-2/3 bg-p-950/60 p-9">
                     <div
                         className="container relative flex items-center justify-center h-full md:justify-end 2xl:justify-center">

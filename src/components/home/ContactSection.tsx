@@ -12,7 +12,7 @@ const ContactSection = () => {
                                 Có câu hỏi ?
                             </h2>
                             <h1 className="main_heading"> Liên hệ với
-                                <span className="text-gradient">Huy bán trà</span>
+                                <span className="text-gradient"> Huy bán trà </span>
                                 tại
                             </h1>
                         </div>
@@ -20,7 +20,7 @@ const ContactSection = () => {
                         {/* <!-- địa chỉ --> */}
                         <div className="contact-info">
                             <div>
-                                <img src="../../assets/images/building.svg" alt="building" className="size-4" />
+                                <img src="../../images/building.svg" alt="building" className="size-4" />
                                 <h1>Địa Chỉ</h1>
                             </div>
 
@@ -32,7 +32,7 @@ const ContactSection = () => {
                         {/* <!-- email --> */}
                         <div className="contact-info">
                             <div>
-                                <img src="../../assets/images/mail.svg" alt="building" className="size-4" />
+                                <img src="../../images/mail.svg" alt="building" className="size-4" />
                                 <h1>Email</h1>
                             </div>
 
@@ -42,7 +42,7 @@ const ContactSection = () => {
                         {/* <!-- số điện thoại --> */}
                         <div className="contact-info">
                             <div>
-                                <img src="../../assets/images/phone.svg" alt="building" className="size-4" />
+                                <img src="../../images/phone.svg" alt="building" className="size-4" />
                                 <h1>Điện Thoại</h1>
                             </div>
 
@@ -65,7 +65,7 @@ const ContactSection = () => {
                         <div className="relative w-[250px] md:w-[350px]">
                             <input type="email" placeholder="Nhập địa chỉ email của bạn"
                                 className="w-full px-12 py-3 border border-p-600" />
-                            <img src="../../assets/images/mail2.svg" alt="mail icon"
+                            <img src="../../images/mail2.svg" alt="mail icon"
                                 className="absolute -translate-y-1/2 top-1/2 left-4" />
                         </div>
 
@@ -77,7 +77,7 @@ const ContactSection = () => {
                         </button>
 
                         {/* <!-- decor --> */}
-                        <img src="../../assets/images/contact.png" alt="decor"
+                        <img src="../../images/contact.png" alt="decor"
                             className="absolute -bottom-20 -right-20 w-[400px] opacity-15 -z-10" />
                     </div>
                 </div>
