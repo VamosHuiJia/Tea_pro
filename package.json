@@ -1,16 +1,39 @@
 {
-  "name": "tea_project",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "tea-react",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "build": "tailwindcss -i ./src/css/main.css -o ./dist/output.css",
-    "dev": "tailwindcss -i ./src/css/main.css -o ./dist/output.css --watch"
+    "dev": "vite",
+    "build": "npm run build:css && tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "dev:css": "tailwindcss -i ./src/index.css -o ./dist/output.css --watch",
+    "build:css": "tailwindcss -i ./src/index.css -o ./dist/output.css --minify"
   },
-  "author": "Gia Huy",
-  "license": "ISC",
   "dependencies": {
-    "@tailwindcss/cli": "^4.1.10",
-    "tailwindcss": "^4.1.10"
+    "jquery": "^3.7.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@tailwindcss/cli": "^4.1.18",
+    "@tailwindcss/vite": "^4.1.18",
+    "@types/jquery": "^3.5.33",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.5",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.1",
+    "autoprefixer": "^10.4.24",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.5.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.10",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.46.4",
+    "vite": "^7.2.4"
   }
 }
