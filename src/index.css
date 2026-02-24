@@ -75,7 +75,7 @@
   }
 
   .mobileNavLink {
-    @apply text-p-50 hover:text-p-200;
+    @apply text-p-700 hover:text-p-500;
   }
 
   .dropdown-menu {
