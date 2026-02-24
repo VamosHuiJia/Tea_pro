@@ -1,16 +1,13 @@
-// src/animations/HideShowNavbar.ts
-
 type NavbarOptions = {
   navbarSelector?: string;
+  onHiddenChange?: (isHidden: boolean) => void;
 };
 
 export function initNavbarScrollBehavior(options: NavbarOptions = {}) {
-  const { navbarSelector = ".navbar" } = options;
+  const { navbarSelector = ".navbar", onHiddenChange } = options;
 
   const navbar = document.querySelector(navbarSelector) as HTMLElement | null;
-  if (!navbar) {
-    return () => {};
-  }
+  if (!navbar) return () => {};
 
   let lastScrollY = window.scrollY;
   const navbarHeight = navbar.offsetHeight || 80;
@@ -20,6 +17,7 @@ export function initNavbarScrollBehavior(options: NavbarOptions = {}) {
 
     if (currentY <= 0) {
       navbar.classList.remove("stick", "visible", "hidden");
+      onHiddenChange?.(false);
       lastScrollY = currentY;
       return;
     }
@@ -31,19 +29,16 @@ export function initNavbarScrollBehavior(options: NavbarOptions = {}) {
     if (scrollingDown && currentY > navbarHeight) {
       navbar.classList.add("hidden");
       navbar.classList.remove("visible");
-    } 
-    else {
+      onHiddenChange?.(true);
+    } else {
       navbar.classList.add("visible");
       navbar.classList.remove("hidden");
+      onHiddenChange?.(false);
     }
 
     lastScrollY = currentY;
   };
 
   window.addEventListener("scroll", onScroll, { passive: true });
-
-  // cleanup
-  return () => {
-    window.removeEventListener("scroll", onScroll);
-  };
+  return () => window.removeEventListener("scroll", onScroll);
 }
