@@ -17,7 +17,7 @@ const Footer = () => {
 
             <div className="flex items-center gap-5 mt-8 md:gap-6">
               <a
-                href="https://www.facebook.com/huybantra" 
+                href="https://www.facebook.com/nguyen.huy.291472" 
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
@@ -31,7 +31,7 @@ const Footer = () => {
               </a>
 
               <a
-                href="https://www.instagram.com/huybantra" 
+                href="https://www.instagram.com/mitom20097" 
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
@@ -45,7 +45,7 @@ const Footer = () => {
               </a>
 
               <a
-                href="https://www.tiktok.com/@huybantra" 
+                href="https://www.tiktok.com/@jahuiiiiiiiii04" 
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="TikTok"

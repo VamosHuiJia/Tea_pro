@@ -72,7 +72,7 @@ const ContactSection = () => {
                         {/* <!-- Theo dõi --> */}
                         <button className="flex-none !border-p-600 w-[250px] md:w-[350px]">
                             <div className="capitalize btn !bg-p-600 hover:!bg-p-700">
-                                <span className="w-full text-center">Đồng Ý Theo Dõi</span>
+                                <span className="w-full text-center">Đồng ý theo dõi</span>
                             </div>
                         </button>
 
