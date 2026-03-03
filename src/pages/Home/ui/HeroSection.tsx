@@ -1,6 +1,4 @@
 // src/components/home/HeroSection.tsx
-import "./../../../App.css"
-
 const HeroSection = () => {
     return (
         <section
