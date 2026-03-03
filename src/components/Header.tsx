@@ -61,6 +61,7 @@ const Header = () => {
                         <Link to="/products" className="navLink">Sản Phẩm</Link>
                         <a href="#story" className="navLink">Giới Thiệu</a>
                         <a href="#contact" className="navLink">Liên Hệ</a>
+                        <Link to="/login" className="navLink">Đăng nhập</Link>
                     </nav>
 
                     {/* Hamburger button - mobile */}
@@ -103,6 +104,9 @@ const Header = () => {
                     <a href="#contact" className="py-3 text-lg navLink mobileNavLink" onClick={handleLinkClick}>
                         Liên Hệ
                     </a>
+                    <Link to="/login" className="py-3 text-lg navLink mobileNavLink" onClick={handleLinkClick}>
+                        Đăng nhập
+                    </Link>
                 </div>
             </div>
         </header>

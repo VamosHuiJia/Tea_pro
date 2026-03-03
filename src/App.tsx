@@ -1,23 +1,34 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Header from "./components/Header"
+import Header from "./components/Header";
 import Footer from "./components/Footer";
 
 import Home from "./pages/Home/Home";
 import Products from "./pages/Products/Products";
+import Login from "./pages/Auth/Login";
 
 function App() {
   return (
     <BrowserRouter>
-      <Header />
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/products" element={<Products />} />   
+      <Routes>
+        <Route
+          path="/*"
+          element={
+            <>
+              <Header />
+              <main>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/products" element={<Products />} />
+                </Routes>
+              </main>
+              <Footer />
+            </>
+          }
+        />
 
-        </Routes>
-      </main>
-      <Footer />
+        <Route path="/login" element={<Login />} />
+      </Routes>
     </BrowserRouter>
   );
 }
