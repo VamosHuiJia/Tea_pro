@@ -7,13 +7,29 @@ import "../src/styles/showHideNav.css"
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-AOS.init({                         
-  anchorPlacement: 'top-center',        
+AOS.init({
+  easing: 'ease-out',
+  offset: 120,
 });
 
-window.addEventListener('load', () => {
-  AOS.refresh();
-});
+const refreshAOS = () => {
+  AOS.refresh();        
+};
+
+window.addEventListener('load', refreshAOS);           
+
+setTimeout(refreshAOS, 600);
+
+// Refresh khi scroll lần đầu 
+let hasScrolled = false;
+const onFirstScroll = () => {
+  if (!hasScrolled) {
+    hasScrolled = true;
+    refreshAOS();
+    window.removeEventListener('scroll', onFirstScroll);
+  }
+};
+window.addEventListener('scroll', onFirstScroll, { passive: true });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
