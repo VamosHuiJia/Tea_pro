@@ -1,4 +1,3 @@
-// ProductSection.tsx
 import { useEffect, useState } from 'react';
 import { productList } from '../../animations/data';
 
@@ -41,21 +40,21 @@ const ProductSection = () => {
                         data-aos-delay="100"
                         className="max-w-lg mt-2 text-xs text-n-500"
                     >
-                        Cho dù bạn là người đam mê trà lâu năm hay mới bước chân vào thế giới trà...
+                        Cho dù bạn là người đam mê trà lâu năm hay mới bước chân vào thế giới trà, chúng tôi ở đây để giúp bạn khám phá loại trà pha trộn yêu thích tiếp theo của mình. Khám phá bộ sưu tập của chúng tôi và trải nghiệm nghệ thuật pha trà trong từng ngụm.
                     </p>
                 </div>
 
                 {/* filter tabs */}
                 <div
                     id="allProduct-filters"
-                    className="flex flex-wrap gap-6 mt-6 md:mt-9 md:gap-8"
+                    className="flex gap-8 mt-4 md:mt-9"
                 >
                     <a
                         href="?filter-category=all"
                         className={`tab-link ${filter === 'all' ? 'activeFilter' : ''}`}
                         onClick={() => setFilter('all')}
                     >
-                        Tất cả sản phẩm
+                        Tất cả <span className="hidden md:inline">sản phẩm</span>
                     </a>
 
                     <a
@@ -96,7 +95,7 @@ const ProductSection = () => {
                     <div className="mt-9">
                         <div
                             id="product-items--container"
-                            className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-y-10"
+                            className="grid grid-cols-3 gap-4 md:grid-cols-4 lg:grid-cols-4"
                         >
                             {filteredProducts.length === 0 ? (
                                 <p className="py-10 text-center col-span-full text-n-500">

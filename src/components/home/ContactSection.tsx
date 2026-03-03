@@ -7,7 +7,7 @@ const ContactSection = () => {
                     <div
                         className="flex h-[515px] flex-col items-center justify-center flex-1 w-full px-10 py-20 border-4 rounded-4xl border-dotted border-p-600 gap-9">
                         {/* <!-- Heading --> */}
-                        <div>
+                        <div data-aos="fade-down">
                             <h2 className="sub_heading">
                                 Có câu hỏi ?
                             </h2>
@@ -54,7 +54,7 @@ const ContactSection = () => {
                     <div
                         className="relative text-center flex flex-col items-center w-full flex-1 h-[515px] px-10 py-20 gap-9 border-3 rounded-4xl border-p-600 overflow-clip">
                         {/* <!-- heading --> */}
-                        <div>
+                        <div data-aos="fade-down">
                             <h2 className="sub_heading">Cập nhập bản tin</h2>
                             <h1 className="main_heading">Đăng ký theo dõi</h1>
                         </div>

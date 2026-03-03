@@ -8,16 +8,17 @@ const StorySection = () => {
                         className="container relative flex items-center justify-center h-full md:justify-end 2xl:justify-center">
 
                         {/* <!-- Lớp mờ đè trên ảnh và Tên shop --> */}
-                        <div
+                        <div data-aos="fade-right"
                             className="absolute hidden -translate-y-1/2 translate-x-36 top-1/2 right-1/2 md:block 2xl:translate-x-0">
                             <h1
                                 className="uppercase -rotate-90 whitespace-nowrap text-[130px] text-center leading-[130px] font-bold text-p-50 opacity-20">
-                                Huy Bán <br/> Trà
+                                Huy Bán <br /> Trà
                             </h1>
                         </div>
 
                         {/* <!-- Nội dung story --> */}
-                        <div className="relative lg:ml-50">
+                        <div data-aos="fade-left"
+                            className="relative lg:ml-50">
                             <div className="mb-9">
                                 <h2 className="!text-p-200 sub_heading">
                                     Khám phá

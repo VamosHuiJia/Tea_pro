@@ -1,3 +1,4 @@
+@import 'aos/dist/aos.css';
 @import "tailwindcss";
 @config "../tailwind.config.js";
 @import "./styles/showHideNav.css";

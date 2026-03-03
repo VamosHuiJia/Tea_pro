@@ -12,7 +12,8 @@ const ProductSection = () => {
             <div className="container">
                 {/* <!-- Heading --> */}
                 <div className="flex-col gap-9">
-                    <div className="mb-10">
+                    <div data-aos="fade-right"
+                        className="mb-10">
                         <h2 className="sub_heading">Tìm hiểu</h2>
                         <h1 className="main_heading">Sản Phẩm
                             <span className="text-gradient"> Trà Ngon</span>
