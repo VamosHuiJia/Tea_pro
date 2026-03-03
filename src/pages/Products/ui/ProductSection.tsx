@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { productList } from '../../animations/data';
+import { productList } from '../../../animations/data';
 
 const ProductSection = () => {
     const [filter, setFilter] = useState<string>('all');
@@ -23,7 +23,7 @@ const ProductSection = () => {
                 {/* banner */}
                 <img
                     data-aos="flip-up"
-                    src="../../../public/images/banners/banner1.jpg"
+                    src="../../../../public/images/banners/banner1.jpg"
                     alt="products banner"
                     className="w-full h-[350px] object-cover shadow-xl"
                 />

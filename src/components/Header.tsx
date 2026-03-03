@@ -1,7 +1,7 @@
 // src/components/layout/header.tsx
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { initNavbarScrollBehavior } from "../../animations/HideShowNavbar";
+import { initNavbarScrollBehavior } from "../animations/HideShowNavbar";
 
 const Header = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

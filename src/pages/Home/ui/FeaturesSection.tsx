@@ -6,7 +6,7 @@ const FeaturesSection = () => {
                 <div className="flex flex-col items-center justify-center w-full gap-0 lg:gap-10 lg:flex-row">
                     {/* <!-- Holigon 1  --> */}
                     <div data-aos="zoom-in"
-                        className="feature-card group bg-[url(../../public/images/benefit_1.jpg)]">
+                        className="feature-card group bg-[url(../../../public/images/benefit_1.jpg)]">
                         <div className="feature-filter"></div>
 
                         <h3 className="uppercase">Nguồn cung cao cấp</h3>
@@ -33,7 +33,7 @@ const FeaturesSection = () => {
                     {/* <!-- Holigon 3 --> */}
                     <div data-aos="zoom-in"
                         data-aos-delay="100"
-                        className="feature-card group bg-[url(../../public/images/benefit_2.jpg)]">
+                        className="feature-card group bg-[url(../../../public/images/benefit_2.jpg)]">
                         <div className="feature-filter"></div>
 
                         <h3 className="uppercase">Hương vị pha chế độc đáo</h3>
@@ -48,7 +48,7 @@ const FeaturesSection = () => {
                     data-aos-delay="200"
                     className="flex flex-col items-center justify-center w-full lg:-mt-16 lg:gap-10 lg:flex-row">
                     {/* <!-- Holigon 4 --> */}
-                    <div className="feature-card group bg-[url(../../public/images/benefit_3.jpg)]">
+                    <div className="feature-card group bg-[url(../../../public/images/benefit_3.jpg)]">
                         <div className="feature-filter"></div>
 
                         <h3 className="uppercase">Tập trung vào sức khỏe</h3>
@@ -60,7 +60,7 @@ const FeaturesSection = () => {
                     {/* <!-- Holigon 5 --> */}
                     <div data-aos="zoom-in"
                         data-aos-delay="300"
-                        className="feature-card group bg-[url(../../public/images/benefit_4.jpg)]">
+                        className="feature-card group bg-[url(../../../public/images/benefit_4.jpg)]">
                         <div className="feature-filter"></div>
 
                         <h3 className="uppercase">Trải nghiệm cá nhân hóa</h3>

@@ -1,4 +1,4 @@
-import { partnerLogos, partnerLogoBasePath } from "../../animations/data"
+import { partnerLogos, partnerLogoBasePath } from "../../../animations/data"
 
 const PartnerSection = () => {
     const logoPartner = [...partnerLogos, ...partnerLogos];

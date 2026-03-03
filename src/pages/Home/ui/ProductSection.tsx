@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { initProductTabs } from "../../animations/productTabs";
+import { initProductTabs } from "../../../animations/productTabs";
 
 const ProductSection = () => {
     useEffect(() => {
@@ -45,7 +45,7 @@ const ProductSection = () => {
                     {/* <!-- Fake data products introduction --> */}
                     <div id="matcha">
                         <div className="tabContainer">
-                            <img src="../../../public/images/product_1.jpg" alt="matcha" className="productImg" />
+                            <img src="../../../../public/images/product_1.jpg" alt="matcha" className="productImg" />
                             <div>
                                 <h3>Matcha Magic</h3>
                                 <h4>
@@ -64,7 +64,7 @@ const ProductSection = () => {
                                 </p>
                                 <button>
                                     <a href="" className="btn">Xem sản phẩm ngay
-                                        <img src="../../../public/images/right-arrow.svg" alt="right-arrow" />
+                                        <img src="../../../../public/images/right-arrow.svg" alt="right-arrow" />
                                     </a>
                                 </button>
                             </div>
@@ -73,7 +73,7 @@ const ProductSection = () => {
 
                     <div id="whiteTea">
                         <div className="tabContainer">
-                            <img src="../../../public/images/product_2.jpg" alt="whiteTea" className="productImg" />
+                            <img src="../../../../public/images/product_2.jpg" alt="whiteTea" className="productImg" />
                             <div>
                                 <h3>Tinh Chất Tinh Tế Từ Trà Trắng</h3>
                                 <h4>
@@ -92,7 +92,7 @@ const ProductSection = () => {
                                 </p>
                                 <button>
                                     <a href="" className="btn">Xem sản phẩm ngay
-                                        <img src="../../../public/images/right-arrow.svg" alt="right-arrow" />
+                                        <img src="../../../../public/images/right-arrow.svg" alt="right-arrow" />
                                     </a>
                                 </button>
                             </div>
@@ -101,7 +101,7 @@ const ProductSection = () => {
 
                     <div id="oolongTea">
                         <div className="tabContainer">
-                            <img src="../../../public/images/product_3.jpg" alt="oolongTea" className="productImg" />
+                            <img src="../../../../public/images/product_3.jpg" alt="oolongTea" className="productImg" />
                             <div>
                                 <h3>Cuộc Cách Mạng Trà Ô Long</h3>
                                 <h4>
@@ -118,7 +118,7 @@ const ProductSection = () => {
                                 </p>
                                 <button>
                                     <a href="" className="btn">Xem sản phẩm ngay
-                                        <img src="../../../public/images/right-arrow.svg" alt="right-arrow" />
+                                        <img src="../../../../public/images/right-arrow.svg" alt="right-arrow" />
                                     </a>
                                 </button>
                             </div>
@@ -127,7 +127,7 @@ const ProductSection = () => {
 
                     <div id="blackTea">
                         <div className="tabContainer">
-                            <img src="../../../public/images/product_4.png" alt="blackTea" className="productImg" />
+                            <img src="../../../../public/images/product_4.png" alt="blackTea" className="productImg" />
                             <div>
                                 <h3>Đánh Thức Các Giác Quan Của Bạn Cùng Trà Đen
                                 </h3>
@@ -143,7 +143,7 @@ const ProductSection = () => {
                                 </p>
                                 <button>
                                     <a href="" className="btn">Xem sản phẩm ngay
-                                        <img src="../../../public/images/right-arrow.svg" alt="right-arrow" />
+                                        <img src="../../../../public/images/right-arrow.svg" alt="right-arrow" />
                                     </a>
                                 </button>
                             </div>

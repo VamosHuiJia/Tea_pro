@@ -4,8 +4,8 @@ import { useInView } from 'react-intersection-observer';
 
 const StatsSection = () => {
   const { ref, inView } = useInView({
-    threshold: 0.3,          // trigger khi thấy ~30% section
-    triggerOnce: true,       // chỉ chạy animation 1 lần
+    threshold: 0.3,          
+    triggerOnce: true,       
   });
 
   return (
