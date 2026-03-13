@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 import Home from "./pages/Home/Home";
 import Products from "./pages/Products/Products";
 import Login from "./pages/Auth/Login";
+import Register from "./pages/Auth/Register";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         />
 
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </BrowserRouter>
   );
