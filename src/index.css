@@ -109,11 +109,9 @@
   .main_heading {
     @apply mt-2 text-2xl tracking-wide capitalize lg:text-3xl font-lobster;
   }
-  
+
   .auth-input {
-    @apply w-full px-5 py-3.5 rounded-xl bg-white/8 border border-white/15 
-           text-white placeholder-white/50 text-base
-           focus:outline-none focus:border-p-400/70 focus:ring-2 focus:ring-p-400/20 focus:bg-white/12 transition-all;
+    @apply w-full rounded-xl border border-white/15 bg-white/8 px-3.5 py-2.5 text-sm text-white placeholder-white/45 focus:outline-none focus:border-p-400/70 focus:ring-2 focus:ring-p-400/20 focus:bg-white/12 transition-all;
   }
 }
 
@@ -167,7 +165,8 @@
 
   /* Features */
   .feature-card {
-    @apply h-[400px] w-[368px] flex flex-col justify-center items-center p-[36px] gap-[36px] [clip-path:polygon(50%_0%,100%_25%,100%_75%,50%_100%,0%_75%,0%_25%)] transition-all duration-500 bg-center bg-no-repeat bg-cover;
+    @apply h-[400px] w-[368px] flex flex-col justify-center items-center p-[36px] gap-[36px] transition-all duration-500 bg-center bg-no-repeat bg-cover;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   }
 
   #features h3 {
@@ -223,7 +222,8 @@
   /* Stats */
   .stats-item {
     h1 {
-      @apply text-6xl lg:text-8xl font-lobster text-center tracking-wider leading-none font-bold text-transparent bg-clip-text bg-[linear-gradient(24deg,rgba(255,255,255,1)_40%,rgba(121,220,180,1)_100%)];
+      @apply text-6xl lg:text-8xl font-lobster text-center tracking-wider leading-none font-bold text-transparent bg-clip-text;
+      background-image: linear-gradient(24deg, rgba(255, 255, 255, 1) 40%, rgba(121, 220, 180, 1) 100%);
     }
 
     h2 {

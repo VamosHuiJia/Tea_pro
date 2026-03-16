@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "aos": "^2.3.4",
+    "framer-motion": "^12.36.0",
     "jquery": "^3.7.1",
     "react": "^19.2.0",
     "react-countup": "^6.5.3",
