@@ -5,7 +5,7 @@ import { AuthLayout } from "./AuthLayout";
 const LoginPage = () => {
   return (
     <AuthLayout
-      title="Chào mừng quay lại"
+      title="Chào mừng bạn"
       subtitle="Đăng nhập để tiếp tục theo dõi đơn hàng, lưu sản phẩm yêu thích và mua sắm nhanh hơn."
       badge="Đăng nhập"
       bottomText="Chưa có tài khoản?"
@@ -23,7 +23,7 @@ const LoginPage = () => {
           <input
             id="login-email"
             type="text"
-            placeholder="nhap@email.com"
+            placeholder="Nhập email của bạn"
             className="auth-input"
           />
         </div>

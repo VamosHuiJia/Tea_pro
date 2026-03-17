@@ -24,7 +24,7 @@ const RegisterPage = () => {
                         <input
                             id="register-username"
                             type="text"
-                            placeholder="huytra"
+                            placeholder="Nhập tên tài khoản"
                             className="auth-input"
                         />
                     </div>
@@ -39,7 +39,7 @@ const RegisterPage = () => {
                         <input
                             id="register-fullname"
                             type="text"
-                            placeholder="Nguyễn Văn A"
+                            placeholder="Nhập họ và tên"
                             className="auth-input"
                         />
                     </div>
@@ -56,7 +56,7 @@ const RegisterPage = () => {
                         <input
                             id="register-email"
                             type="email"
-                            placeholder="nhap@email.com"
+                            placeholder="Nhập email của bạn"
                             className="auth-input"
                         />
                     </div>
@@ -71,7 +71,7 @@ const RegisterPage = () => {
                         <input
                             id="register-phone"
                             type="tel"
-                            placeholder="0123 456 789"
+                            placeholder="Nhập số điện thoại"
                             className="auth-input"
                         />
                     </div>
