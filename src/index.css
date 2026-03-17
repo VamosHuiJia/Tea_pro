@@ -122,6 +122,11 @@
     @apply w-auto h-6 lg:h-9;
   }
 
+  .partner-marquee {
+    animation: partner-marquee 15s linear infinite;
+    will-change: transform;
+  }
+
   /* Products */
   .tabContainer {
     @apply flex flex-col w-full gap-8 md:flex-row md:gap-16;
@@ -271,5 +276,15 @@
 
   .activeFilter {
     @apply !text-p-900 border-b-2 border-b-p-900;
+  }
+}
+
+@keyframes partner-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
   }
 }

@@ -17,13 +17,13 @@ const PartnerSection = () => {
 
                 {/* <!-- Logo Partner --> */}
                 <div className="flex mt-9 md:mt-16 [mask-image:linear-gradient(to_right,transparent,black,transparent)]">
-                    <div className="flex flex-none logos-wrapper gap-14 pl-14">
+                    <div className="partner-marquee flex flex-none logos-wrapper gap-14 pl-14">
                         {logoPartner.map((logo, idx) => (
                             <img
                                 key={`${logo.fileName}-${idx}`}
                                 src={`${partnerLogoBasePath}${logo.fileName}`}
                                 alt={logo.alt}
-                                className="logo-ticker-image"
+                                className="logo-ticker-image shrink-0"
                                 loading="lazy"
                             />
                         ))}

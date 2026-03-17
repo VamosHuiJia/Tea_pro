@@ -28,7 +28,7 @@ const HeroSection = () => {
                         <h1 data-aos="zoom-in"
                             data-aos-delay="100"
                             className="text-5xl leading-none tracking-wide text-center capitalize font-lobster text-p-950 md:text-6xl lg:text-7xl">
-                            Trà Đặc Biệt Chế Tác
+                            Một ngụm trà, ngàn dư vị
                         </h1>
                     </div>
 
