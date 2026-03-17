@@ -89,12 +89,16 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
 
   return (
     <section className="fixed inset-0 z-[999] overflow-y-auto">
+      <div
+        className="absolute inset-0 bg-[url('../images/tea_bg.jpg')] bg-cover bg-center bg-no-repeat"
+      />
+
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.28, ease: "easeOut" }}
-        className="absolute inset-0 bg-black/40 backdrop-blur-md"
+        className="absolute inset-0 bg-black/35 backdrop-blur-[3px]"
         onClick={handleClose}
       />
 
