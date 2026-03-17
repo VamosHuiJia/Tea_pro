@@ -89,6 +89,9 @@ const Header = () => {
               <a href="/#contact" className="navLink">
                 Liên hệ
               </a>
+              <Link to="/admin" className="navLink">
+                Admin
+              </Link>
             </nav>
 
             <div className="flex items-center justify-end gap-2 md:gap-3">
@@ -233,6 +236,9 @@ const Header = () => {
           <a href="/#contact" className="py-3 text-lg navLink mobileNavLink" onClick={handleLinkClick}>
             Liên hệ
           </a>
+          <Link to="/admin" className="py-3 text-lg navLink mobileNavLink" onClick={handleLinkClick}>
+            Admin
+          </Link>
         </div>
       </div>
     </header>

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -8,18 +8,27 @@ import Products from "./pages/Products/Products";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 
+import AdminLayout from "./pages/Admin/layout/AdminLayout";
+import Dashboard from "./pages/Admin/pages/Dashboard";
+
 function AppRoutes() {
   const location = useLocation();
   const state = location.state as { backgroundLocation?: Location };
   const backgroundLocation = state?.backgroundLocation;
-  const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
-  const showSiteChrome = !isAuthPage || Boolean(backgroundLocation);
+
+  const isAuthPage =
+    location.pathname === "/login" || location.pathname === "/register";
+
+  const isAdminPage = location.pathname.startsWith("/admin");
+
+  const showSiteChrome =
+    (!isAuthPage && !isAdminPage) || Boolean(backgroundLocation);
 
   return (
     <>
       {showSiteChrome && <Header />}
 
-      {showSiteChrome && (
+      {!isAdminPage && showSiteChrome && (
         <main>
           <Routes location={backgroundLocation || location}>
             <Route path="/" element={<Home />} />
@@ -33,6 +42,11 @@ function AppRoutes() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Navigate to="dashboard" replace />} />
+          <Route path="dashboard" element={<Dashboard />} />
+        </Route>
       </Routes>
     </>
   );
