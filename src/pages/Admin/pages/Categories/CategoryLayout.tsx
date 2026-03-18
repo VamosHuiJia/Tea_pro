@@ -1,17 +1,17 @@
 import { useMemo, useRef, useState } from "react";
 import { Search } from "lucide-react";
-import BrandList from "./BrandList";
+import CategoryList from "./CategoryList";
 import { exportToExcel, importFromExcel } from "../../../../utils/excel";
-import type { BrandItem } from "./BrandList";
-import BrandModal from "./BrandModal";
-import type { BrandFormValues } from "./BrandModal";
+import type { CategoryItem } from "./CategoryList";
+import CategoryModal from "./CategoryModal";
+import type { CategoryFormValues } from "./CategoryModal";
 
-const mockBrands: BrandItem[] = [
+const mockCategories: CategoryItem[] = [
   {
     id: 1,
-    name: "Lộc Phát Tea",
+    name: "Trà truyền thống",
     description:
-      "Thương hiệu trà hướng tới hương vị truyền thống, phù hợp nhóm khách hàng yêu thích trà đậm vị.",
+      "Danh mục dành cho các sản phẩm trà truyền thống, hương vị đậm, phù hợp khách hàng lâu năm.",
     image:
       "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=300&q=80",
     isActive: true,
@@ -20,9 +20,9 @@ const mockBrands: BrandItem[] = [
   },
   {
     id: 2,
-    name: "Moon Leaf",
+    name: "Trà trái cây",
     description:
-      "Bộ nhận diện trẻ trung, thiên về các dòng trà trái cây và sản phẩm theo mùa.",
+      "Nhóm sản phẩm trẻ trung, phù hợp khách hàng thích hương vị tươi mới và theo mùa.",
     image:
       "https://images.unsplash.com/photo-1515823662972-da6a2e4d3002?auto=format&fit=crop&w=300&q=80",
     isActive: false,
@@ -31,9 +31,9 @@ const mockBrands: BrandItem[] = [
   },
   {
     id: 3,
-    name: "Zen Brew",
+    name: "Quà tặng cao cấp",
     description:
-      "Phong cách tối giản, cao cấp, tập trung vào trà nguyên lá và quà tặng doanh nghiệp.",
+      "Danh mục các dòng sản phẩm cao cấp, trà hộp quà, dùng cho dịp lễ và doanh nghiệp.",
     image:
       "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=300&q=80",
     isActive: true,
@@ -42,9 +42,9 @@ const mockBrands: BrandItem[] = [
   },
 ];
 
-function normalizeImportedRow(row: Record<string, unknown>): BrandFormValues {
+function normalizeImportedRow(row: Record<string, unknown>): CategoryFormValues {
   return {
-    name: String(row.name ?? row["Tên thương hiệu"] ?? "").trim(),
+    name: String(row.name ?? row["Tên danh mục"] ?? "").trim(),
     description: String(row.description ?? row["Mô tả"] ?? "").trim(),
     image: String(row.image ?? row["Hình ảnh"] ?? "").trim(),
     isActive: ["true", "1", "hoạt động", "active"].includes(
@@ -57,52 +57,55 @@ function normalizeImportedRow(row: Record<string, unknown>): BrandFormValues {
   };
 }
 
-export default function BrandLayout() {
-  const [brands, setBrands] = useState<BrandItem[]>(mockBrands);
+export default function CategoryLayout() {
+  const [categories, setCategories] = useState<CategoryItem[]>(mockCategories);
   const [keyword, setKeyword] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<"create" | "edit">("create");
-  const [selectedBrand, setSelectedBrand] = useState<BrandItem | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<CategoryItem | null>(null);
 
   const excelInputRef = useRef<HTMLInputElement | null>(null);
 
-  const filteredBrands = useMemo(() => {
+  const filteredCategories = useMemo(() => {
     const normalized = keyword.trim().toLowerCase();
-    if (!normalized) return brands;
+    if (!normalized) return categories;
 
-    return brands.filter((brand) =>
-      [brand.name, brand.description].some((value) =>
+    return categories.filter((category) =>
+      [category.name, category.description].some((value) =>
         String(value || "").toLowerCase().includes(normalized)
       )
     );
-  }, [brands, keyword]);
+  }, [categories, keyword]);
 
-  const activeCount = useMemo(() => brands.filter((brand) => brand.isActive).length, [brands]);
+  const activeCount = useMemo(
+    () => categories.filter((category) => category.isActive).length,
+    [categories]
+  );
 
   const handleOpenCreate = () => {
     setMode("create");
-    setSelectedBrand(null);
+    setSelectedCategory(null);
     setOpenModal(true);
   };
 
-  const handleOpenEdit = (brand: BrandItem) => {
+  const handleOpenEdit = (category: CategoryItem) => {
     setMode("edit");
-    setSelectedBrand(brand);
+    setSelectedCategory(category);
     setOpenModal(true);
   };
 
-  const handleDelete = (brand: BrandItem) => {
+  const handleDelete = (category: CategoryItem) => {
     const confirmed = window.confirm(
-      `Bạn có chắc muốn xóa thương hiệu "${brand.name}" không?`
+      `Bạn có chắc muốn xóa danh mục "${category.name}" không?`
     );
     if (!confirmed) return;
 
     // TODO: gọi API delete tại đây
-    setBrands((prev) => prev.filter((item) => item.id !== brand.id));
+    setCategories((prev) => prev.filter((item) => item.id !== category.id));
   };
 
-  const handleSubmit = (values: BrandFormValues) => {
+  const handleSubmit = (values: CategoryFormValues) => {
     setLoading(true);
 
     try {
@@ -110,7 +113,7 @@ export default function BrandLayout() {
         // TODO: gọi API create tại đây
         const now = new Date().toISOString();
 
-        const newBrand: BrandItem = {
+        const newCategory: CategoryItem = {
           id: Date.now(),
           name: values.name,
           description: values.description,
@@ -120,27 +123,27 @@ export default function BrandLayout() {
           update_at: now,
         };
 
-        setBrands((prev) => [newBrand, ...prev]);
-      } else if (selectedBrand) {
+        setCategories((prev) => [newCategory, ...prev]);
+      } else if (selectedCategory) {
         // TODO: gọi API update tại đây
-        setBrands((prev) =>
+        setCategories((prev) =>
           prev.map((item) =>
-            item.id === selectedBrand.id
+            item.id === selectedCategory.id
               ? {
-                ...item,
-                name: values.name,
-                description: values.description,
-                image: values.image,
-                isActive: values.isActive,
-                update_at: new Date().toISOString(),
-              }
+                  ...item,
+                  name: values.name,
+                  description: values.description,
+                  image: values.image,
+                  isActive: values.isActive,
+                  update_at: new Date().toISOString(),
+                }
               : item
           )
         );
       }
 
       setOpenModal(false);
-      setSelectedBrand(null);
+      setSelectedCategory(null);
     } finally {
       setLoading(false);
     }
@@ -163,7 +166,7 @@ export default function BrandLayout() {
         .map(normalizeImportedRow)
         .filter((item) => item.name);
 
-      const mappedRows: BrandItem[] = normalizedRows.map((row, index) => ({
+      const mappedRows: CategoryItem[] = normalizedRows.map((row, index) => ({
         id: Date.now() + index,
         name: row.name,
         description: row.description,
@@ -174,7 +177,7 @@ export default function BrandLayout() {
       }));
 
       // TODO: nếu muốn import qua API thì gọi API tại đây
-      setBrands((prev) => [...mappedRows, ...prev]);
+      setCategories((prev) => [...mappedRows, ...prev]);
     } catch (error) {
       console.error("Lỗi khi đọc file Excel:", error);
     } finally {
@@ -182,17 +185,17 @@ export default function BrandLayout() {
     }
   };
 
-  const handleExportAllBrands = () => {
-    const data = brands.map((brand) => ({
-      "Tên thương hiệu": brand.name,
-      "Mô tả": brand.description || "",
-      "Hình ảnh": brand.image || "",
-      "Trạng thái": brand.isActive ? "Hoạt động" : "Không hoạt động",
-      "Tạo lúc": brand.create_at || "",
-      "Cập nhật lúc": brand.update_at || "",
+  const handleExportAllCategories = () => {
+    const data = categories.map((category) => ({
+      "Tên danh mục": category.name,
+      "Mô tả": category.description || "",
+      "Hình ảnh": category.image || "",
+      "Trạng thái": category.isActive ? "Hoạt động" : "Không hoạt động",
+      "Tạo lúc": category.create_at || "",
+      "Cập nhật lúc": category.update_at || "",
     }));
 
-    exportToExcel(data, "danh-sach-thuong-hieu.xlsx", "Brands");
+    exportToExcel(data, "danh-sach-danh-muc.xlsx", "Categories");
   };
 
   return (
@@ -203,22 +206,24 @@ export default function BrandLayout() {
 
         <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="mb-2 text-sm font-medium text-white/80">Trang quản trị thương hiệu</p>
-            <h1 className="text-2xl font-bold md:text-4xl">Quản lý Thương hiệu</h1>
+            <p className="mb-2 text-sm font-medium text-white/80">Trang quản trị danh mục</p>
+            <h1 className="text-2xl font-bold md:text-4xl">Quản lý Danh mục</h1>
           </div>
 
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-            <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm text-center">
-              <p className="text-xs text-white/70">Tổng thương hiệu</p>
-              <p className="mt-1 text-lg font-semibold ">{brands.length}</p>
+            <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-center backdrop-blur-sm">
+              <p className="text-xs text-white/70">Tổng danh mục</p>
+              <p className="mt-1 text-lg font-semibold">{categories.length}</p>
             </div>
-            <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm text-center">
+
+            <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-center backdrop-blur-sm">
               <p className="text-xs text-white/70">Đang hoạt động</p>
               <p className="mt-1 text-lg font-semibold">{activeCount}</p>
             </div>
-            <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm col-span-2 sm:col-span-1 text-center">
+
+            <div className="col-span-2 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-center backdrop-blur-sm sm:col-span-1">
               <p className="text-xs text-white/70">Không hoạt động</p>
-              <p className="mt-1 text-lg font-semibold">{brands.length - activeCount}</p>
+              <p className="mt-1 text-lg font-semibold">{categories.length - activeCount}</p>
             </div>
           </div>
         </div>
@@ -230,20 +235,20 @@ export default function BrandLayout() {
           <input
             value={keyword}
             onChange={(event) => setKeyword(event.target.value)}
-            placeholder="Nhập tên hoặc mô tả thương hiệu..."
+            placeholder="Nhập tên hoặc mô tả danh mục..."
             className="w-full rounded-2xl border border-p-100 bg-p-50 py-3 pl-10 pr-4 text-sm outline-none transition focus:border-p-400"
           />
         </div>
       </section>
 
-      <BrandList
-        brands={filteredBrands}
+      <CategoryList
+        categories={filteredCategories}
         loading={false}
         onAdd={handleOpenCreate}
         onEdit={handleOpenEdit}
         onDelete={handleDelete}
         onImportExcel={handleImportExcelClick}
-        onExportExcel={handleExportAllBrands}
+        onExportExcel={handleExportAllCategories}
       />
 
       <input
@@ -254,14 +259,14 @@ export default function BrandLayout() {
         onChange={handleImportExcelFile}
       />
 
-      <BrandModal
+      <CategoryModal
         open={openModal}
         mode={mode}
-        initialData={selectedBrand}
+        initialData={selectedCategory}
         loading={loading}
         onClose={() => {
           setOpenModal(false);
-          setSelectedBrand(null);
+          setSelectedCategory(null);
         }}
         onSubmit={handleSubmit}
       />
