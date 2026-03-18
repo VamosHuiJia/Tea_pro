@@ -1,9 +1,11 @@
 import {
   ArrowLeft,
+  BadgePercent,
   LayoutDashboard,
   Package,
   ShoppingCart,
   Tags,
+  UserRound,
   Users,
   X,
 } from "lucide-react";
@@ -19,6 +21,8 @@ const menus = [
   { to: "/admin/products", label: "Sản phẩm", icon: Package },
   { to: "/admin/orders", label: "Đơn hàng", icon: ShoppingCart },
   { to: "/admin/categories", label: "Danh mục", icon: Tags },
+  { to: "/admin/brands", label: "Thương hiệu", icon: BadgePercent },
+  { to: "/admin/employees", label: "Nhân viên", icon: UserRound },
   { to: "/admin/customers", label: "Khách hàng", icon: Users },
 ];
 
@@ -50,10 +54,9 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
               to={item.to}
               onClick={onClose}
               className={({ isActive }) =>
-                `flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition ${
-                  isActive
-                    ? "bg-p-700 text-white shadow-lg"
-                    : "text-white/75 hover:bg-white/10 hover:text-white"
+                `flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition ${isActive
+                  ? "bg-p-700 text-white shadow-lg"
+                  : "text-white/75 hover:bg-white/10 hover:text-white"
                 }`
               }
             >
@@ -94,18 +97,16 @@ export default function AdminSidebar({ mobileOpen = false, onClose }: AdminSideb
       </aside>
 
       <div
-        className={`fixed inset-0 z-50 bg-n-800/50 backdrop-blur-[2px] transition-all duration-300 lg:hidden ${
-          mobileOpen
-            ? "pointer-events-auto opacity-100"
-            : "pointer-events-none opacity-0"
-        }`}
+        className={`fixed inset-0 z-50 bg-n-800/50 backdrop-blur-[2px] transition-all duration-300 lg:hidden ${mobileOpen
+          ? "pointer-events-auto opacity-100"
+          : "pointer-events-none opacity-0"
+          }`}
         onClick={onClose}
       />
 
       <aside
-        className={`fixed inset-y-0 left-0 z-[60] w-[280px] max-w-[85vw] overflow-y-auto bg-p-950 text-white shadow-2xl transition-transform duration-300 lg:hidden ${
-          mobileOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed inset-y-0 left-0 z-[60] w-[280px] max-w-[85vw] overflow-y-auto bg-p-950 text-white shadow-2xl transition-transform duration-300 lg:hidden ${mobileOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         <SidebarContent onClose={onClose} />
       </aside>
