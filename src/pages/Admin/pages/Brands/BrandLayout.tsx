@@ -127,13 +127,13 @@ export default function BrandLayout() {
           prev.map((item) =>
             item.id === selectedBrand.id
               ? {
-                  ...item,
-                  name: values.name,
-                  description: values.description,
-                  image: values.image,
-                  isActive: values.isActive,
-                  update_at: new Date().toISOString(),
-                }
+                ...item,
+                name: values.name,
+                description: values.description,
+                image: values.image,
+                isActive: values.isActive,
+                update_at: new Date().toISOString(),
+              }
               : item
           )
         );
@@ -211,22 +211,22 @@ export default function BrandLayout() {
           </div>
 
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-            <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm">
+            <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm text-center">
               <p className="text-xs text-white/70">Tổng thương hiệu</p>
-              <p className="mt-1 text-lg font-semibold text-center">{brands.length}</p>
+              <p className="mt-1 text-lg font-semibold ">{brands.length}</p>
             </div>
-            <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm">
+            <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm text-center">
               <p className="text-xs text-white/70">Đang hoạt động</p>
-              <p className="mt-1 text-lg font-semibold text-center">{activeCount}</p>
+              <p className="mt-1 text-lg font-semibold">{activeCount}</p>
             </div>
-            <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm col-span-2 sm:col-span-1">
+            <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm col-span-2 sm:col-span-1 text-center">
               <p className="text-xs text-white/70">Không hoạt động</p>
-              <p className="mt-1 text-lg font-semibold text-center">{brands.length - activeCount}</p>
+              <p className="mt-1 text-lg font-semibold">{brands.length - activeCount}</p>
             </div>
           </div>
         </div>
       </section>
-      
+
       <section className="rounded-[28px] border border-p-100 bg-white p-5 shadow-sm">
         <div className="relative w-full">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-n-500" />

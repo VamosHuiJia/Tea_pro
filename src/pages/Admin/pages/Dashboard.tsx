@@ -140,24 +140,24 @@ export default function Dashboard() {
                         <p className="mb-2 text-sm font-medium text-white/80">
                             Trang quản trị cửa hàng trà
                         </p>
-                        <h1 className="text-2xl font-bold md:text-4xl">
-                            Tổng quan hoạt động kinh doanh
-                        </h1>
+                        <h2 className="text-2xl font-bold md:text-4xl">
+                            Hoạt động kinh doanh
+                        </h2>
                         <p className="mt-3 max-w-2xl text-sm text-white/80 md:text-base">
                             Tận tâm từng tách – giữ chân từng khách
                         </p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                        <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm">
+                        <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm text-center">
                             <p className="text-xs text-white/70">Hôm nay</p>
                             <p className="mt-1 text-lg font-semibold">126 đơn</p>
                         </div>
-                        <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm">
+                        <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm text-center">
                             <p className="text-xs text-white/70">Doanh thu</p>
                             <p className="mt-1 text-lg font-semibold">12.8tr</p>
                         </div>
-                        <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm col-span-2 sm:col-span-1">
+                        <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm col-span-2 sm:col-span-1 text-center">
                             <p className="text-xs text-white/70">Khách mới</p>
                             <p className="mt-1 text-lg font-semibold">+48</p>
                         </div>

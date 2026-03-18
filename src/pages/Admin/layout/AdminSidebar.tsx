@@ -70,7 +70,9 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
       <div className="mt-auto space-y-4 pt-6">
         <div className="rounded-[24px] bg-white/10 p-4">
           <p className="text-sm text-white/70">Hệ thống quản trị</p>
-          <p className="mt-2 text-lg font-semibold">Cửa hàng bán trà</p>
+          <p className="mt-2 text-lg font-semibold">Cửa hàng
+            <span className="text-lg capitalize font-lobster text-p-400"> Huy bán Trà</span>
+          </p>
           <p className="mt-2 text-xs leading-6 text-white/60">
             Từng cử chỉ nhỏ bé, từng lời chào hỏi nhẹ nhàng, từng tách trà được pha cẩn thận – tất cả tạo nên trải nghiệm đáng nhớ.
           </p>
