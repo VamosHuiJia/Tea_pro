@@ -8,9 +8,13 @@ type AdminHeaderProps = {
 export default function AdminHeader({ onOpenMobileMenu }: AdminHeaderProps) {
   const location = useLocation();
 
-  const pageTitle = location.pathname.startsWith("/admin/brands")
-    ? "Quản lý thương hiệu"
-    : "Bảng điều khiển";
+  const getPageTitle = (pathname: string) => {
+    if (pathname.startsWith("/admin/brands")) return "Quản lý thương hiệu";
+    if (pathname.startsWith("/admin/categories")) return "Quản lý danh mục";
+    if (pathname.startsWith("/admin/dashboard")) return "Tổng quan cửa hàng";
+  };
+
+  const pageTitle = getPageTitle(location.pathname);
 
   return (
     <header className="sticky top-0 z-30 border-b border-p-100 bg-white/90 backdrop-blur-md">
