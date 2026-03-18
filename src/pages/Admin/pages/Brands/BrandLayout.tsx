@@ -208,23 +208,20 @@ export default function BrandLayout() {
           <div>
             <p className="mb-2 text-sm font-medium text-white/80">Trang quản trị thương hiệu</p>
             <h1 className="text-2xl font-bold md:text-4xl">Quản lý Thương hiệu</h1>
-            <p className="mt-3 max-w-2xl text-sm text-white/80 md:text-base">
-              Theo dõi, thêm mới, chỉnh sửa và xuất nhập danh sách thương hiệu một cách trực quan.
-            </p>
           </div>
 
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm">
               <p className="text-xs text-white/70">Tổng thương hiệu</p>
-              <p className="mt-1 text-lg font-semibold">{brands.length}</p>
+              <p className="mt-1 text-lg font-semibold text-center">{brands.length}</p>
             </div>
             <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm">
               <p className="text-xs text-white/70">Đang hoạt động</p>
-              <p className="mt-1 text-lg font-semibold">{activeCount}</p>
+              <p className="mt-1 text-lg font-semibold text-center">{activeCount}</p>
             </div>
             <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm col-span-2 sm:col-span-1">
               <p className="text-xs text-white/70">Không hoạt động</p>
-              <p className="mt-1 text-lg font-semibold">{brands.length - activeCount}</p>
+              <p className="mt-1 text-lg font-semibold text-center">{brands.length - activeCount}</p>
             </div>
           </div>
         </div>
