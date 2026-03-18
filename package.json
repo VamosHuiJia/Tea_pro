@@ -20,7 +20,8 @@
     "react-countup": "^6.5.3",
     "react-dom": "^19.2.0",
     "react-intersection-observer": "^10.0.3",
-    "react-router-dom": "^7.13.1"
+    "react-router-dom": "^7.13.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

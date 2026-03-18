@@ -10,6 +10,7 @@ import Register from "./pages/Auth/Register";
 
 import AdminLayout from "./pages/Admin/layout/AdminLayout";
 import Dashboard from "./pages/Admin/pages/Dashboard";
+import Brand from "./pages/Admin/pages/Brands/BrandLayout";
 
 function AppRoutes() {
   const location = useLocation();
@@ -46,6 +47,7 @@ function AppRoutes() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="brands" element={<Brand />} />
         </Route>
       </Routes>
     </>

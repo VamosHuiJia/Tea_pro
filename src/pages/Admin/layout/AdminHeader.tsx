@@ -1,10 +1,17 @@
 import { Bell, Menu, Search } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 type AdminHeaderProps = {
   onOpenMobileMenu: () => void;
 };
 
 export default function AdminHeader({ onOpenMobileMenu }: AdminHeaderProps) {
+  const location = useLocation();
+
+  const pageTitle = location.pathname.startsWith("/admin/brands")
+    ? "Quản lý thương hiệu"
+    : "Bảng điều khiển";
+
   return (
     <header className="sticky top-0 z-30 border-b border-p-100 bg-white/90 backdrop-blur-md">
       <div className="flex items-start justify-between gap-3 px-4 py-4 md:items-center md:px-6">
@@ -20,7 +27,7 @@ export default function AdminHeader({ onOpenMobileMenu }: AdminHeaderProps) {
 
           <div className="min-w-0">
             <p className="truncate text-sm text-n-500">Xin chào, Admin</p>
-            <h2 className="truncate text-lg font-bold text-n-800 sm:text-xl">Bảng điều khiển</h2>
+            <h2 className="truncate text-lg font-bold text-n-800 sm:text-xl">{pageTitle}</h2>
           </div>
         </div>
 
