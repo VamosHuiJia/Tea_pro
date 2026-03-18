@@ -11,6 +11,7 @@ export default function AdminHeader({ onOpenMobileMenu }: AdminHeaderProps) {
   const getPageTitle = (pathname: string) => {
     if (pathname.startsWith("/admin/brands")) return "Quản lý thương hiệu";
     if (pathname.startsWith("/admin/categories")) return "Quản lý danh mục";
+    if (pathname.startsWith("/admin/products")) return "Quản lý sản phẩm";
     if (pathname.startsWith("/admin/dashboard")) return "Tổng quan cửa hàng";
   };
 

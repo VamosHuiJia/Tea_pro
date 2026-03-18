@@ -12,6 +12,7 @@ import AdminLayout from "./pages/Admin/layout/AdminLayout";
 import Dashboard from "./pages/Admin/pages/Dashboard";
 import Brand from "./pages/Admin/pages/Brands/BrandLayout";
 import Category from "./pages/Admin/pages/Categories/CategoryLayout";
+import Product from "./pages/Admin/pages/Products/ProductLayout";
 
 function AppRoutes() {
   const location = useLocation();
@@ -50,6 +51,7 @@ function AppRoutes() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="brands" element={<Brand />} />
           <Route path="categories" element={<Category />} />
+          <Route path="products" element={<Product />} />
         </Route>
       </Routes>
     </>
