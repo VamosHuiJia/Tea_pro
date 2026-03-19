@@ -1,8 +1,40 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthLayout } from "./AuthLayout";
+import { registerUser } from "../../api/shop/Auth/auth.api";
 
 const RegisterPage = () => {
+    const [username, setUsername] = useState("");
+    const [fullname, setFullname] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError("");
+
+        if (password !== confirmPassword) {
+            setError("Mật khẩu nhập lại không khớp!");
+            return;
+        }
+
+        setIsLoading(true);
+        try {
+            await registerUser(username, email, password, phone);
+            alert("Đăng ký thành công! Vui lòng đăng nhập.");
+            navigate("/login");
+        } catch (err: any) {
+            setError(err.message || "Đăng ký thất bại");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
         <AuthLayout
             title="Tạo tài khoản mới"
@@ -12,7 +44,12 @@ const RegisterPage = () => {
             bottomLinkText="Đăng nhập"
             bottomLinkTo="/login"
         >
-            <form className="space-y-3">
+            <form onSubmit={handleSubmit} className="space-y-3">
+                {error && (
+                    <div className="rounded-md bg-red-500/10 p-3 text-sm text-red-500 border border-red-500/20 mb-3">
+                        {error}
+                    </div>
+                )}
                 <div className="grid grid-cols-2 gap-3">
                     <div>
                         <label
@@ -26,6 +63,9 @@ const RegisterPage = () => {
                             type="text"
                             placeholder="Nhập tên tài khoản"
                             className="auth-input"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
                         />
                     </div>
 
@@ -41,6 +81,9 @@ const RegisterPage = () => {
                             type="text"
                             placeholder="Nhập họ và tên"
                             className="auth-input"
+                            value={fullname}
+                            onChange={(e) => setFullname(e.target.value)}
+                            // required có thể thêm nếu muốn
                         />
                     </div>
                 </div>
@@ -58,6 +101,9 @@ const RegisterPage = () => {
                             type="email"
                             placeholder="Nhập email của bạn"
                             className="auth-input"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
                         />
                     </div>
 
@@ -73,6 +119,9 @@ const RegisterPage = () => {
                             type="tel"
                             placeholder="Nhập số điện thoại"
                             className="auth-input"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            required
                         />
                     </div>
                 </div>
@@ -90,6 +139,9 @@ const RegisterPage = () => {
                             type="password"
                             placeholder="Tối thiểu 8 ký tự"
                             className="auth-input"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
                         />
                     </div>
 
@@ -105,6 +157,9 @@ const RegisterPage = () => {
                             type="password"
                             placeholder="Nhập lại mật khẩu"
                             className="auth-input"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            required
                         />
                     </div>
                 </div>
@@ -129,9 +184,10 @@ const RegisterPage = () => {
 
                 <button
                     type="submit"
-                    className="flex w-full items-center justify-center rounded-2xl bg-gradient-to-r from-p-400 via-p-500 to-p-600 px-4 py-3 text-sm font-semibold tracking-wide text-white shadow-[0_18px_40px_rgba(18,137,99,0.35)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_24px_48px_rgba(18,137,99,0.45)]"
+                    disabled={isLoading}
+                    className="flex w-full items-center justify-center rounded-2xl bg-gradient-to-r from-p-400 via-p-500 to-p-600 px-4 py-3 text-sm font-semibold tracking-wide text-white shadow-[0_18px_40px_rgba(18,137,99,0.35)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_24px_48px_rgba(18,137,99,0.45)] disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                    Tạo tài khoản
+                    {isLoading ? "Đang tạo tài khoản..." : "Tạo tài khoản"}
                 </button>
             </form>
 

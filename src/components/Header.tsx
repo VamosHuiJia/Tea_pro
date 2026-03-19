@@ -29,6 +29,17 @@ const UserIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   </svg>
 );
 
+const UserSolidIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className={className}
+    aria-hidden="true"
+  >
+    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+  </svg>
+);
+
 const CartIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   <svg
     viewBox="0 0 24 24"
@@ -50,19 +61,24 @@ const CartIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
 
 const Header = () => {
   const {
+    user,
     isMobileMenuOpen,
     isNavbarHidden,
     isDesktopSearchOpen,
     setIsDesktopSearchOpen,
     isMobileSearchOpen,
     setIsMobileSearchOpen,
+    isUserDropdownOpen,
+    setIsUserDropdownOpen,
     searchValue,
     setSearchValue,
     desktopSearchRef,
     mobileSearchRef,
+    userDropdownRef,
     toggleMobileMenu,
     handleLinkClick,
     handleUserClick,
+    handleLogout,
     handleSearchSubmit,
   } = useHeader();
 
@@ -89,9 +105,6 @@ const Header = () => {
               <a href="/#contact" className="navLink">
                 Liên hệ
               </a>
-              <Link to="/admin" className="navLink">
-                Admin
-              </Link>
             </nav>
 
             <div className="flex items-center justify-end gap-2 md:gap-3">
@@ -131,14 +144,51 @@ const Header = () => {
                 </div>
               </div>
 
-              <button
-                type="button"
-                className="items-center justify-center hidden w-10 h-10 transition-colors border-0 rounded-full lg:flex text-p-900 hover:bg-p-50"
-                onClick={handleUserClick}
-                aria-label="Đăng nhập"
-              >
-                <UserIcon />
-              </button>
+              <div className="relative hidden lg:block" ref={userDropdownRef}>
+                <button
+                  type="button"
+                  className="flex items-center justify-center w-10 h-10 transition-colors border-0 rounded-full text-p-900 hover:bg-p-50"
+                  onClick={handleUserClick}
+                  aria-label="Đăng nhập / Tài khoản"
+                  aria-expanded={isUserDropdownOpen}
+                >
+                  {user ? <UserSolidIcon /> : <UserIcon />}
+                </button>
+
+                <div
+                  className={`absolute right-0 top-full mt-4 w-48 rounded-2xl border border-p-100 bg-white shadow-[0_12px_30px_rgba(13,71,56,0.12)] transition-all duration-200 overflow-hidden ${
+                    isUserDropdownOpen
+                      ? "visible opacity-100 translate-y-0"
+                      : "invisible pointer-events-none opacity-0 -translate-y-2"
+                  }`}
+                >
+                  <div className="flex flex-col py-2">
+                    <Link
+                      to="/profile"
+                      className="px-4 py-2 text-sm text-n-700 hover:bg-p-50 transition-colors"
+                      onClick={() => setIsUserDropdownOpen(false)}
+                    >
+                      Thông tin tài khoản
+                    </Link>
+                    {(user?.roleLevel === "admin" || user?.roleLevel === "staff") && (
+                      <Link
+                        to="/admin"
+                        className="px-4 py-2 text-sm text-n-700 hover:bg-p-50 transition-colors"
+                        onClick={() => setIsUserDropdownOpen(false)}
+                      >
+                        Quản lý
+                      </Link>
+                    )}
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="px-4 py-2 text-sm text-left text-red-600 hover:bg-red-50 transition-colors"
+                    >
+                      Đăng xuất
+                    </button>
+                  </div>
+                </div>
+              </div>
 
               <button
                 type="button"
@@ -187,9 +237,9 @@ const Header = () => {
               type="button"
               className="flex items-center justify-center w-11 h-11 transition-colors border rounded-full border-p-100 text-p-900 hover:bg-p-50"
               onClick={handleUserClick}
-              aria-label="Đăng nhập"
+              aria-label="Đăng nhập / Tài khoản"
             >
-              <UserIcon />
+              {user ? <UserSolidIcon /> : <UserIcon />}
             </button>
 
             <button
@@ -236,9 +286,26 @@ const Header = () => {
           <a href="/#contact" className="py-3 text-lg navLink mobileNavLink" onClick={handleLinkClick}>
             Liên hệ
           </a>
-          <Link to="/admin" className="py-3 text-lg navLink mobileNavLink" onClick={handleLinkClick}>
-            Admin
-          </Link>
+          
+          {user && (
+            <div className="flex flex-col gap-2 pt-4 border-t border-p-100">
+              <Link to="/profile" className="py-3 text-lg navLink mobileNavLink" onClick={handleLinkClick}>
+                Thông tin tài khoản
+              </Link>
+              {(user.roleLevel === "admin" || user.roleLevel === "staff") && (
+                <Link to="/admin" className="py-3 text-lg navLink mobileNavLink" onClick={handleLinkClick}>
+                  Quản lý
+                </Link>
+              )}
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="py-3 text-lg text-red-600 border-0 bg-transparent text-center hover:bg-red-50 rounded-xl transition-colors"
+              >
+                Đăng xuất
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>
