@@ -264,10 +264,6 @@ export default function EmployeeLayout() {
               Trang quản trị nhân viên
             </div>
             <h1 className="text-3xl font-bold md:text-5xl">Quản lý nhân viên</h1>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-white/80">
-              Danh sách này dành cho user có RoleLevel là staff hoặc admin.
-              Bảng hiển thị thêm cột quyền hạn để phân biệt rõ quyền quản lý.
-            </p>
           </div>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">

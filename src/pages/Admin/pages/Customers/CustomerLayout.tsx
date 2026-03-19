@@ -183,16 +183,16 @@ export default function CustomerLayout() {
           prev.map((item) =>
             item.id === selectedCustomer.id
               ? {
-                  ...item,
-                  username: values.username,
-                  fullName: values.fullName,
-                  email: values.email,
-                  phone: values.phone,
-                  avatar_url: values.avatar_url,
-                  roleName: values.roleName || "Khách hàng",
-                  roleLevel: "customer",
-                  updated_at: new Date().toISOString(),
-                }
+                ...item,
+                username: values.username,
+                fullName: values.fullName,
+                email: values.email,
+                phone: values.phone,
+                avatar_url: values.avatar_url,
+                roleName: values.roleName || "Khách hàng",
+                roleLevel: "customer",
+                updated_at: new Date().toISOString(),
+              }
               : item
           )
         );
@@ -277,24 +277,8 @@ export default function CustomerLayout() {
             </div>
             <h1 className="text-3xl font-bold md:text-5xl">Quản lý khách hàng</h1>
             <p className="mt-3 max-w-2xl text-sm leading-7 text-white/80">
-              Giao diện FE mô phỏng theo entity User/Role ở BE. Màn hình này chỉ quản lý
-              user có RoleLevel = customer.
+              Sự hài lòng của khách hàng là thước đo chính xác nhất cho chất lượng dịch vụ
             </p>
-          </div>
-
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-            <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-4 text-center backdrop-blur-sm">
-              <p className="text-xs text-white/70">Tổng khách hàng</p>
-              <p className="mt-2 text-2xl font-bold">{stats.totalCustomers}</p>
-            </div>
-            <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-4 text-center backdrop-blur-sm">
-              <p className="text-xs text-white/70">Đã có SĐT</p>
-              <p className="mt-2 text-2xl font-bold">{stats.withPhone}</p>
-            </div>
-            <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-4 text-center backdrop-blur-sm">
-              <p className="text-xs text-white/70">Cập nhật hôm nay</p>
-              <p className="mt-2 text-2xl font-bold">{stats.updatedToday}</p>
-            </div>
           </div>
         </div>
       </section>
