@@ -13,6 +13,8 @@ export default function AdminHeader({ onOpenMobileMenu }: AdminHeaderProps) {
     if (pathname.startsWith("/admin/categories")) return "Quản lý danh mục";
     if (pathname.startsWith("/admin/products")) return "Quản lý sản phẩm";
     if (pathname.startsWith("/admin/dashboard")) return "Tổng quan cửa hàng";
+    if (pathname.startsWith("/admin/customers")) return "Quản lý khách hàng";
+    if (pathname.startsWith("/admin/employees")) return "Quản lý nhân viên";
   };
 
   const pageTitle = getPageTitle(location.pathname);

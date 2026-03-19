@@ -13,6 +13,9 @@ import Dashboard from "./pages/Admin/pages/Dashboard";
 import Brand from "./pages/Admin/pages/Brands/BrandLayout";
 import Category from "./pages/Admin/pages/Categories/CategoryLayout";
 import Product from "./pages/Admin/pages/Products/ProductLayout";
+import Customer from "./pages/Admin/pages/Customers/CustomerLayout";
+import Employees from "./pages/Admin/pages/Employees/EmployeeLayout";
+
 
 function AppRoutes() {
   const location = useLocation();
@@ -52,6 +55,8 @@ function AppRoutes() {
           <Route path="brands" element={<Brand />} />
           <Route path="categories" element={<Category />} />
           <Route path="products" element={<Product />} />
+          <Route path="customers" element={<Customer />} />
+          <Route path="employees" element={<Employees />} />
         </Route>
       </Routes>
     </>
