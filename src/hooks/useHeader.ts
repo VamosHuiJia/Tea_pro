@@ -3,13 +3,26 @@ import { useNavigate } from "react-router-dom";
 import { initNavbarScrollBehavior } from "../animations/HideShowNavbar";
 import { useOnClickOutside } from "./useOnClickOutside";
 
+type RoleLevel = "admin" | "staff" | "user" | string;
+
+type CurrentUser = {
+  id?: number | string;
+  username?: string;
+  fullName?: string;
+  email?: string;
+  phone?: string;
+  avatar?: string;
+  address?: string;
+  roleLevel?: RoleLevel;
+};
+
 export function useHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNavbarHidden, setIsNavbarHidden] = useState(false);
   const [isDesktopSearchOpen, setIsDesktopSearchOpen] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<CurrentUser | null>(null);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -17,15 +30,35 @@ export function useHeader() {
   const mobileSearchRef = useRef<HTMLDivElement | null>(null);
   const userDropdownRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
+  const syncUserFromStorage = () => {
     const userStr = localStorage.getItem("user");
-    if (userStr) {
-      try {
-        setUser(JSON.parse(userStr));
-      } catch (e) {
-        console.error("Error parsing user from localStorage:", e);
-      }
+    if (!userStr) {
+      setUser(null);
+      return;
     }
+
+    try {
+      setUser(JSON.parse(userStr));
+    } catch (e) {
+      console.error("Error parsing user from localStorage:", e);
+      setUser(null);
+    }
+  };
+
+  useEffect(() => {
+    syncUserFromStorage();
+
+    const handleAuthChanged = () => {
+      syncUserFromStorage();
+    };
+
+    window.addEventListener("auth-changed", handleAuthChanged);
+    window.addEventListener("storage", handleAuthChanged);
+
+    return () => {
+      window.removeEventListener("auth-changed", handleAuthChanged);
+      window.removeEventListener("storage", handleAuthChanged);
+    };
   }, []);
 
   useEffect(() => {
@@ -53,6 +86,9 @@ export function useHeader() {
   useOnClickOutside(mobileSearchRef, () => setIsMobileSearchOpen(false));
   useOnClickOutside(userDropdownRef, () => setIsUserDropdownOpen(false));
 
+  const isManager =
+    user?.roleLevel === "admin" || user?.roleLevel === "staff";
+
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen((prev) => {
       const next = !prev;
@@ -71,23 +107,34 @@ export function useHeader() {
   };
 
   const handleUserClick = () => {
-    setIsMobileMenuOpen(false);
     setIsDesktopSearchOpen(false);
     setIsMobileSearchOpen(false);
-    
-    if (user) {
-      setIsUserDropdownOpen((prev) => !prev);
-    } else {
+
+    if (!user) {
       navigate("/login");
+      return;
     }
+
+    if (isManager) {
+      setIsUserDropdownOpen((prev) => !prev);
+      return;
+    }
+
+    setIsMobileMenuOpen(false);
+    setIsUserDropdownOpen(false);
+    navigate("/profile");
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setUser(null);
+  const handleGoProfile = () => {
+    setIsMobileMenuOpen(false);
     setIsUserDropdownOpen(false);
-    navigate("/");
+    navigate("/profile");
+  };
+
+  const handleGoAdmin = () => {
+    setIsMobileMenuOpen(false);
+    setIsUserDropdownOpen(false);
+    navigate("/admin");
   };
 
   const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -97,6 +144,7 @@ export function useHeader() {
 
   return {
     user,
+    isManager,
     isMobileMenuOpen,
     isNavbarHidden,
     isDesktopSearchOpen,
@@ -104,7 +152,6 @@ export function useHeader() {
     isMobileSearchOpen,
     setIsMobileSearchOpen,
     isUserDropdownOpen,
-    setIsUserDropdownOpen,
     searchValue,
     setSearchValue,
     desktopSearchRef,
@@ -113,7 +160,8 @@ export function useHeader() {
     toggleMobileMenu,
     handleLinkClick,
     handleUserClick,
-    handleLogout,
+    handleGoProfile,
+    handleGoAdmin,
     handleSearchSubmit,
   };
 }

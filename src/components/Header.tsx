@@ -62,6 +62,7 @@ const CartIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
 const Header = () => {
   const {
     user,
+    isManager,
     isMobileMenuOpen,
     isNavbarHidden,
     isDesktopSearchOpen,
@@ -69,7 +70,6 @@ const Header = () => {
     isMobileSearchOpen,
     setIsMobileSearchOpen,
     isUserDropdownOpen,
-    setIsUserDropdownOpen,
     searchValue,
     setSearchValue,
     desktopSearchRef,
@@ -78,7 +78,8 @@ const Header = () => {
     toggleMobileMenu,
     handleLinkClick,
     handleUserClick,
-    handleLogout,
+    handleGoProfile,
+    handleGoAdmin,
     handleSearchSubmit,
   } = useHeader();
 
@@ -93,18 +94,10 @@ const Header = () => {
             </Link>
 
             <nav className="items-center justify-center hidden gap-8 lg:flex">
-              <Link to="/" className="navLink">
-                Trang chủ
-              </Link>
-              <Link to="/products" className="navLink">
-                Sản phẩm
-              </Link>
-              <a href="/#story" className="navLink">
-                Giới thiệu
-              </a>
-              <a href="/#contact" className="navLink">
-                Liên hệ
-              </a>
+              <Link to="/" className="navLink">Trang chủ</Link>
+              <Link to="/products" className="navLink">Sản phẩm</Link>
+              <a href="/#story" className="navLink">Giới thiệu</a>
+              <a href="/#contact" className="navLink">Liên hệ</a>
             </nav>
 
             <div className="flex items-center justify-end gap-2 md:gap-3">
@@ -113,8 +106,6 @@ const Header = () => {
                   type="button"
                   className="flex items-center justify-center w-10 h-10 transition-colors border-0 rounded-full text-p-900 hover:bg-p-50"
                   onClick={() => setIsDesktopSearchOpen((prev) => !prev)}
-                  aria-label="Mở tìm kiếm"
-                  aria-expanded={isDesktopSearchOpen}
                 >
                   <SearchIcon />
                 </button>
@@ -132,7 +123,7 @@ const Header = () => {
                       value={searchValue}
                       onChange={(event) => setSearchValue(event.target.value)}
                       placeholder="Tìm kiếm sản phẩm..."
-                      className="h-12 w-full rounded-2xl border border-n-200 bg-white px-4 text-sm text-p-900 placeholder:text-gray-400 outline-none transition focus:border-n-200 focus:outline-none"
+                      className="h-12 w-full rounded-2xl border border-n-200 bg-white px-4 text-sm text-p-900 placeholder:text-gray-400 outline-none"
                     />
                     <button
                       type="submit"
@@ -147,53 +138,44 @@ const Header = () => {
               <div className="relative hidden lg:block" ref={userDropdownRef}>
                 <button
                   type="button"
-                  className="flex items-center justify-center w-10 h-10 transition-colors border-0 rounded-full text-p-900 hover:bg-p-50"
+                  className="flex items-center justify-center w-10 h-10 transition-colors border-0 rounded-full text-n-800 hover:bg-n-100"
                   onClick={handleUserClick}
-                  aria-label="Đăng nhập / Tài khoản"
-                  aria-expanded={isUserDropdownOpen}
                 >
-                  {user ? <UserSolidIcon /> : <UserIcon />}
+                  {user ? <UserSolidIcon className="w-5 h-5 text-n-800" /> : <UserIcon className="w-5 h-5 text-n-800" />}
                 </button>
 
-                <div
-                  className={`absolute right-0 top-full mt-4 w-48 rounded-2xl border border-p-100 bg-white shadow-[0_12px_30px_rgba(13,71,56,0.12)] transition-all duration-200 overflow-hidden ${
-                    isUserDropdownOpen
-                      ? "visible opacity-100 translate-y-0"
-                      : "invisible pointer-events-none opacity-0 -translate-y-2"
-                  }`}
-                >
-                  <div className="flex flex-col py-2">
-                    <Link
-                      to="/profile"
-                      className="px-4 py-2 text-sm text-n-700 hover:bg-p-50 transition-colors"
-                      onClick={() => setIsUserDropdownOpen(false)}
-                    >
-                      Thông tin tài khoản
-                    </Link>
-                    {(user?.roleLevel === "admin" || user?.roleLevel === "staff") && (
-                      <Link
-                        to="/admin"
-                        className="px-4 py-2 text-sm text-n-700 hover:bg-p-50 transition-colors"
-                        onClick={() => setIsUserDropdownOpen(false)}
+                {isManager && (
+                  <div
+                    className={`absolute right-0 top-full mt-4 w-52 rounded-2xl border border-p-100 bg-white shadow-[0_12px_30px_rgba(13,71,56,0.12)] transition-all duration-200 overflow-hidden ${
+                      isUserDropdownOpen
+                        ? "visible opacity-100 translate-y-0"
+                        : "invisible pointer-events-none opacity-0 -translate-y-2"
+                    }`}
+                  >
+                    <div className="flex flex-col py-2">
+                      <button
+                        type="button"
+                        className="px-4 py-2 text-sm text-left text-n-700 hover:bg-p-50 transition-colors border-0 bg-transparent"
+                        onClick={handleGoProfile}
                       >
-                        Quản lý
-                      </Link>
-                    )}
-                    <button
-                      type="button"
-                      onClick={handleLogout}
-                      className="px-4 py-2 text-sm text-left text-red-600 hover:bg-red-50 transition-colors"
-                    >
-                      Đăng xuất
-                    </button>
+                        Thông tin tài khoản
+                      </button>
+
+                      <button
+                        type="button"
+                        className="px-4 py-2 text-sm text-left text-n-700 hover:bg-p-50 transition-colors border-0 bg-transparent"
+                        onClick={handleGoAdmin}
+                      >
+                        Trang quản lý
+                      </button>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
 
               <button
                 type="button"
                 className="items-center justify-center hidden w-10 h-10 transition-colors border-0 rounded-full lg:flex text-p-900 hover:bg-p-50"
-                aria-label="Giỏ hàng"
               >
                 <CartIcon />
               </button>
@@ -203,8 +185,6 @@ const Header = () => {
                 type="button"
                 className="p-2 cursor-pointer lg:hidden"
                 onClick={toggleMobileMenu}
-                aria-expanded={isMobileMenuOpen}
-                aria-label="Toggle mobile menu"
               >
                 <img src="../../images/Menu Icon.svg" alt="menu" className="w-6 h-6" />
               </button>
@@ -227,25 +207,21 @@ const Header = () => {
               type="button"
               className="flex items-center justify-center w-11 h-11 transition-colors border rounded-full border-p-100 text-p-900 hover:bg-p-50"
               onClick={() => setIsMobileSearchOpen((prev) => !prev)}
-              aria-label="Mở tìm kiếm"
-              aria-expanded={isMobileSearchOpen}
             >
               <SearchIcon />
             </button>
 
             <button
               type="button"
-              className="flex items-center justify-center w-11 h-11 transition-colors border rounded-full border-p-100 text-p-900 hover:bg-p-50"
+              className="flex items-center justify-center w-11 h-11 transition-colors border rounded-full border-p-100 text-n-800 hover:bg-n-100"
               onClick={handleUserClick}
-              aria-label="Đăng nhập / Tài khoản"
             >
-              {user ? <UserSolidIcon /> : <UserIcon />}
+              {user ? <UserSolidIcon className="w-5 h-5 text-n-800" /> : <UserIcon className="w-5 h-5 text-n-800" />}
             </button>
 
             <button
               type="button"
               className="flex items-center justify-center w-11 h-11 transition-colors border rounded-full border-p-100 text-p-900 hover:bg-p-50"
-              aria-label="Giỏ hàng"
             >
               <CartIcon />
             </button>
@@ -263,7 +239,7 @@ const Header = () => {
                 value={searchValue}
                 onChange={(event) => setSearchValue(event.target.value)}
                 placeholder="Tìm kiếm sản phẩm..."
-                className="h-12 w-full rounded-2xl border border-n-200 bg-white px-4 text-sm text-p-900 placeholder:text-gray-400 outline-none focus:border-n-200 focus:outline-none focus:ring-0 focus:shadow-none"
+                className="h-12 w-full rounded-2xl border border-n-200 bg-white px-4 text-sm text-p-900 placeholder:text-gray-400 outline-none"
               />
               <button
                 type="submit"
@@ -286,26 +262,6 @@ const Header = () => {
           <a href="/#contact" className="py-3 text-lg navLink mobileNavLink" onClick={handleLinkClick}>
             Liên hệ
           </a>
-          
-          {user && (
-            <div className="flex flex-col gap-2 pt-4 border-t border-p-100">
-              <Link to="/profile" className="py-3 text-lg navLink mobileNavLink" onClick={handleLinkClick}>
-                Thông tin tài khoản
-              </Link>
-              {(user.roleLevel === "admin" || user.roleLevel === "staff") && (
-                <Link to="/admin" className="py-3 text-lg navLink mobileNavLink" onClick={handleLinkClick}>
-                  Quản lý
-                </Link>
-              )}
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="py-3 text-lg text-red-600 border-0 bg-transparent text-center hover:bg-red-50 rounded-xl transition-colors"
-              >
-                Đăng xuất
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </header>

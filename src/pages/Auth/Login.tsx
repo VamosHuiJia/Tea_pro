@@ -17,9 +17,11 @@ const LoginPage = () => {
 
     try {
       const data = await loginUser(email, password);
-      // Giả sử Backend trả về token và user trong object data
+
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
+      window.dispatchEvent(new Event("auth-changed"));
+
       alert("Đăng nhập thành công!");
       navigate("/");
     } catch (err: any) {
@@ -44,6 +46,7 @@ const LoginPage = () => {
             {error}
           </div>
         )}
+
         <div>
           <label
             htmlFor="login-email"

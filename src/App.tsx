@@ -7,6 +7,7 @@ import Home from "./pages/Home/Home";
 import Products from "./pages/Products/Products";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
+import Profile from "./pages/Profile/Profile";
 
 import AdminLayout from "./pages/Admin/layout/AdminLayout";
 import Dashboard from "./pages/Admin/pages/Dashboard";
@@ -39,6 +40,7 @@ function AppRoutes() {
           <Routes location={backgroundLocation || location}>
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<Products />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </main>
       )}
