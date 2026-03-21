@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   BadgePercent,
   Box,
@@ -12,105 +12,12 @@ import type { ProductItem } from "./ProductList";
 import ProductModal from "./ProductModal";
 import type { ProductFormValues, ProductOption } from "./ProductModal";
 import { exportToExcel, importFromExcel } from "../../../../utils/excel";
+import { getAllCategories } from "../../../../api/admin/category.api";
+import { getAllBrands } from "../../../../api/admin/brand.api";
+import { getAllProducts, createProduct, updateProduct, deleteProduct } from "../../../../api/admin/product.api";
+    // mock items removed
 
-const mockCategories: ProductOption[] = [
-  { id: 1, name: "Trà truyền thống" },
-  { id: 2, name: "Trà trái cây" },
-  { id: 3, name: "Quà tặng cao cấp" },
-  { id: 4, name: "Phụ kiện pha trà" },
-];
-
-const mockBrands: ProductOption[] = [
-  { id: 1, name: "Lộc Phát Tea" },
-  { id: 2, name: "Moon Leaf" },
-  { id: 3, name: "Zen Brew" },
-  { id: 4, name: "Mộc Nhiên" },
-];
-
-const mockProducts: ProductItem[] = [
-  {
-    id: 101,
-    name: "Trà Oolong Thượng Hạng",
-    description:
-      "Dòng trà cao cấp hương dịu, hậu ngọt, phù hợp khách hàng yêu thích vị trà thanh và tinh tế.",
-    image:
-      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=500&q=80",
-    quantity: 120,
-    sold: 315,
-    categoryId: 1,
-    categoryName: "Trà truyền thống",
-    brandId: 1,
-    brandName: "Lộc Phát Tea",
-    originalPrice: 250000,
-    discountPercent: 12,
-    currentPrice: 220000,
-    isActive: true,
-    created_at: "2026-03-08T08:30:00",
-    updated_at: "2026-03-17T15:20:00",
-  },
-  {
-    id: 102,
-    name: "Trà Vải Hoa Hồng",
-    description:
-      "Sản phẩm trẻ trung, hương vải thơm mát kết hợp hậu vị hoa hồng nhẹ, bán tốt trong mùa hè.",
-    image:
-      "https://images.unsplash.com/photo-1515823662972-da6a2e4d3002?auto=format&fit=crop&w=500&q=80",
-    quantity: 86,
-    sold: 248,
-    categoryId: 2,
-    categoryName: "Trà trái cây",
-    brandId: 2,
-    brandName: "Moon Leaf",
-    originalPrice: 89000,
-    discountPercent: 10,
-    currentPrice: 80100,
-    isActive: true,
-    created_at: "2026-03-05T10:00:00",
-    updated_at: "2026-03-18T09:10:00",
-  },
-  {
-    id: 103,
-    name: "Hộp Quà Trà Xuân Premium",
-    description:
-      "Set quà tặng trà đóng hộp sang trọng, phù hợp khách doanh nghiệp và dịp lễ đặc biệt.",
-    image:
-      "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=500&q=80",
-    quantity: 40,
-    sold: 95,
-    categoryId: 3,
-    categoryName: "Quà tặng cao cấp",
-    brandId: 3,
-    brandName: "Zen Brew",
-    originalPrice: 520000,
-    discountPercent: 18,
-    currentPrice: 426400,
-    isActive: false,
-    created_at: "2026-02-26T14:05:00",
-    updated_at: "2026-03-16T17:45:00",
-  },
-  {
-    id: 104,
-    name: "Bình Pha Trà Thủy Tinh",
-    description:
-      "Phụ kiện pha trà tối giản, phù hợp cho set quà và bán kèm cùng sản phẩm trà đóng gói.",
-    image:
-      "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=500&q=80",
-    quantity: 64,
-    sold: 112,
-    categoryId: 4,
-    categoryName: "Phụ kiện pha trà",
-    brandId: 4,
-    brandName: "Mộc Nhiên",
-    originalPrice: 180000,
-    discountPercent: 5,
-    currentPrice: 171000,
-    isActive: true,
-    created_at: "2026-03-01T12:20:00",
-    updated_at: "2026-03-15T11:40:00",
-  },
-];
-
-function normalizeImportedRow(row: Record<string, unknown>) {
+function normalizeImportedRow(row: Record<string, unknown>, categories: ProductOption[], brands: ProductOption[]) {
   const categoryName = String(
     row.categoryName ?? row.category ?? row["Danh mục"] ?? ""
   ).trim();
@@ -118,10 +25,10 @@ function normalizeImportedRow(row: Record<string, unknown>) {
     row.brandName ?? row.brand ?? row["Thương hiệu"] ?? ""
   ).trim();
 
-  const category = mockCategories.find(
+  const category = categories.find(
     (item) => item.name.toLowerCase() === categoryName.toLowerCase()
   );
-  const brand = mockBrands.find(
+  const brand = brands.find(
     (item) => item.name.toLowerCase() === brandName.toLowerCase()
   );
 
@@ -164,16 +71,48 @@ function normalizeImportedRow(row: Record<string, unknown>) {
 }
 
 export default function ProductLayout() {
-  const [products, setProducts] = useState<ProductItem[]>(mockProducts);
+  const [products, setProducts] = useState<ProductItem[]>([]);
+  const [categories, setCategories] = useState<ProductOption[]>([]);
+  const [brands, setBrands] = useState<ProductOption[]>([]);
+  
   const [keyword, setKeyword] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedBrand, setSelectedBrand] = useState("all");
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [listLoading, setListLoading] = useState(true);
   const [mode, setMode] = useState<"create" | "edit">("create");
   const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
 
   const excelInputRef = useRef<HTMLInputElement | null>(null);
+
+  const fetchData = async () => {
+    setListLoading(true);
+    try {
+      const [prodRes, catRes, brandRes] = await Promise.all([
+        getAllProducts(),
+        getAllCategories(),
+        getAllBrands()
+      ]);
+      setCategories(catRes.data?.map((c: any) => ({ id: c.id, name: c.name })) || []);
+      setBrands(brandRes.data?.map((b: any) => ({ id: b.id, name: b.name })) || []);
+      
+      setProducts(prodRes.map((p: any) => ({
+         ...p,
+         image: p.urlImg || null,
+         categoryName: p.category?.name || "Không rõ",
+         brandName: p.brand?.name || "Không rõ"
+      })));
+    } catch (error) {
+       console.error("Lỗi lấy dữ liệu:", error);
+    } finally {
+       setListLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const filteredProducts = useMemo(() => {
     const normalized = keyword.trim().toLowerCase();
@@ -226,76 +165,69 @@ export default function ProductLayout() {
     setOpenModal(true);
   };
 
-  const handleDelete = (product: ProductItem) => {
+  const handleDelete = async (product: ProductItem) => {
     const confirmed = window.confirm(
       `Bạn có chắc muốn xóa sản phẩm "${product.name}" không?`
     );
     if (!confirmed) return;
 
-    // TODO: gọi API delete tại đây
-    setProducts((prev) => prev.filter((item) => item.id !== product.id));
+    try {
+      await deleteProduct(Number(product.id));
+      setProducts((prev) => prev.filter((item) => item.id !== product.id));
+      alert("Xóa thành công!");
+    } catch (error) {
+      alert("Lỗi khi xóa sản phẩm");
+    }
   };
 
-  const handleSubmit = (values: ProductFormValues) => {
+  const handleSubmit = async (values: ProductFormValues) => {
     setLoading(true);
 
     try {
-      const category = mockCategories.find(
-        (item) => String(item.id) === String(values.categoryId)
-      );
-      const brand = mockBrands.find((item) => String(item.id) === String(values.brandId));
-
-      if (!category || !brand) return;
+      const formData = new FormData();
+      formData.append("name", values.name);
+      formData.append("description", values.description || "");
+      formData.append("quantity", String(values.quantity || 0));
+      formData.append("categoryId", String(values.categoryId));
+      formData.append("brandId", String(values.brandId));
+      formData.append("originalPrice", String(values.originalPrice || 0));
+      formData.append("discountPercent", String(values.discountPercent || 0));
+      formData.append("isActive", String(values.isActive));
+      
+      if (values.imageFile) {
+        formData.append("image", values.imageFile);
+      }
 
       if (mode === "create") {
-        const now = new Date().toISOString();
-
-        const newProduct: ProductItem = {
-          id: Date.now(),
-          name: values.name,
-          description: values.description,
-          image: values.image,
-          quantity: Number(values.quantity || 0),
-          sold: Number(values.sold || 0),
-          categoryId: category.id,
-          categoryName: category.name,
-          brandId: brand.id,
-          brandName: brand.name,
-          originalPrice: Number(values.originalPrice || 0),
-          discountPercent: Number(values.discountPercent || 0),
-          currentPrice: Number(values.currentPrice || 0),
-          isActive: values.isActive,
-          created_at: now,
-          updated_at: now,
-        };
-
-        // TODO: gọi API create tại đây
-        setProducts((prev) => [newProduct, ...prev]);
+        const res = await createProduct(formData);
+        if (res.product) {
+          const cName = categories.find(c => String(c.id) === String(res.product.categoryId))?.name || "";
+          const bName = brands.find(b => String(b.id) === String(res.product.brandId))?.name || "";
+          const newProduct: ProductItem = {
+             ...res.product,
+             image: res.product.urlImg,
+             categoryName: cName,
+             brandName: bName
+          };
+          setProducts((prev) => [newProduct, ...prev]);
+          alert("Thêm thành công!");
+        }
       } else if (selectedProduct) {
-        // TODO: gọi API update tại đây
-        setProducts((prev) =>
-          prev.map((item) =>
-            item.id === selectedProduct.id
-              ? {
-                ...item,
-                name: values.name,
-                description: values.description,
-                image: values.image,
-                quantity: Number(values.quantity || 0),
-                sold: Number(values.sold || 0),
-                categoryId: category.id,
-                categoryName: category.name,
-                brandId: brand.id,
-                brandName: brand.name,
-                originalPrice: Number(values.originalPrice || 0),
-                discountPercent: Number(values.discountPercent || 0),
-                currentPrice: Number(values.currentPrice || 0),
-                isActive: values.isActive,
-                updated_at: new Date().toISOString(),
-              }
-              : item
-          )
-        );
+        const res = await updateProduct(Number(selectedProduct.id), formData);
+        if (res.product) {
+          const cName = categories.find(c => String(c.id) === String(res.product.categoryId))?.name || "";
+          const bName = brands.find(b => String(b.id) === String(res.product.brandId))?.name || "";
+          const newProduct: ProductItem = {
+             ...res.product,
+             image: res.product.urlImg,
+             categoryName: cName,
+             brandName: bName
+          };
+          setProducts((prev) =>
+            prev.map((item) => (item.id === selectedProduct.id ? newProduct : item))
+          );
+          alert("Cập nhật thành công!");
+        }
       }
 
       setOpenModal(false);
@@ -319,30 +251,30 @@ export default function ProductLayout() {
       const rows = await importFromExcel<Record<string, unknown>>(file);
 
       const normalizedRows = rows
-        .map(normalizeImportedRow)
+        .map(row => normalizeImportedRow(row, categories, brands))
         .filter((item) => item.name && item.categoryId && item.brandId);
 
-      const mappedRows: ProductItem[] = normalizedRows.map((row, index) => ({
-        id: Date.now() + index,
-        name: row.name,
-        description: row.description,
-        image: row.image,
-        quantity: row.quantity,
-        sold: row.sold,
-        categoryId: row.categoryId,
-        categoryName: row.categoryName,
-        brandId: row.brandId,
-        brandName: row.brandName,
-        originalPrice: row.originalPrice,
-        discountPercent: row.discountPercent,
-        currentPrice: row.currentPrice,
-        isActive: row.isActive,
-        created_at: row.created_at || new Date().toISOString(),
-        updated_at: row.updated_at || new Date().toISOString(),
-      }));
-
-      // TODO: nếu muốn import qua API thì gọi API tại đây
-      setProducts((prev) => [...mappedRows, ...prev]);
+      // Nhập qua API thay vì list tĩnh
+      for (const row of normalizedRows) {
+        const formData = new FormData();
+        formData.append("name", row.name);
+        formData.append("description", row.description || "");
+        formData.append("quantity", String(row.quantity || 0));
+        formData.append("categoryId", String(row.categoryId));
+        formData.append("brandId", String(row.brandId));
+        formData.append("originalPrice", String(row.originalPrice || 0));
+        formData.append("discountPercent", String(row.discountPercent || 0));
+        formData.append("isActive", String(row.isActive));
+        
+        try {
+          await createProduct(formData);
+        } catch (e) {
+          console.error("Lỗi dòng:", row.name, e);
+        }
+      }
+      
+      alert("Đã hoàn tất nhập dữ liệu Excel!");
+      await fetchData();
     } catch (error) {
       console.error("Lỗi khi đọc file Excel:", error);
     } finally {
@@ -428,7 +360,7 @@ export default function ProductLayout() {
                 className="w-full appearance-none rounded-2xl border border-p-100 bg-p-50/60 px-4 py-3.5 pr-12 text-sm font-semibold text-n-700 outline-none transition-all duration-200 hover:border-p-300 focus:border-p-400 focus:bg-white focus:ring-4 focus:ring-p-100"
               >
                 <option value="all">Tất cả danh mục</option>
-                {mockCategories.map((category) => (
+                {categories.map((category: ProductOption) => (
                   <option key={category.id} value={String(category.id)}>
                     {category.name}
                   </option>
@@ -447,7 +379,7 @@ export default function ProductLayout() {
                 className="w-full appearance-none rounded-2xl border border-p-100 bg-p-50/60 px-4 py-3.5 pr-12 text-sm font-semibold text-n-700 outline-none transition-all duration-200 hover:border-p-300 focus:border-p-400 focus:bg-white focus:ring-4 focus:ring-p-100"
               >
                 <option value="all">Tất cả thương hiệu</option>
-                {mockBrands.map((brand) => (
+                {brands.map((brand: ProductOption) => (
                   <option key={brand.id} value={String(brand.id)}>
                     {brand.name}
                   </option>
@@ -462,7 +394,7 @@ export default function ProductLayout() {
 
       <ProductList
         products={filteredProducts}
-        loading={false}
+        loading={listLoading}
         onAdd={handleOpenCreate}
         onEdit={handleOpenEdit}
         onDelete={handleDelete}
@@ -482,8 +414,8 @@ export default function ProductLayout() {
         open={openModal}
         mode={mode}
         initialData={selectedProduct}
-        categories={mockCategories}
-        brands={mockBrands}
+        categories={categories}
+        brands={brands}
         loading={loading}
         onClose={() => {
           setOpenModal(false);

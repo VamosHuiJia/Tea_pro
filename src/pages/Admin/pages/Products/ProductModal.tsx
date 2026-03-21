@@ -21,6 +21,7 @@ export type ProductFormValues = {
   name: string;
   description: string;
   image: string;
+  imageFile?: File;
   quantity: number;
   sold: number;
   categoryId: string | number;
@@ -154,7 +155,7 @@ export default function ProductModal({
     if (!file) return;
 
     const base64 = await toBase64(file);
-    setForm((prev) => ({ ...prev, image: base64 }));
+    setForm((prev) => ({ ...prev, image: base64, imageFile: file }));
   };
 
   const handleDropImage = async (event: DragEvent<HTMLLabelElement>) => {
@@ -166,7 +167,7 @@ export default function ProductModal({
     if (!file || !file.type.startsWith("image/")) return;
 
     const base64 = await toBase64(file);
-    setForm((prev) => ({ ...prev, image: base64 }));
+    setForm((prev) => ({ ...prev, image: base64, imageFile: file }));
   };
 
   const handleSubmit = () => {
@@ -182,6 +183,7 @@ export default function ProductModal({
       originalPrice: Number(form.originalPrice || 0),
       discountPercent: Number(form.discountPercent || 0),
       currentPrice: Number(form.currentPrice || 0),
+      imageFile: form.imageFile,
     });
   };
 
