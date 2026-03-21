@@ -1,64 +1,27 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Search } from "lucide-react";
 import BrandList from "./BrandList";
 import { exportToExcel, importFromExcel } from "../../../../utils/excel";
 import type { BrandItem } from "./BrandList";
 import BrandModal from "./BrandModal";
 import type { BrandFormValues } from "./BrandModal";
-
-const mockBrands: BrandItem[] = [
-  {
-    id: 1,
-    name: "Lộc Phát Tea",
-    description:
-      "Thương hiệu trà hướng tới hương vị truyền thống, phù hợp nhóm khách hàng yêu thích trà đậm vị.",
-    image:
-      "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=300&q=80",
-    isActive: true,
-    create_at: "2026-03-10T08:30:00",
-    update_at: "2026-03-15T16:10:00",
-  },
-  {
-    id: 2,
-    name: "Moon Leaf",
-    description:
-      "Bộ nhận diện trẻ trung, thiên về các dòng trà trái cây và sản phẩm theo mùa.",
-    image:
-      "https://images.unsplash.com/photo-1515823662972-da6a2e4d3002?auto=format&fit=crop&w=300&q=80",
-    isActive: false,
-    create_at: "2026-03-04T10:00:00",
-    update_at: "2026-03-12T09:45:00",
-  },
-  {
-    id: 3,
-    name: "Zen Brew",
-    description:
-      "Phong cách tối giản, cao cấp, tập trung vào trà nguyên lá và quà tặng doanh nghiệp.",
-    image:
-      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=300&q=80",
-    isActive: true,
-    create_at: "2026-02-26T14:05:00",
-    update_at: "2026-03-14T18:20:00",
-  },
-];
+import { getAllBrands, createBrand, updateBrand, deleteBrand } from "../../../../api/admin/brand.api";
 
 function normalizeImportedRow(row: Record<string, unknown>): BrandFormValues {
   return {
     name: String(row.name ?? row["Tên thương hiệu"] ?? "").trim(),
     description: String(row.description ?? row["Mô tả"] ?? "").trim(),
     image: String(row.image ?? row["Hình ảnh"] ?? "").trim(),
-    isActive: ["true", "1", "hoạt động", "active"].includes(
-      String(row.isActive ?? row["Trạng thái"] ?? "")
+    isActive: ["true", "1", "hoạt động", "active", "true", "yes"].includes(
+      String(row.isActive ?? row["Trạng thái"] ?? "active")
         .trim()
         .toLowerCase()
     ),
-    create_at: row.create_at ? String(row.create_at) : undefined,
-    update_at: row.update_at ? String(row.update_at) : undefined,
   };
 }
 
 export default function BrandLayout() {
-  const [brands, setBrands] = useState<BrandItem[]>(mockBrands);
+  const [brands, setBrands] = useState<BrandItem[]>([]);
   const [keyword, setKeyword] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -80,6 +43,25 @@ export default function BrandLayout() {
 
   const activeCount = useMemo(() => brands.filter((brand) => brand.isActive).length, [brands]);
 
+  const fetchBrands = async () => {
+    try {
+      setLoading(true);
+      const res = await getAllBrands();
+      if (res.success) {
+        setBrands(res.data);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Lỗi tải danh sách thương hiệu");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBrands();
+  }, []);
+
   const handleOpenCreate = () => {
     setMode("create");
     setSelectedBrand(null);
@@ -92,55 +74,56 @@ export default function BrandLayout() {
     setOpenModal(true);
   };
 
-  const handleDelete = (brand: BrandItem) => {
+  const handleDelete = async (brand: BrandItem) => {
     const confirmed = window.confirm(
       `Bạn có chắc muốn xóa thương hiệu "${brand.name}" không?`
     );
     if (!confirmed) return;
 
-    // TODO: gọi API delete tại đây
-    setBrands((prev) => prev.filter((item) => item.id !== brand.id));
+    try {
+      await deleteBrand(Number(brand.id));
+      setBrands((prev) => prev.filter((item) => item.id !== brand.id));
+      alert("Xóa thành công!");
+    } catch (error) {
+      console.error(error);
+      alert("Lỗi khi xóa thương hiệu");
+    }
   };
 
-  const handleSubmit = (values: BrandFormValues) => {
+  const handleSubmit = async (values: BrandFormValues) => {
     setLoading(true);
 
     try {
+      const formData = new FormData();
+      formData.append("name", values.name);
+      formData.append("description", values.description);
+      formData.append("isActive", String(values.isActive));
+      
+      if (values.imageFile) {
+        formData.append("image", values.imageFile);
+      }
+
       if (mode === "create") {
-        // TODO: gọi API create tại đây
-        const now = new Date().toISOString();
-
-        const newBrand: BrandItem = {
-          id: Date.now(),
-          name: values.name,
-          description: values.description,
-          image: values.image,
-          isActive: values.isActive,
-          create_at: now,
-          update_at: now,
-        };
-
-        setBrands((prev) => [newBrand, ...prev]);
+        const res = await createBrand(formData);
+        if (res.success) {
+          setBrands((prev) => [res.data, ...prev]);
+          alert("Thêm mới thành công!");
+        }
       } else if (selectedBrand) {
-        // TODO: gọi API update tại đây
-        setBrands((prev) =>
-          prev.map((item) =>
-            item.id === selectedBrand.id
-              ? {
-                ...item,
-                name: values.name,
-                description: values.description,
-                image: values.image,
-                isActive: values.isActive,
-                update_at: new Date().toISOString(),
-              }
-              : item
-          )
-        );
+        const res = await updateBrand(Number(selectedBrand.id), formData);
+        if (res.success) {
+          setBrands((prev) =>
+            prev.map((item) => (item.id === selectedBrand.id ? res.data : item))
+          );
+          alert("Cập nhật thành công!");
+        }
       }
 
       setOpenModal(false);
       setSelectedBrand(null);
+    } catch (error) {
+      console.error("Lỗi submit brand:", error);
+      alert("Đã xảy ra lỗi khi lưu thông tin");
     } finally {
       setLoading(false);
     }
@@ -157,27 +140,35 @@ export default function BrandLayout() {
     if (!file) return;
 
     try {
+      setLoading(true);
       const rows = await importFromExcel<Record<string, unknown>>(file);
 
       const normalizedRows = rows
         .map(normalizeImportedRow)
         .filter((item) => item.name);
 
-      const mappedRows: BrandItem[] = normalizedRows.map((row, index) => ({
-        id: Date.now() + index,
-        name: row.name,
-        description: row.description,
-        image: row.image,
-        isActive: row.isActive,
-        create_at: row.create_at || new Date().toISOString(),
-        update_at: row.update_at || new Date().toISOString(),
-      }));
+      let successCount = 0;
+      for (const row of normalizedRows) {
+        try {
+          const formData = new FormData();
+          formData.append("name", row.name);
+          formData.append("description", row.description);
+          formData.append("isActive", String(row.isActive));
+          // Import excel không hỗ trợ trực tiếp ảnh dưới dạng file
 
-      // TODO: nếu muốn import qua API thì gọi API tại đây
-      setBrands((prev) => [...mappedRows, ...prev]);
+          await createBrand(formData);
+          successCount++;
+        } catch (err) {
+          console.error(`Lỗi import mục ${row.name}:`, err);
+        }
+      }
+
+      alert(`Đã import thành công ${successCount}/${normalizedRows.length} thương hiệu`);
+      await fetchBrands();
     } catch (error) {
       console.error("Lỗi khi đọc file Excel:", error);
     } finally {
+      setLoading(false);
       event.target.value = "";
     }
   };

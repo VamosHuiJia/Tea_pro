@@ -8,6 +8,7 @@ export type BrandFormValues = {
   name: string;
   description: string;
   image: string;
+  imageFile?: File;
   isActive: boolean;
   create_at?: string;
   update_at?: string;
@@ -81,7 +82,7 @@ export default function BrandModal({
     if (!file) return;
 
     const base64 = await toBase64(file);
-    setForm((prev) => ({ ...prev, image: base64 }));
+    setForm((prev) => ({ ...prev, image: base64, imageFile: file }));
   };
 
   const handleDropImage = async (event: DragEvent<HTMLLabelElement>) => {
@@ -93,7 +94,7 @@ export default function BrandModal({
     if (!file || !file.type.startsWith("image/")) return;
 
     const base64 = await toBase64(file);
-    setForm((prev) => ({ ...prev, image: base64 }));
+    setForm((prev) => ({ ...prev, image: base64, imageFile: file }));
   };
 
   const handleSubmit = () => {

@@ -1,64 +1,27 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Search } from "lucide-react";
 import CategoryList from "./CategoryList";
 import { exportToExcel, importFromExcel } from "../../../../utils/excel";
 import type { CategoryItem } from "./CategoryList";
 import CategoryModal from "./CategoryModal";
 import type { CategoryFormValues } from "./CategoryModal";
-
-const mockCategories: CategoryItem[] = [
-  {
-    id: 1,
-    name: "Trà truyền thống",
-    description:
-      "Danh mục dành cho các sản phẩm trà truyền thống, hương vị đậm, phù hợp khách hàng lâu năm.",
-    image:
-      "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=300&q=80",
-    isActive: true,
-    create_at: "2026-03-10T08:30:00",
-    update_at: "2026-03-15T16:10:00",
-  },
-  {
-    id: 2,
-    name: "Trà trái cây",
-    description:
-      "Nhóm sản phẩm trẻ trung, phù hợp khách hàng thích hương vị tươi mới và theo mùa.",
-    image:
-      "https://images.unsplash.com/photo-1515823662972-da6a2e4d3002?auto=format&fit=crop&w=300&q=80",
-    isActive: false,
-    create_at: "2026-03-04T10:00:00",
-    update_at: "2026-03-12T09:45:00",
-  },
-  {
-    id: 3,
-    name: "Quà tặng cao cấp",
-    description:
-      "Danh mục các dòng sản phẩm cao cấp, trà hộp quà, dùng cho dịp lễ và doanh nghiệp.",
-    image:
-      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=300&q=80",
-    isActive: true,
-    create_at: "2026-02-26T14:05:00",
-    update_at: "2026-03-14T18:20:00",
-  },
-];
+import { getAllCategories, createCategory, updateCategory, deleteCategory } from "../../../../api/admin/category.api";
 
 function normalizeImportedRow(row: Record<string, unknown>): CategoryFormValues {
   return {
     name: String(row.name ?? row["Tên danh mục"] ?? "").trim(),
     description: String(row.description ?? row["Mô tả"] ?? "").trim(),
     image: String(row.image ?? row["Hình ảnh"] ?? "").trim(),
-    isActive: ["true", "1", "hoạt động", "active"].includes(
-      String(row.isActive ?? row["Trạng thái"] ?? "")
+    isActive: ["true", "1", "hoạt động", "active", "true", "yes"].includes(
+      String(row.isActive ?? row["Trạng thái"] ?? "active")
         .trim()
         .toLowerCase()
     ),
-    create_at: row.create_at ? String(row.create_at) : undefined,
-    update_at: row.update_at ? String(row.update_at) : undefined,
   };
 }
 
 export default function CategoryLayout() {
-  const [categories, setCategories] = useState<CategoryItem[]>(mockCategories);
+  const [categories, setCategories] = useState<CategoryItem[]>([]);
   const [keyword, setKeyword] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -83,6 +46,25 @@ export default function CategoryLayout() {
     [categories]
   );
 
+  const fetchCategories = async () => {
+    try {
+      setLoading(true);
+      const res = await getAllCategories();
+      if (res.success) {
+        setCategories(res.data);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Lỗi tải danh sách danh mục");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
   const handleOpenCreate = () => {
     setMode("create");
     setSelectedCategory(null);
@@ -95,55 +77,56 @@ export default function CategoryLayout() {
     setOpenModal(true);
   };
 
-  const handleDelete = (category: CategoryItem) => {
+  const handleDelete = async (category: CategoryItem) => {
     const confirmed = window.confirm(
       `Bạn có chắc muốn xóa danh mục "${category.name}" không?`
     );
     if (!confirmed) return;
 
-    // TODO: gọi API delete tại đây
-    setCategories((prev) => prev.filter((item) => item.id !== category.id));
+    try {
+      await deleteCategory(Number(category.id));
+      setCategories((prev) => prev.filter((item) => item.id !== category.id));
+      alert("Xóa thành công!");
+    } catch (error) {
+      console.error(error);
+      alert("Lỗi khi xóa danh mục");
+    }
   };
 
-  const handleSubmit = (values: CategoryFormValues) => {
+  const handleSubmit = async (values: CategoryFormValues) => {
     setLoading(true);
 
     try {
+      const formData = new FormData();
+      formData.append("name", values.name);
+      formData.append("description", values.description);
+      formData.append("isActive", String(values.isActive));
+      
+      if (values.imageFile) {
+        formData.append("image", values.imageFile);
+      }
+
       if (mode === "create") {
-        // TODO: gọi API create tại đây
-        const now = new Date().toISOString();
-
-        const newCategory: CategoryItem = {
-          id: Date.now(),
-          name: values.name,
-          description: values.description,
-          image: values.image,
-          isActive: values.isActive,
-          create_at: now,
-          update_at: now,
-        };
-
-        setCategories((prev) => [newCategory, ...prev]);
+        const res = await createCategory(formData);
+        if (res.success) {
+          setCategories((prev) => [res.data, ...prev]);
+          alert("Thêm mới thành công!");
+        }
       } else if (selectedCategory) {
-        // TODO: gọi API update tại đây
-        setCategories((prev) =>
-          prev.map((item) =>
-            item.id === selectedCategory.id
-              ? {
-                  ...item,
-                  name: values.name,
-                  description: values.description,
-                  image: values.image,
-                  isActive: values.isActive,
-                  update_at: new Date().toISOString(),
-                }
-              : item
-          )
-        );
+        const res = await updateCategory(Number(selectedCategory.id), formData);
+        if (res.success) {
+          setCategories((prev) =>
+            prev.map((item) => (item.id === selectedCategory.id ? res.data : item))
+          );
+          alert("Cập nhật thành công!");
+        }
       }
 
       setOpenModal(false);
       setSelectedCategory(null);
+    } catch (error) {
+      console.error("Lỗi submit category:", error);
+      alert("Đã xảy ra lỗi khi lưu thông tin");
     } finally {
       setLoading(false);
     }
@@ -160,27 +143,34 @@ export default function CategoryLayout() {
     if (!file) return;
 
     try {
+      setLoading(true);
       const rows = await importFromExcel<Record<string, unknown>>(file);
 
       const normalizedRows = rows
         .map(normalizeImportedRow)
         .filter((item) => item.name);
 
-      const mappedRows: CategoryItem[] = normalizedRows.map((row, index) => ({
-        id: Date.now() + index,
-        name: row.name,
-        description: row.description,
-        image: row.image,
-        isActive: row.isActive,
-        create_at: row.create_at || new Date().toISOString(),
-        update_at: row.update_at || new Date().toISOString(),
-      }));
+      let successCount = 0;
+      for (const row of normalizedRows) {
+        try {
+          const formData = new FormData();
+          formData.append("name", row.name);
+          formData.append("description", row.description);
+          formData.append("isActive", String(row.isActive));
 
-      // TODO: nếu muốn import qua API thì gọi API tại đây
-      setCategories((prev) => [...mappedRows, ...prev]);
+          await createCategory(formData);
+          successCount++;
+        } catch (err) {
+          console.error(`Lỗi import mục ${row.name}:`, err);
+        }
+      }
+
+      alert(`Đã import thành công ${successCount}/${normalizedRows.length} danh mục`);
+      await fetchCategories();
     } catch (error) {
       console.error("Lỗi khi đọc file Excel:", error);
     } finally {
+      setLoading(false);
       event.target.value = "";
     }
   };
