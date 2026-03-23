@@ -15,31 +15,6 @@ const SearchIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   </svg>
 );
 
-const UserIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    className={className}
-    aria-hidden="true"
-  >
-    <path d="M20 21a8 8 0 0 0-16 0" strokeLinecap="round" strokeLinejoin="round" />
-    <circle cx="12" cy="8" r="4" />
-  </svg>
-);
-
-const UserSolidIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    className={className}
-    aria-hidden="true"
-  >
-    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-  </svg>
-);
-
 const CartIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   <svg
     viewBox="0 0 24 24"
@@ -58,6 +33,76 @@ const CartIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
     />
   </svg>
 );
+
+const UserIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.9"
+    className={className}
+    aria-hidden="true"
+  >
+    <path
+      d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M4.75 19.25a7.25 7.25 0 0 1 14.5 0"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+type AvatarButtonProps = {
+  user: unknown;
+  onClick: () => void;
+  className?: string;
+};
+
+const AvatarButton = ({
+  user,
+  onClick,
+  className = "",
+}: AvatarButtonProps) => {
+  const currentUser =
+    user as
+      | {
+          avatar?: string;
+          avatarUrl?: string;
+          image?: string;
+          photoURL?: string;
+        }
+      | null;
+
+  const avatarSrc =
+    currentUser?.avatar ||
+    currentUser?.avatarUrl ||
+    currentUser?.image ||
+    currentUser?.photoURL ||
+    "/images/user.png";
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={user ? "Mở tài khoản" : "Đăng nhập"}
+      className={`flex h-10 w-10 items-center justify-center rounded-full border-0 bg-transparent text-p-900 transition-colors duration-200 hover:bg-p-50 ${className}`}
+    >
+      {user ? (
+        <img
+          src={avatarSrc}
+          alt="Ảnh tài khoản"
+          className="h-6 w-6 rounded-full object-cover"
+        />
+      ) : (
+        <UserIcon className="w-5 h-5" />
+      )}
+    </button>
+  );
+};
 
 const Header = () => {
   const {
@@ -88,16 +133,30 @@ const Header = () => {
       <div className="navbar">
         <div className="max-w-[1536px] w-full px-4 py-4 md:px-[72px] mx-auto relative">
           <div className="grid items-center grid-cols-[auto_1fr_auto] gap-4 lg:gap-8">
-            <Link to="/" className="flex items-center flex-none gap-3" onClick={handleLinkClick}>
+            <Link
+              to="/"
+              className="flex items-center flex-none gap-3"
+              onClick={handleLinkClick}
+            >
               <img src="../../images/logo.png" alt="logo" className="w-16 h-16" />
-              <p className="text-lg capitalize font-lobster text-p-900">Huy bán Trà</p>
+              <p className="text-lg capitalize font-lobster text-p-900">
+                Huy bán Trà
+              </p>
             </Link>
 
             <nav className="items-center justify-center hidden gap-8 lg:flex">
-              <Link to="/" className="navLink">Trang chủ</Link>
-              <Link to="/products" className="navLink">Sản phẩm</Link>
-              <a href="/#story" className="navLink">Giới thiệu</a>
-              <a href="/#contact" className="navLink">Liên hệ</a>
+              <Link to="/" className="navLink">
+                Trang chủ
+              </Link>
+              <Link to="/products" className="navLink">
+                Sản phẩm
+              </Link>
+              <a href="/#story" className="navLink">
+                Giới thiệu
+              </a>
+              <a href="/#contact" className="navLink">
+                Liên hệ
+              </a>
             </nav>
 
             <div className="flex items-center justify-end gap-2 md:gap-3">
@@ -136,13 +195,7 @@ const Header = () => {
               </div>
 
               <div className="relative hidden lg:block" ref={userDropdownRef}>
-                <button
-                  type="button"
-                  className="flex items-center justify-center w-10 h-10 transition-colors border-0 rounded-full text-n-800 hover:bg-n-100"
-                  onClick={handleUserClick}
-                >
-                  {user ? <UserSolidIcon className="w-5 h-5 text-n-800" /> : <UserIcon className="w-5 h-5 text-n-800" />}
-                </button>
+                <AvatarButton user={user} onClick={handleUserClick} />
 
                 {isManager && (
                   <div
@@ -205,23 +258,17 @@ const Header = () => {
           <div className="flex items-center justify-center gap-3 pb-2 border-b border-p-100">
             <button
               type="button"
-              className="flex items-center justify-center w-11 h-11 transition-colors border rounded-full border-p-100 text-p-900 hover:bg-p-50"
+              className="flex items-center justify-center w-10 h-10 transition-colors border rounded-full border-p-100 text-p-900 hover:bg-p-50"
               onClick={() => setIsMobileSearchOpen((prev) => !prev)}
             >
               <SearchIcon />
             </button>
 
-            <button
-              type="button"
-              className="flex items-center justify-center w-11 h-11 transition-colors border rounded-full border-p-100 text-n-800 hover:bg-n-100"
-              onClick={handleUserClick}
-            >
-              {user ? <UserSolidIcon className="w-5 h-5 text-n-800" /> : <UserIcon className="w-5 h-5 text-n-800" />}
-            </button>
+            <AvatarButton user={user} onClick={handleUserClick} />
 
             <button
               type="button"
-              className="flex items-center justify-center w-11 h-11 transition-colors border rounded-full border-p-100 text-p-900 hover:bg-p-50"
+              className="flex items-center justify-center w-10 h-10 transition-colors border rounded-full border-p-100 text-p-900 hover:bg-p-50"
             >
               <CartIcon />
             </button>
@@ -250,16 +297,32 @@ const Header = () => {
             </form>
           </div>
 
-          <Link to="/" className="py-3 text-lg navLink mobileNavLink" onClick={handleLinkClick}>
+          <Link
+            to="/"
+            className="py-3 text-lg navLink mobileNavLink"
+            onClick={handleLinkClick}
+          >
             Trang chủ
           </Link>
-          <Link to="/products" className="py-3 text-lg navLink mobileNavLink" onClick={handleLinkClick}>
+          <Link
+            to="/products"
+            className="py-3 text-lg navLink mobileNavLink"
+            onClick={handleLinkClick}
+          >
             Sản phẩm
           </Link>
-          <a href="/#story" className="py-3 text-lg navLink mobileNavLink" onClick={handleLinkClick}>
+          <a
+            href="/#story"
+            className="py-3 text-lg navLink mobileNavLink"
+            onClick={handleLinkClick}
+          >
             Giới thiệu
           </a>
-          <a href="/#contact" className="py-3 text-lg navLink mobileNavLink" onClick={handleLinkClick}>
+          <a
+            href="/#contact"
+            className="py-3 text-lg navLink mobileNavLink"
+            onClick={handleLinkClick}
+          >
             Liên hệ
           </a>
         </div>
