@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { CartProvider } from "./contexts/CartContext";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -8,6 +9,8 @@ import Products from "./pages/Products/Products";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import Profile from "./pages/Profile/Profile";
+import Cart from "./pages/Cart/CartLayout";
+import Checkout from "./pages/Cart/Checkout";
 
 import AdminLayout from "./pages/Admin/layout/AdminLayout";
 import Dashboard from "./pages/Admin/pages/Dashboard";
@@ -41,6 +44,8 @@ function AppRoutes() {
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<Products />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
           </Routes>
         </main>
       )}
@@ -67,9 +72,11 @@ function AppRoutes() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <AppRoutes />
-    </BrowserRouter>
+    <CartProvider>
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
+    </CartProvider>
   );
 }
 
