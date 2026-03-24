@@ -1,6 +1,7 @@
 import {
   ArrowLeft,
   BadgePercent,
+  CreditCard,
   LayoutDashboard,
   Package,
   ShoppingCart,
@@ -20,6 +21,7 @@ const menus = [
   { to: "/admin/dashboard", label: "Tổng quan", icon: LayoutDashboard },
   { to: "/admin/products", label: "Sản phẩm", icon: Package },
   { to: "/admin/orders", label: "Đơn hàng", icon: ShoppingCart },
+  { to: "/admin/payments", label: "Phương thức thanh toán", icon: CreditCard },
   { to: "/admin/categories", label: "Danh mục", icon: Tags },
   { to: "/admin/brands", label: "Thương hiệu", icon: BadgePercent },
   { to: "/admin/employees", label: "Nhân viên", icon: UserRound },
@@ -54,9 +56,10 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
               to={item.to}
               onClick={onClose}
               className={({ isActive }) =>
-                `flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition ${isActive
-                  ? "bg-p-700 text-white shadow-lg"
-                  : "text-white/75 hover:bg-white/10 hover:text-white"
+                `flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition ${
+                  isActive
+                    ? "bg-p-700 text-white shadow-lg"
+                    : "text-white/75 hover:bg-white/10 hover:text-white"
                 }`
               }
             >
@@ -70,7 +73,8 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
       <div className="mt-auto space-y-4 pt-6">
         <div className="rounded-[24px] bg-white/10 p-4">
           <p className="text-sm text-white/70">Hệ thống quản trị</p>
-          <p className="mt-2 text-lg font-semibold">Cửa hàng
+          <p className="mt-2 text-lg font-semibold">
+            Cửa hàng
             <span className="text-lg capitalize font-lobster text-p-400"> Huy bán Trà</span>
           </p>
           <p className="mt-2 text-xs leading-6 text-white/60">
@@ -99,16 +103,16 @@ export default function AdminSidebar({ mobileOpen = false, onClose }: AdminSideb
       </aside>
 
       <div
-        className={`fixed inset-0 z-50 bg-n-800/50 backdrop-blur-[2px] transition-all duration-300 lg:hidden ${mobileOpen
-          ? "pointer-events-auto opacity-100"
-          : "pointer-events-none opacity-0"
-          }`}
+        className={`fixed inset-0 z-50 bg-n-800/50 backdrop-blur-[2px] transition-all duration-300 lg:hidden ${
+          mobileOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+        }`}
         onClick={onClose}
       />
 
       <aside
-        className={`fixed inset-y-0 left-0 z-[60] w-[280px] max-w-[85vw] overflow-y-auto bg-p-950 text-white shadow-2xl transition-transform duration-300 lg:hidden ${mobileOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+        className={`fixed inset-y-0 left-0 z-[60] w-[280px] max-w-[85vw] overflow-y-auto bg-p-950 text-white shadow-2xl transition-transform duration-300 lg:hidden ${
+          mobileOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
       >
         <SidebarContent onClose={onClose} />
       </aside>

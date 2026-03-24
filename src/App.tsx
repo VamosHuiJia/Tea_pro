@@ -19,6 +19,8 @@ import Category from "./pages/Admin/pages/Categories/CategoryLayout";
 import Product from "./pages/Admin/pages/Products/ProductLayout";
 import Customer from "./pages/Admin/pages/Customers/CustomerLayout";
 import Employees from "./pages/Admin/pages/Employees/EmployeeLayout";
+import Order from "./pages/Admin/pages/Orders/OrderLayout";
+import Payment from "./pages/Admin/pages/Payment/PaymentLayout";
 
 
 function AppRoutes() {
@@ -64,6 +66,8 @@ function AppRoutes() {
           <Route path="products" element={<Product />} />
           <Route path="customers" element={<Customer />} />
           <Route path="employees" element={<Employees />} />
+          <Route path="orders" element={<Order />} />
+          <Route path="payments" element={<Payment />} />
         </Route>
       </Routes>
     </>
