@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Eye, Search, X } from "lucide-react";
+import { Eye, Search, Trash2 } from "lucide-react";
 
 export type OrderStatus = "pending" | "confirmed" | "shipping" | "delivered" | "cancelled";
 export type PaymentMethod = "cod" | "vnpay" | "momo" | "zalopay";
@@ -151,18 +151,18 @@ const paymentMethodLabel: Record<PaymentMethod, string> = {
 };
 
 const orderStatusLabel: Record<OrderStatus, string> = {
-  pending: "pending",
-  confirmed: "confirmed",
-  shipping: "shipping",
-  delivered: "delivered",
-  cancelled: "cancelled",
+  pending: "Pending",
+  confirmed: "Confirmed",
+  shipping: "Shipping",
+  delivered: "Delivered",
+  cancelled: "Cancelled",
 };
 
 const paymentStatusLabel: Record<PaymentStatus, string> = {
-  pending: "pending",
-  success: "success",
-  failed: "failed",
-  refunded: "refunded",
+  pending: "Pending",
+  success: "Success",
+  failed: "Failed",
+  refunded: "Refunded",
 };
 
 function formatCurrency(value: number) {
@@ -255,15 +255,15 @@ export default function OrderList({
 
       <div className="mt-5 flex min-h-0 flex-1 flex-col overflow-hidden rounded-[28px] border border-p-100 bg-white">
         <div className="max-h-[560px] min-h-0 flex-1 overflow-auto">
-          <table className="w-full min-w-[1120px] table-fixed border-separate border-spacing-0">
+          <table className="w-full min-w-[1080px] table-fixed border-separate border-spacing-0">
             <colgroup>
               <col style={{ width: "12%" }} />
               <col style={{ width: "20%" }} />
               <col style={{ width: "14%" }} />
               <col style={{ width: "12%" }} />
-              <col style={{ width: "14%" }} />
               <col style={{ width: "12%" }} />
-              <col style={{ width: "16%" }} />
+              <col style={{ width: "12%" }} />
+              <col style={{ width: "18%" }} />
             </colgroup>
 
             <thead className="sticky top-0 z-10 bg-p-50">
@@ -279,7 +279,7 @@ export default function OrderList({
                 ].map((label) => (
                   <th
                     key={label}
-                    className="border-b border-p-100 px-5 py-4 text-left text-[15px] font-semibold text-n-500"
+                    className="border-b border-p-100 px-4 py-3.5 text-left text-sm font-semibold text-n-500"
                   >
                     {label}
                   </th>
@@ -306,27 +306,31 @@ export default function OrderList({
                         isActive && "bg-p-50/80",
                       )}
                     >
-                      <td className="border-b border-p-100 px-5 py-5 align-top">
-                        <div className="space-y-2">
-                          <p className="text-2xl font-bold tracking-tight text-n-800">#{order.id}</p>
-                          <p className="text-sm leading-6 text-n-500">{order.itemCount} sản phẩm</p>
+                      <td className="border-b border-p-100 px-4 py-4 align-top">
+                        <div className="space-y-1.5">
+                          <p className="text-xl font-bold tracking-tight text-n-800">#{order.id}</p>
+                          <p className="text-[13px] leading-5 text-n-500">{order.itemCount} sản phẩm</p>
                         </div>
                       </td>
 
-                      <td className="border-b border-p-100 px-5 py-5 align-top">
-                        <div className="space-y-2 pr-2">
-                          <p className="text-lg font-semibold text-n-800 break-words">{order.customerName}</p>
-                          <p className="text-sm leading-6 text-n-500 break-all">{order.email}</p>
-                          <p className="text-sm leading-6 text-n-500">{order.phone}</p>
+                      <td className="border-b border-p-100 px-4 py-4 align-top">
+                        <div className="space-y-1.5 pr-2">
+                          <p className="break-words text-[15px] font-semibold text-n-800">
+                            {order.customerName}
+                          </p>
+                          <p className="break-all text-[13px] leading-5 text-n-500">{order.email}</p>
+                          <p className="text-[13px] leading-5 text-n-500">{order.phone}</p>
                         </div>
                       </td>
 
-                      <td className="border-b border-p-100 px-5 py-5 align-top">
-                        <div className="space-y-3">
-                          <p className="text-lg font-semibold uppercase text-n-800">{paymentMethodLabel[order.paymentMethod]}</p>
+                      <td className="border-b border-p-100 px-4 py-4 align-top">
+                        <div className="space-y-2.5">
+                          <p className="text-[15px] font-semibold uppercase text-n-800">
+                            {paymentMethodLabel[order.paymentMethod]}
+                          </p>
                           <span
                             className={cn(
-                              "inline-flex rounded-full border px-3 py-1 text-xs font-semibold capitalize",
+                              "inline-flex rounded-full border px-3 py-1 text-[11px] font-semibold",
                               paymentStatusBadge[order.paymentStatus],
                             )}
                           >
@@ -335,14 +339,16 @@ export default function OrderList({
                         </div>
                       </td>
 
-                      <td className="border-b border-p-100 px-5 py-5 align-top">
-                        <p className="text-lg font-bold text-n-800">{formatCurrency(order.totalAmount)}</p>
+                      <td className="border-b border-p-100 px-4 py-4 align-top">
+                        <p className="text-[15px] font-bold text-n-800">
+                          {formatCurrency(order.totalAmount)}
+                        </p>
                       </td>
 
-                      <td className="border-b border-p-100 px-5 py-5 align-top">
+                      <td className="border-b border-p-100 px-4 py-4 align-top">
                         <span
                           className={cn(
-                            "inline-flex rounded-full border px-4 py-1.5 text-sm font-semibold capitalize",
+                            "inline-flex rounded-full border px-3 py-1.5 text-xs font-semibold",
                             orderStatusBadge[order.status],
                           )}
                         >
@@ -350,43 +356,45 @@ export default function OrderList({
                         </span>
                       </td>
 
-                      <td className="border-b border-p-100 px-5 py-5 align-top text-sm font-medium text-n-600">
+                      <td className="border-b border-p-100 px-4 py-4 align-top text-[13px] font-medium text-n-600">
                         {order.createdAt}
                       </td>
 
-                      <td className="border-b border-p-100 px-5 py-5 align-top">
-                        <div className="flex flex-wrap items-center justify-end gap-2">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setInternalSelectedId(order.id);
-                              onSelect?.(order);
-                            }}
-                            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-p-100 bg-p-50 text-n-600 transition hover:border-p-300 hover:bg-white hover:text-p-700"
-                            aria-label={`Xem chi tiết đơn #${order.id}`}
-                          >
-                            <Eye className="h-5 w-5" />
-                          </button>
+                      <td className="border-b border-p-100 px-4 py-4 align-top">
+                        <div className="rounded-2xl border border-p-100 bg-p-50/70 p-2.5">
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setInternalSelectedId(order.id);
+                                onSelect?.(order);
+                              }}
+                              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-p-100 bg-white text-n-600 transition hover:border-p-300 hover:text-p-700"
+                              aria-label={`Xem chi tiết đơn #${order.id}`}
+                            >
+                              <Eye className="h-4.5 w-4.5" />
+                            </button>
 
-                          <select
-                            value={order.status}
-                            onChange={(event) => {
-                              const nextStatus = event.target.value as OrderStatus;
-                              setTableData((current) =>
-                                current.map((item) =>
-                                  item.id === order.id ? { ...item, status: nextStatus } : item,
-                                ),
-                              );
-                              onStatusChange?.(order, nextStatus);
-                            }}
-                            className="h-11 min-w-[138px] rounded-2xl border border-p-100 bg-white px-3 text-sm text-n-700 outline-none transition focus:border-p-400"
-                          >
-                            {ORDER_STATUS_OPTIONS.map((status) => (
-                              <option key={status} value={status}>
-                                {orderStatusLabel[status]}
-                              </option>
-                            ))}
-                          </select>
+                            <select
+                              value={order.status}
+                              onChange={(event) => {
+                                const nextStatus = event.target.value as OrderStatus;
+                                setTableData((current) =>
+                                  current.map((item) =>
+                                    item.id === order.id ? { ...item, status: nextStatus } : item,
+                                  ),
+                                );
+                                onStatusChange?.(order, nextStatus);
+                              }}
+                              className="h-9 min-w-0 flex-1 rounded-xl border border-p-100 bg-white px-3 text-[13px] text-n-700 outline-none transition focus:border-p-400"
+                            >
+                              {ORDER_STATUS_OPTIONS.map((status) => (
+                                <option key={status} value={status}>
+                                  {orderStatusLabel[status]}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
 
                           <button
                             type="button"
@@ -395,9 +403,10 @@ export default function OrderList({
                               if (internalSelectedId === order.id) setInternalSelectedId(undefined);
                               onDelete?.(order);
                             }}
-                            className="inline-flex h-11 items-center justify-center rounded-2xl border border-rose-100 bg-rose-50 px-4 text-sm font-semibold text-rose-600 transition hover:border-rose-200 hover:bg-rose-100"
+                            className="mt-2 inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-xl border border-rose-100 bg-white text-[13px] font-semibold text-rose-600 transition hover:border-rose-200 hover:bg-rose-50"
                           >
-                            Hủy
+                            <Trash2 className="h-4 w-4" />
+                            Hủy đơn
                           </button>
                         </div>
                       </td>

@@ -118,15 +118,15 @@ export default function PaymentList({
 
       <div className="mt-5 flex min-h-0 flex-1 flex-col overflow-hidden rounded-[28px] border border-p-100 bg-white">
         <div className="max-h-[560px] min-h-0 flex-1 overflow-auto">
-          <table className="w-full min-w-[1140px] table-fixed border-separate border-spacing-0">
+          <table className="w-full min-w-[1100px] table-fixed border-separate border-spacing-0">
             <colgroup>
-              <col style={{ width: "24%" }} />
+              <col style={{ width: "25%" }} />
               <col style={{ width: "14%" }} />
-              <col style={{ width: "16%" }} />
-              <col style={{ width: "10%" }} />
-              <col style={{ width: "10%" }} />
-              <col style={{ width: "12%" }} />
-              <col style={{ width: "14%" }} />
+              <col style={{ width: "17%" }} />
+              <col style={{ width: "9%" }} />
+              <col style={{ width: "9%" }} />
+              <col style={{ width: "11%" }} />
+              <col style={{ width: "15%" }} />
             </colgroup>
 
             <thead className="sticky top-0 z-10 bg-p-50">
@@ -142,7 +142,7 @@ export default function PaymentList({
                 ].map((label) => (
                   <th
                     key={label}
-                    className="border-b border-p-100 px-5 py-4 text-left text-[15px] font-semibold text-n-500"
+                    className="border-b border-p-100 px-4 py-3.5 text-left text-sm font-semibold text-n-500"
                   >
                     {label}
                   </th>
@@ -169,30 +169,34 @@ export default function PaymentList({
                         isActiveRow && "bg-p-50/80",
                       )}
                     >
-                      <td className="border-b border-p-100 px-5 py-5 align-top">
-                        <div className="space-y-2 pr-3">
-                          <p className="text-lg font-semibold text-n-800 break-words">{payment.name}</p>
-                          <p className="text-sm leading-6 text-n-500 break-words">{payment.description}</p>
+                      <td className="border-b border-p-100 px-4 py-4 align-top">
+                        <div className="space-y-1.5 pr-3">
+                          <p className="break-words text-[15px] font-semibold text-n-800">
+                            {payment.name}
+                          </p>
+                          <p className="break-words text-[13px] leading-5 text-n-500">
+                            {payment.description}
+                          </p>
                         </div>
                       </td>
 
-                      <td className="border-b border-p-100 px-5 py-5 align-top">
+                      <td className="border-b border-p-100 px-4 py-4 align-top">
                         <span
                           className={cn(
-                            "inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-semibold uppercase",
+                            "inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold uppercase",
                             methodBadge[payment.method],
                           )}
                         >
-                          <WalletCards className="h-4 w-4" />
+                          <WalletCards className="h-3.5 w-3.5" />
                           {methodLabel[payment.method]}
                         </span>
                       </td>
 
-                      <td className="border-b border-p-100 px-5 py-5 align-top">
+                      <td className="border-b border-p-100 px-4 py-4 align-top">
                         <div className="flex flex-wrap gap-2">
                           <span
                             className={cn(
-                              "inline-flex rounded-full border px-3 py-1.5 text-sm font-semibold capitalize",
+                              "inline-flex rounded-full border px-3 py-1 text-xs font-semibold capitalize",
                               resultStatusBadge[payment.status] || "border-slate-200 bg-slate-100 text-slate-700",
                             )}
                           >
@@ -201,29 +205,29 @@ export default function PaymentList({
 
                           <span
                             className={cn(
-                              "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-semibold capitalize",
+                              "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold capitalize",
                               payment.isActive ? channelStatusBadge.active : channelStatusBadge.inactive
                             )}
                           >
-                            <ShieldCheck className="h-4 w-4" />
+                            <ShieldCheck className="h-3.5 w-3.5" />
                             {payment.isActive ? "Active" : "Inactive"}
                           </span>
                         </div>
                       </td>
 
-                      <td className="border-b border-p-100 px-5 py-5 align-top text-lg font-semibold text-n-700">
+                      <td className="border-b border-p-100 px-4 py-4 align-top text-[15px] font-semibold text-n-700">
                         {payment.feePercent}%
                       </td>
 
-                      <td className="border-b border-p-100 px-5 py-5 align-top text-lg font-semibold text-n-700">
+                      <td className="border-b border-p-100 px-4 py-4 align-top text-[15px] font-semibold text-n-700">
                         {payment.sortOrder}
                       </td>
 
-                      <td className="border-b border-p-100 px-5 py-5 align-top text-sm font-medium text-n-600">
+                      <td className="border-b border-p-100 px-4 py-4 align-top text-[13px] font-medium text-n-600">
                         {new Date(payment.updated_at).toLocaleDateString("vi-VN")}
                       </td>
 
-                      <td className="border-b border-p-100 px-5 py-5 align-top">
+                      <td className="border-b border-p-100 px-4 py-4 align-top">
                         <div className="flex flex-wrap items-center justify-end gap-2">
                           <button
                             type="button"
@@ -231,19 +235,19 @@ export default function PaymentList({
                               setInternalSelectedId(payment.id);
                               onView?.(payment);
                             }}
-                            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-p-100 bg-p-50 text-n-600 transition hover:border-p-300 hover:bg-white hover:text-p-700"
+                            className="flex h-9 w-9 items-center justify-center rounded-xl border border-p-100 bg-p-50 text-n-600 transition hover:border-p-300 hover:bg-white hover:text-p-700"
                             aria-label={`Xem ${payment.name}`}
                           >
-                            <Eye className="h-5 w-5" />
+                            <Eye className="h-4 w-4" />
                           </button>
 
                           <button
                             type="button"
                             onClick={() => onEdit?.(payment)}
-                            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-p-100 bg-white text-n-600 transition hover:border-p-300 hover:bg-p-50 hover:text-p-700"
+                            className="flex h-9 w-9 items-center justify-center rounded-xl border border-p-100 bg-white text-n-600 transition hover:border-p-300 hover:bg-p-50 hover:text-p-700"
                             aria-label={`Sửa ${payment.name}`}
                           >
-                            <Pencil className="h-5 w-5" />
+                            <Pencil className="h-4 w-4" />
                           </button>
 
                           <button
@@ -252,10 +256,10 @@ export default function PaymentList({
                               if (internalSelectedId === payment.id) setInternalSelectedId(undefined);
                               onDelete?.(payment.id);
                             }}
-                            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-rose-100 bg-rose-50 text-rose-600 transition hover:border-rose-200 hover:bg-rose-100"
+                            className="flex h-9 w-9 items-center justify-center rounded-xl border border-rose-100 bg-rose-50 text-rose-600 transition hover:border-rose-200 hover:bg-rose-100"
                             aria-label={`Xóa ${payment.name}`}
                           >
-                            <Trash2 className="h-5 w-5" />
+                            <Trash2 className="h-4 w-4" />
                           </button>
                         </div>
                       </td>
