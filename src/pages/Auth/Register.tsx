@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthLayout } from "./AuthLayout";
-import { registerUser } from "../../api/shop/Auth/auth.api";
+import { registerUser } from "../../api/shop/auth.api";
 
 const RegisterPage = () => {
     const [username, setUsername] = useState("");

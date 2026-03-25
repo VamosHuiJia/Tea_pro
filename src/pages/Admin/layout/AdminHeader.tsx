@@ -1,5 +1,12 @@
 import { Bell, Menu, Search } from "lucide-react";
 import { useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+
+type CurrentUser = {
+  username?: string;
+  roleName?: string;
+  role?: { level?: string };
+};
 
 type AdminHeaderProps = {
   onOpenMobileMenu: () => void;
@@ -7,6 +14,18 @@ type AdminHeaderProps = {
 
 export default function AdminHeader({ onOpenMobileMenu }: AdminHeaderProps) {
   const location = useLocation();
+  const [user, setUser] = useState<CurrentUser | null>(null);
+
+  useEffect(() => {
+    const userStr = localStorage.getItem("user");
+    if (userStr) {
+      try {
+        setUser(JSON.parse(userStr));
+      } catch (e) {
+        console.error("Failed to parse user from localStorage");
+      }
+    }
+  }, []);
 
   const getPageTitle = (pathname: string) => {
     if (pathname.startsWith("/admin/brands")) return "Quản lý thương hiệu";
@@ -35,7 +54,7 @@ export default function AdminHeader({ onOpenMobileMenu }: AdminHeaderProps) {
           </button>
 
           <div className="min-w-0">
-            <p className="truncate text-sm text-n-500">Xin chào, Admin</p>
+            <p className="truncate text-sm text-n-500">Xin chào, {user?.username || "Admin"}</p>
             <h2 className="truncate text-lg font-bold text-n-800 sm:text-xl">{pageTitle}</h2>
           </div>
         </div>
@@ -55,12 +74,12 @@ export default function AdminHeader({ onOpenMobileMenu }: AdminHeaderProps) {
           </button>
 
           <div className="flex shrink-0 items-center gap-2 rounded-full border border-p-100 bg-white px-2.5 py-2 sm:gap-3 sm:px-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-p-700 text-sm font-bold text-white sm:h-10 sm:w-10">
-              A
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-p-700 text-sm font-bold text-white uppercase sm:h-10 sm:w-10">
+              {user?.username ? user.username.charAt(0) : "A"}
             </div>
             <div className="hidden sm:block">
-              <p className="text-sm font-semibold text-n-800">Admin Tea</p>
-              <p className="text-xs text-n-500">Quản trị viên</p>
+              <p className="text-sm font-semibold text-n-800">{user?.username || "Admin"}</p>
+              <p className="text-xs text-n-500">{user?.roleName || (user?.role?.level === "admin" ? "Quản trị viên" : "Nhân viên")}</p>
             </div>
           </div>
         </div>
