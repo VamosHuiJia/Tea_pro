@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 
 import Home from "./pages/Home/Home";
 import Products from "./pages/Products/Products";
+import ProductDetail from "./pages/Products/ui/ProductDetail";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import Profile from "./pages/Profile/Profile";
@@ -45,6 +46,7 @@ function AppRoutes() {
           <Routes location={backgroundLocation || location}>
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<Products />} />
+            <Route path="/products/:id" element={<ProductDetail />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />

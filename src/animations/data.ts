@@ -1,183 +1,235 @@
-// src/animations/data.ts
+export type ProductCategory = {
+  id: number;
+  name: string;
+  slug: string;
+};
 
-export const productList = [
+export type ProductBrand = {
+  id: number;
+  name: string;
+};
+
+export type ProductItem = {
+  id: number;
+  urlImg: string | null;
+  name: string;
+  description: string | null;
+  quantity: number;
+  sold: number;
+  category: ProductCategory;
+  categoryId: number;
+  brand: ProductBrand;
+  brandId: number;
+  originalPrice: number;
+  discountPercent: number;
+  currentPrice: number;
+  isActive: boolean;
+};
+
+export const productList: ProductItem[] = [
   {
+    id: 1,
+    urlImg: "/images/products/blacktea1.jpg",
     name: "Midnight Spice",
-    img: "../../public/images/products/blacktea1.jpg",
     description:
-      "Một sự pha trộn đậm đà với quế, bạch đậu khấu và chút hương đinh hương.",
-    category: "blacktea",
+      "Một sự pha trộn đậm đà với quế, bạch đậu khấu và chút hương đinh hương, phù hợp cho buổi sáng đầy năng lượng.",
+    quantity: 40,
+    sold: 15,
+    category: { id: 1, name: "Trà đen", slug: "blacktea" },
+    categoryId: 1,
+    brand: { id: 1, name: "Tea House" },
+    brandId: 1,
+    originalPrice: 220000,
+    discountPercent: 15,
+    currentPrice: 187000,
+    isActive: true,
   },
   {
+    id: 2,
+    urlImg: "/images/products/blacktea2.jpg",
     name: "Golden Earl",
-    img: "../../public/images/products/blacktea2.jpg",
     description:
-      "Một biến tấu từ trà Earl Grey cổ điển với chút ngọt ngào của mật ong.",
-    category: "blacktea",
+      "Biến tấu từ Earl Grey cổ điển với hương mật ong nhẹ và hậu vị mềm mại.",
+    quantity: 28,
+    sold: 9,
+    category: { id: 1, name: "Trà đen", slug: "blacktea" },
+    categoryId: 1,
+    brand: { id: 2, name: "Royal Leaf" },
+    brandId: 2,
+    originalPrice: 245000,
+    discountPercent: 0,
+    currentPrice: 245000,
+    isActive: true,
   },
   {
+    id: 3,
+    urlImg: "/images/products/blacktea3.jpg",
     name: "Smoky Reverie",
-    img: "../../public/images/products/blacktea3.jpg",
-    description: "Trà đen đậm đà với hương khói, thoảng vị mạch nha và đất.",
-    category: "blacktea",
+    description:
+      "Trà đen đậm đà với hương khói, thoảng vị mạch nha và chút hậu vị đất ấm.",
+    quantity: 0,
+    sold: 31,
+    category: { id: 1, name: "Trà đen", slug: "blacktea" },
+    categoryId: 1,
+    brand: { id: 3, name: "Mountain Tea" },
+    brandId: 3,
+    originalPrice: 260000,
+    discountPercent: 10,
+    currentPrice: 234000,
+    isActive: false,
   },
   {
-    name: "Citrus Infusion",
-    img: "../../public/images/products/blacktea4.jpg",
-    description: "Trà đen tươi sáng với hương cam, chanh và cam bergamot rực rỡ.",
-    category: "blacktea",
-  },
-  {
+    id: 4,
+    urlImg: "/images/products/matcha1.jpg",
     name: "Zen Garden",
-    img: "../../public/images/products/matcha1.jpg",
     description:
-      "Sự kết hợp dịu nhẹ của matcha với chút hương hoa nhài và hoa hồng.",
-    category: "matcha",
+      "Matcha dịu nhẹ kết hợp với hương hoa nhài và hoa hồng, cân bằng và thanh mát.",
+    quantity: 52,
+    sold: 20,
+    category: { id: 2, name: "Matcha", slug: "matcha" },
+    categoryId: 2,
+    brand: { id: 1, name: "Tea House" },
+    brandId: 1,
+    originalPrice: 320000,
+    discountPercent: 20,
+    currentPrice: 256000,
+    isActive: true,
   },
   {
+    id: 5,
+    urlImg: "/images/products/matcha2.jpg",
     name: "Minted Harmony",
-    img: "../../public/images/products/matcha2.jpg",
-    description: "Matcha mượt mà kết hợp với bạc hà tươi mát và chút ngọt ngào.",
-    category: "matcha",
+    description:
+      "Matcha mượt mà hòa cùng bạc hà tươi mát, cực kỳ phù hợp cho những ngày nóng.",
+    quantity: 35,
+    sold: 12,
+    category: { id: 2, name: "Matcha", slug: "matcha" },
+    categoryId: 2,
+    brand: { id: 4, name: "Green Bloom" },
+    brandId: 4,
+    originalPrice: 295000,
+    discountPercent: 0,
+    currentPrice: 295000,
+    isActive: true,
   },
   {
-    name: "Citrus robotoflexze",
-    img: "../../public/images/products/matcha3.jpg",
-    description: "Matcha với hương chanh và chanh xanh tươi sáng, đầy sảng khoái.",
-    category: "matcha",
-  },
-  {
-    name: "Vanilla Bamboo",
-    img: "../../public/images/products/matcha4.jpg",
-    description: "Matcha béo ngậy, dịu ngọt với chút hương vani và tre thanh nhẹ.",
-    category: "matcha",
-  },
-  {
+    id: 6,
+    urlImg: "/images/products/matcha5.jpg",
     name: "Matcha Choco Bliss",
-    img: "../../public/images/products/matcha5.jpg",
     description:
-      "Sự hòa quyện đậm đà giữa matcha và socola cho một trải nghiệm mịn màng, đầy mê hoặc.",
-    category: "matcha",
+      "Sự hòa quyện giữa matcha và socola cho cảm giác đậm vị nhưng vẫn thanh nhẹ.",
+    quantity: 14,
+    sold: 18,
+    category: { id: 2, name: "Matcha", slug: "matcha" },
+    categoryId: 2,
+    brand: { id: 4, name: "Green Bloom" },
+    brandId: 4,
+    originalPrice: 340000,
+    discountPercent: 12,
+    currentPrice: 299200,
+    isActive: true,
   },
   {
-    name: "Spiced Serenity",
-    img: "../../public/images/products/matcha6.jpg",
-    description: "Matcha kết hợp với quế ấm, gừng và chút đinh hương.",
-    category: "matcha",
-  },
-  {
-    name: "Berry Blossom",
-    img: "../../public/images/products/matcha7.jpg",
-    description:
-      "Matcha pha cùng hương dâu và việt quất nhẹ nhàng, tạo nên vị trái cây thú vị.",
-    category: "matcha",
-  },
-  {
-    name: "Lavender Dream",
-    img: "../../public/images/products/matcha8.jpg",
-    description: "Matcha dịu nhẹ với hương hoa oải hương thư giãn và chút mật ong.",
-    category: "matcha",
-  },
-  {
+    id: 7,
+    urlImg: "/images/products/oolong1.jpg",
     name: "Jade Orchid",
-    img: "../../public/images/products/oolong1.jpg",
-    description: "Trà ô long thơm ngát với hương hoa lan và hoa nhài tinh tế.",
-    category: "oolong",
+    description:
+      "Trà ô long thơm ngát với hương hoa lan và hoa nhài tinh tế, hậu vị rất sạch.",
+    quantity: 26,
+    sold: 7,
+    category: { id: 3, name: "Trà ô long", slug: "oolong" },
+    categoryId: 3,
+    brand: { id: 5, name: "Orient Leaf" },
+    brandId: 5,
+    originalPrice: 280000,
+    discountPercent: 8,
+    currentPrice: 257600,
+    isActive: true,
   },
   {
-    name: "Citrus Blossom",
-    img: "../../public/images/products/oolong2.jpg",
-    description: "Trà ô long tươi mát với chút hương cam, bưởi và mật ong.",
-    category: "oolong",
-  },
-  {
-    name: "Velvet Honeycomb",
-    img: "../../public/images/products/oolong3.jpg",
-    description: "Trà ô long mượt mà với vị ngọt mật ong và cảm giác béo nhẹ.",
-    category: "oolong",
-  },
-  {
+    id: 8,
+    urlImg: "/images/products/oolong4.jpg",
     name: "Golden Lotus",
-    img: "../../public/images/products/oolong4.jpg",
     description:
-      "Trà ô long ấm áp, hương hoa nhẹ nhàng với chút vị đào chín và hậu vị bơ nhẹ.",
-    category: "oolong",
+      "Trà ô long ấm áp, hương hoa nhẹ và chút vị đào chín, phù hợp dùng mỗi chiều.",
+    quantity: 22,
+    sold: 11,
+    category: { id: 3, name: "Trà ô long", slug: "oolong" },
+    categoryId: 3,
+    brand: { id: 5, name: "Orient Leaf" },
+    brandId: 5,
+    originalPrice: 310000,
+    discountPercent: 0,
+    currentPrice: 310000,
+    isActive: true,
   },
   {
-    name: "Spiced Bamboo",
-    img: "../../public/images/products/oolong5.jpg",
-    description: "Trà ô long pha cùng gia vị ấm như quế, gừng và hoa hồi.",
-    category: "oolong",
-  },
-  {
-    name: "Tropical Silk",
-    img: "../../public/images/products/oolong6.jpg",
-    description: "Trà ô long mịn màng với hương xoài, dứa và chút dừa nhiệt đới.",
-    category: "oolong",
-  },
-  {
-    name: "Almond Blossom",
-    img: "../../public/images/products/oolong7.jpg",
-    description:
-      "Trà ô long có vị hạt nhẹ nhàng, chút ngọt của hạnh nhân rang và hương hoa dịu.",
-    category: "oolong",
-  },
-  {
+    id: 9,
+    urlImg: "/images/products/oolong8.jpg",
     name: "Mystic Garden",
-    img: "../../public/images/products/oolong8.jpg",
     description:
-      "Trà ô long với hương đất, gỗ và kết thúc bằng hương hoa thanh nhẹ như dạo bước trong vườn thiền.",
-    category: "oolong",
+      "Trà ô long với hương đất, gỗ và lớp hương hoa thanh nhẹ như dạo bước trong vườn thiền.",
+    quantity: 9,
+    sold: 16,
+    category: { id: 3, name: "Trà ô long", slug: "oolong" },
+    categoryId: 3,
+    brand: { id: 6, name: "Zen Valley" },
+    brandId: 6,
+    originalPrice: 355000,
+    discountPercent: 18,
+    currentPrice: 291100,
+    isActive: true,
   },
   {
+    id: 10,
+    urlImg: "/images/products/whitetea1.jpg",
     name: "Silver Dew",
-    img: "../../public/images/products/whitetea1.jpg",
-    description: "Trà trắng nhẹ nhàng với hương lê tươi mát và chút hoa nhài.",
-    category: "whitetea",
+    description:
+      "Trà trắng nhẹ nhàng với hương lê tươi mát và chút hoa nhài, cực kỳ thanh tao.",
+    quantity: 18,
+    sold: 5,
+    category: { id: 4, name: "Trà trắng", slug: "whitetea" },
+    categoryId: 4,
+    brand: { id: 2, name: "Royal Leaf" },
+    brandId: 2,
+    originalPrice: 265000,
+    discountPercent: 0,
+    currentPrice: 265000,
+    isActive: true,
   },
   {
-    name: "Peach Blossom",
-    img: "../../public/images/products/whitetea2.jpg",
-    description: "Trà trắng thơm dịu với hương đào mềm mại và nền hoa nhẹ.",
-    category: "whitetea",
-  },
-  {
+    id: 11,
+    urlImg: "/images/products/whitetea3.jpg",
     name: "Vanilla Snowfall",
-    img: "../../public/images/products/whitetea3.jpg",
-    description: "Trà trắng mịn màng, béo nhẹ với hương vani và chút hạnh nhân.",
-    category: "whitetea",
-  },
-  {
-    name: "Lemon robotoflexze",
-    img: "../../public/images/products/whitetea4.jpg",
-    description: "Trà trắng tươi mát với hương chanh sáng và chút bạc hà.",
-    category: "whitetea",
-  },
-  {
-    name: "Wildflower Dream",
-    img: "../../public/images/products/whitetea5.jpg",
     description:
-      "Trà trắng ngọt tự nhiên với hương hoa cúc, mật ong và các loại hoa dại.",
-    category: "whitetea",
+      "Trà trắng mịn màng với hương vani và hạnh nhân nhẹ, phù hợp làm quà tặng.",
+    quantity: 12,
+    sold: 14,
+    category: { id: 4, name: "Trà trắng", slug: "whitetea" },
+    categoryId: 4,
+    brand: { id: 7, name: "Pure Mist" },
+    brandId: 7,
+    originalPrice: 300000,
+    discountPercent: 25,
+    currentPrice: 225000,
+    isActive: true,
   },
   {
-    name: "Coconut Mist",
-    img: "../../public/images/products/whitetea6.jpg",
-    description: "Trà trắng với chút hương dừa nhiệt đới và vani nhẹ nhàng.",
-    category: "whitetea",
-  },
-  {
-    name: "Rosewater Whisper",
-    img: "../../public/images/products/whitetea7.jpg",
-    description: "Trà trắng dịu nhẹ, hương hoa hồng thanh thoát và chút mật ong.",
-    category: "whitetea",
-  },
-  {
+    id: 12,
+    urlImg: "/images/products/whitetea8.jpg",
     name: "Golden Sunrise",
-    img: "../../public/images/products/whitetea8.jpg",
     description:
-      "Trà trắng ngọt ngào với hương trái cây nhiệt đới và chút vỏ cam chanh.",
-    category: "whitetea",
+      "Trà trắng ngọt ngào với hương trái cây nhiệt đới và chút vỏ cam chanh đầy sảng khoái.",
+    quantity: 0,
+    sold: 22,
+    category: { id: 4, name: "Trà trắng", slug: "whitetea" },
+    categoryId: 4,
+    brand: { id: 7, name: "Pure Mist" },
+    brandId: 7,
+    originalPrice: 315000,
+    discountPercent: 5,
+    currentPrice: 299250,
+    isActive: false,
   },
 ];
 
