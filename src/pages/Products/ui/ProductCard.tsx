@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ShoppingCart } from "lucide-react";
 import { useCart } from "../../../contexts/CartContext";
 import type { ProductItem } from "../../../animations/data";
+import { useTruncate } from "../../../hooks/useTruncate";
 
 type ProductCardProps = {
     product: ProductItem;
@@ -20,6 +21,11 @@ export default function ProductCard({ product }: ProductCardProps) {
 
     const hasDiscount = Number(product.discountPercent) > 0;
     const finalPrice = Number(product.currentPrice || product.originalPrice);
+
+    const { ref: descriptionRef, truncatedText, isTruncated } = useTruncate({
+        text: product.description ?? "",
+        maxLines: 2,
+    });
 
     const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
@@ -74,8 +80,12 @@ export default function ProductCard({ product }: ProductCardProps) {
                     <h3 className="line-clamp-2 min-h-[56px] text-lg font-bold text-n-800">
                         {product.name}
                     </h3>
-                    <p className="mt-2 line-clamp-2 text-sm text-n-500">
-                        {product.description}
+                    <p
+                        ref={descriptionRef as any}
+                        className="mt-2 text-sm text-n-500 min-h-[40px]"
+                        title={isTruncated ? (product.description ?? undefined) : undefined}
+                    >
+                        {truncatedText}
                     </p>
                 </div>
 
@@ -101,7 +111,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                         type="button"
                         onClick={handleAddToCart}
                         disabled={!product.isActive}
-                        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-p-900 bg-p-900 text-white transition hover:bg-p-700 disabled:cursor-not-allowed disabled:border-n-200 disabled:bg-n-200 disabled:text-n-500"
+                        className="absolute bottom-6 right-6 flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-p-900 bg-p-900 text-white transition hover:bg-p-700 disabled:cursor-not-allowed disabled:border-n-200 disabled:bg-n-200 disabled:text-n-500"
                         title="Thêm vào giỏ hàng"
                     >
                         <ShoppingCart className="h-5 w-5" />
