@@ -24,6 +24,8 @@ export type PaymentFormValues = {
   feePercent: number;
   sortOrder: number;
   transactionPrefix: string;
+  image?: File | null;
+  qrCodeUrl?: string | null;
 };
 
 export type PaymentItem = {
@@ -36,6 +38,7 @@ export type PaymentItem = {
   feePercent: number;
   sortOrder: number;
   transactionPrefix: string;
+  qrCodeUrl: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -81,6 +84,7 @@ export default function PaymentLayout() {
   const [openModal, setOpenModal] = useState(false);
   const [mode, setMode] = useState<"create" | "edit">("create");
   const [selectedPayment, setSelectedPayment] = useState<PaymentItem | null>(null);
+  const [viewedPayment, setViewedPayment] = useState<PaymentItem | null>(null);
   const [loading, setLoading] = useState(true);
   const { showToast } = useToast();
 
@@ -175,6 +179,7 @@ export default function PaymentLayout() {
         } else if (selectedPayment) {
             await updatePaymentMethod(selectedPayment.id, values);
             showToast("Cập nhật thành công", "success");
+            if (viewedPayment?.id === selectedPayment.id) setViewedPayment(null);
         }
         await fetchPayments();
         setOpenModal(false);
@@ -184,7 +189,8 @@ export default function PaymentLayout() {
     }
   };
 
-  const featuredMeta = featuredMethod ? (methodMeta[featuredMethod.method] || defaultMeta) : null;
+  const displayMethod = viewedPayment || featuredMethod;
+  const featuredMeta = displayMethod ? (methodMeta[displayMethod.method] || defaultMeta) : null;
   const FeaturedIcon = featuredMeta?.icon ?? CircleDollarSign;
 
   return (
@@ -241,7 +247,9 @@ export default function PaymentLayout() {
           statusFilter={statusFilter}
           onSearchChange={setSearchTerm}
           onStatusFilterChange={setStatusFilter}
+          selectedId={viewedPayment?.id}
           onCreate={handleOpenCreate}
+          onView={(item) => setViewedPayment(item)}
           onEdit={handleOpenEdit}
           onDelete={handleDelete}
         />
@@ -250,9 +258,11 @@ export default function PaymentLayout() {
           <div className="rounded-[28px] border border-p-100 bg-white p-5 shadow-sm">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-sm font-medium text-n-500">Ưu tiên hiển thị</p>
+                <p className="text-sm font-medium text-n-500">
+                  {viewedPayment ? "Chi tiết phương thức" : "Ưu tiên hiển thị"}
+                </p>
                 <h3 className="mt-1 text-xl font-bold text-n-800">
-                  {featuredMethod?.name ?? "Chưa có dữ liệu"}
+                  {displayMethod?.name ?? "Chưa có dữ liệu"}
                 </h3>
               </div>
 
@@ -261,7 +271,7 @@ export default function PaymentLayout() {
               </div>
             </div>
 
-            {featuredMethod && featuredMeta ? (
+            {displayMethod && featuredMeta ? (
               <>
                 <div className="mt-4 flex flex-wrap items-center gap-2">
                   <span
@@ -270,24 +280,31 @@ export default function PaymentLayout() {
                     {featuredMeta.label}
                   </span>
                   <span className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
-                    Thứ tự {featuredMethod.sortOrder}
+                    Thứ tự {displayMethod.sortOrder}
                   </span>
                 </div>
 
-                <p className="mt-4 text-sm leading-6 text-n-600">{featuredMethod.description}</p>
+                <p className="mt-4 text-sm leading-6 text-n-600">{displayMethod.description}</p>
+
+                {displayMethod.qrCodeUrl && (
+                  <div className="mt-4">
+                    <p className="text-xs text-n-500 mb-2">Mã QR / Logo</p>
+                    <img src={displayMethod.qrCodeUrl} alt="QR Code" className="w-32 h-32 object-cover rounded-xl border border-p-100" />
+                  </div>
+                )}
 
                 <div className="mt-5 grid grid-cols-2 gap-3">
                   <div className="rounded-2xl bg-p-50 p-4">
                     <p className="text-xs text-n-500">Prefix giao dịch</p>
                     <p className="mt-1 text-base font-semibold text-n-800">
-                      {featuredMethod.transactionPrefix}
+                      {displayMethod.transactionPrefix}
                     </p>
                   </div>
 
                   <div className="rounded-2xl bg-p-50 p-4">
                     <p className="text-xs text-n-500">Phí áp dụng</p>
                     <p className="mt-1 text-base font-semibold text-n-800">
-                      {featuredMethod.feePercent}%
+                      {displayMethod.feePercent}%
                     </p>
                   </div>
                 </div>

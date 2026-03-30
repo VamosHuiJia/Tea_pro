@@ -25,6 +25,8 @@ const defaultValues: PaymentFormValues = {
   feePercent: 0,
   sortOrder: 1,
   transactionPrefix: "",
+  image: null,
+  qrCodeUrl: null,
 };
 
 const methodPreview: Record<
@@ -77,6 +79,8 @@ export default function PaymentModal({
         feePercent: initialData.feePercent,
         sortOrder: initialData.sortOrder,
         transactionPrefix: initialData.transactionPrefix,
+        qrCodeUrl: initialData.qrCodeUrl,
+        image: null,
       });
     } else {
       setForm(defaultValues);
@@ -218,6 +222,19 @@ export default function PaymentModal({
               </div>
 
               <div className="md:col-span-2">
+                <label className="mb-2 block text-sm font-semibold text-n-700">Ảnh QR / Logo (Tùy chọn)</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleChange("image", file);
+                  }}
+                  className="w-full rounded-2xl border border-p-100 bg-white px-4 py-3 text-sm text-n-800 outline-none transition focus:border-p-400 file:mr-4 file:rounded-xl file:border file:border-p-200 file:bg-p-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-n-700 hover:file:bg-p-100"
+                />
+              </div>
+
+              <div className="md:col-span-2">
                 <label className="flex items-center gap-3 rounded-2xl border border-p-100 bg-p-50 px-4 py-3">
                   <input
                     type="checkbox"
@@ -272,6 +289,16 @@ export default function PaymentModal({
                   <p className="mt-2 text-sm leading-6 text-n-500">
                     {form.description || "Mô tả ngắn của phương thức sẽ hiển thị ở đây."}
                   </p>
+
+                  {(form.image || form.qrCodeUrl) && (
+                    <div className="mt-4 overflow-hidden rounded-xl border border-p-100">
+                      <img 
+                        src={form.image ? URL.createObjectURL(form.image) : form.qrCodeUrl!} 
+                        alt="QR Code Preview" 
+                        className="h-32 w-32 object-cover object-center"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
 
