@@ -15,7 +15,7 @@ import { exportToExcel, importFromExcel } from "../../../../utils/excel";
 import { getAllCategories } from "../../../../api/admin/category.api";
 import { getAllBrands } from "../../../../api/admin/brand.api";
 import { getAllProducts, createProduct, updateProduct, deleteProduct } from "../../../../api/admin/product.api";
-    // mock items removed
+import { useToast } from "../../../../contexts/ToastContext";
 
 function normalizeImportedRow(row: Record<string, unknown>, categories: ProductOption[], brands: ProductOption[]) {
   const categoryName = String(
@@ -83,6 +83,7 @@ export default function ProductLayout() {
   const [listLoading, setListLoading] = useState(true);
   const [mode, setMode] = useState<"create" | "edit">("create");
   const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
+  const { showToast } = useToast();
 
   const excelInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -174,9 +175,9 @@ export default function ProductLayout() {
     try {
       await deleteProduct(Number(product.id));
       setProducts((prev) => prev.filter((item) => item.id !== product.id));
-      alert("Xóa thành công!");
+      showToast("Xóa thành công!", "success");
     } catch (error) {
-      alert("Lỗi khi xóa sản phẩm");
+      showToast("Lỗi khi xóa sản phẩm", "error");
     }
   };
 
@@ -210,7 +211,7 @@ export default function ProductLayout() {
              brandName: bName
           };
           setProducts((prev) => [newProduct, ...prev]);
-          alert("Thêm thành công!");
+          showToast("Thêm thành công!", "success");
         }
       } else if (selectedProduct) {
         const res = await updateProduct(Number(selectedProduct.id), formData);
@@ -226,7 +227,7 @@ export default function ProductLayout() {
           setProducts((prev) =>
             prev.map((item) => (item.id === selectedProduct.id ? newProduct : item))
           );
-          alert("Cập nhật thành công!");
+          showToast("Cập nhật thành công!", "success");
         }
       }
 
@@ -273,7 +274,7 @@ export default function ProductLayout() {
         }
       }
       
-      alert("Đã hoàn tất nhập dữ liệu Excel!");
+      showToast("Đã hoàn tất nhập dữ liệu Excel!", "success");
       await fetchData();
     } catch (error) {
       console.error("Lỗi khi đọc file Excel:", error);

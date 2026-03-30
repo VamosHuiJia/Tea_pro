@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { CartProvider } from "./contexts/CartContext";
+import { ToastProvider } from "./contexts/ToastContext";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -79,9 +80,11 @@ function AppRoutes() {
 function App() {
   return (
     <CartProvider>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
+      <ToastProvider>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </ToastProvider>
     </CartProvider>
   );
 }

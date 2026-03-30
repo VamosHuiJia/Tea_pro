@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthLayout } from "./AuthLayout";
 import { registerUser } from "../../api/shop/auth.api";
+import { useToast } from "../../contexts/ToastContext";
 
 const RegisterPage = () => {
     const [username, setUsername] = useState("");
@@ -13,6 +14,7 @@ const RegisterPage = () => {
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const { showToast } = useToast();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -26,9 +28,10 @@ const RegisterPage = () => {
         setIsLoading(true);
         try {
             await registerUser(username, email, password, phone);
-            alert("Đăng ký thành công! Vui lòng đăng nhập.");
+            showToast("Đăng ký thành công! Vui lòng đăng nhập.", "success");
             navigate("/login");
         } catch (err: any) {
+            showToast("Đăng ký thất bại!", "error");
             setError(err.message || "Đăng ký thất bại");
         } finally {
             setIsLoading(false);

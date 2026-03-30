@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthLayout } from "./AuthLayout";
 import { loginUser } from "../../api/shop/auth.api";
+import { useToast } from "../../contexts/ToastContext";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -9,6 +10,7 @@ const LoginPage = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,9 +24,10 @@ const LoginPage = () => {
       localStorage.setItem("user", JSON.stringify(data.user));
       window.dispatchEvent(new Event("auth-changed"));
 
-      alert("Đăng nhập thành công!");
+      showToast("Đăng nhập thành công!", "success");
       navigate("/");
     } catch (err: any) {
+      showToast("Đăng nhập thất bại!", "error");
       setError(err.message || "Đăng nhập thất bại");
     } finally {
       setIsLoading(false);

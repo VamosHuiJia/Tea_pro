@@ -6,6 +6,7 @@ import type { CategoryItem } from "./CategoryList";
 import CategoryModal from "./CategoryModal";
 import type { CategoryFormValues } from "./CategoryModal";
 import { getAllCategories, createCategory, updateCategory, deleteCategory } from "../../../../api/admin/category.api";
+import { useToast } from "../../../../contexts/ToastContext";
 
 function normalizeImportedRow(row: Record<string, unknown>): CategoryFormValues {
   return {
@@ -27,6 +28,7 @@ export default function CategoryLayout() {
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<"create" | "edit">("create");
   const [selectedCategory, setSelectedCategory] = useState<CategoryItem | null>(null);
+  const { showToast } = useToast();
 
   const excelInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -55,7 +57,7 @@ export default function CategoryLayout() {
       }
     } catch (error) {
       console.error(error);
-      alert("Lỗi tải danh sách danh mục");
+      showToast("Lỗi tải danh sách danh mục", "error");
     } finally {
       setLoading(false);
     }
@@ -86,10 +88,10 @@ export default function CategoryLayout() {
     try {
       await deleteCategory(Number(category.id));
       setCategories((prev) => prev.filter((item) => item.id !== category.id));
-      alert("Xóa thành công!");
+      showToast("Xóa thành công!", "success");
     } catch (error) {
       console.error(error);
-      alert("Lỗi khi xóa danh mục");
+      showToast("Lỗi khi xóa danh mục", "error");
     }
   };
 
@@ -110,7 +112,7 @@ export default function CategoryLayout() {
         const res = await createCategory(formData);
         if (res.success) {
           setCategories((prev) => [res.data, ...prev]);
-          alert("Thêm mới thành công!");
+          showToast("Thêm mới thành công!", "success");
         }
       } else if (selectedCategory) {
         const res = await updateCategory(Number(selectedCategory.id), formData);
@@ -118,7 +120,7 @@ export default function CategoryLayout() {
           setCategories((prev) =>
             prev.map((item) => (item.id === selectedCategory.id ? res.data : item))
           );
-          alert("Cập nhật thành công!");
+          showToast("Cập nhật thành công!", "success");
         }
       }
 
@@ -126,7 +128,7 @@ export default function CategoryLayout() {
       setSelectedCategory(null);
     } catch (error) {
       console.error("Lỗi submit category:", error);
-      alert("Đã xảy ra lỗi khi lưu thông tin");
+      showToast("Đã xảy ra lỗi khi lưu thông tin", "error");
     } finally {
       setLoading(false);
     }
@@ -161,11 +163,11 @@ export default function CategoryLayout() {
           await createCategory(formData);
           successCount++;
         } catch (err) {
-          console.error(`Lỗi import mục ${row.name}:`, err);
+          console.error(`Lỗi nhập mục ${row.name}:`, err);
         }
       }
 
-      alert(`Đã import thành công ${successCount}/${normalizedRows.length} danh mục`);
+      showToast(`Đã nhập thành công ${successCount}/${normalizedRows.length} danh mục`, "success");
       await fetchCategories();
     } catch (error) {
       console.error("Lỗi khi đọc file Excel:", error);

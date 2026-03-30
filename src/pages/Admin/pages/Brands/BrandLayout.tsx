@@ -6,6 +6,7 @@ import type { BrandItem } from "./BrandList";
 import BrandModal from "./BrandModal";
 import type { BrandFormValues } from "./BrandModal";
 import { getAllBrands, createBrand, updateBrand, deleteBrand } from "../../../../api/admin/brand.api";
+import { useToast } from "../../../../contexts/ToastContext";
 
 function normalizeImportedRow(row: Record<string, unknown>): BrandFormValues {
   return {
@@ -27,6 +28,7 @@ export default function BrandLayout() {
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<"create" | "edit">("create");
   const [selectedBrand, setSelectedBrand] = useState<BrandItem | null>(null);
+  const { showToast } = useToast();
 
   const excelInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -52,7 +54,7 @@ export default function BrandLayout() {
       }
     } catch (error) {
       console.error(error);
-      alert("Lỗi tải danh sách thương hiệu");
+      showToast("Lỗi tải danh sách thương hiệu", "error");
     } finally {
       setLoading(false);
     }
@@ -83,10 +85,10 @@ export default function BrandLayout() {
     try {
       await deleteBrand(Number(brand.id));
       setBrands((prev) => prev.filter((item) => item.id !== brand.id));
-      alert("Xóa thành công!");
+      showToast("Xóa thành công!", "success");
     } catch (error) {
       console.error(error);
-      alert("Lỗi khi xóa thương hiệu");
+      showToast("Lỗi khi xóa thương hiệu", "error");
     }
   };
 
@@ -107,7 +109,7 @@ export default function BrandLayout() {
         const res = await createBrand(formData);
         if (res.success) {
           setBrands((prev) => [res.data, ...prev]);
-          alert("Thêm mới thành công!");
+          showToast("Thêm mới thành công!", "success");
         }
       } else if (selectedBrand) {
         const res = await updateBrand(Number(selectedBrand.id), formData);
@@ -115,7 +117,7 @@ export default function BrandLayout() {
           setBrands((prev) =>
             prev.map((item) => (item.id === selectedBrand.id ? res.data : item))
           );
-          alert("Cập nhật thành công!");
+          showToast("Cập nhật thành công!", "success");
         }
       }
 
@@ -123,7 +125,7 @@ export default function BrandLayout() {
       setSelectedBrand(null);
     } catch (error) {
       console.error("Lỗi submit brand:", error);
-      alert("Đã xảy ra lỗi khi lưu thông tin");
+      showToast("Đã xảy ra lỗi khi lưu thông tin", "error");
     } finally {
       setLoading(false);
     }
@@ -159,14 +161,15 @@ export default function BrandLayout() {
           await createBrand(formData);
           successCount++;
         } catch (err) {
-          console.error(`Lỗi import mục ${row.name}:`, err);
+          console.error(`Lỗi nhập mục ${row.name}:`, err);
         }
       }
 
-      alert(`Đã import thành công ${successCount}/${normalizedRows.length} thương hiệu`);
+      showToast(`Đã nhập thành công ${successCount}/${normalizedRows.length} thương hiệu`, "success");
       await fetchBrands();
     } catch (error) {
       console.error("Lỗi khi đọc file Excel:", error);
+      showToast("Lỗi khi đọc file Excel", "error");
     } finally {
       setLoading(false);
       event.target.value = "";
