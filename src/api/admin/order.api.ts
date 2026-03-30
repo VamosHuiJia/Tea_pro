@@ -1,6 +1,6 @@
 import type { OrderStatus } from "../../pages/Admin/pages/Orders/OrderLayout";
 
-const API_BASE_URL = `${import.meta.env.REACT_APP_API_URL || "http://localhost:8000"}/api`;
+const API_BASE_URL = `${import.meta.env.REACT_APP_API_URL}/api`;
 
 function getAuthHeaders() {
   const token = localStorage.getItem("token");

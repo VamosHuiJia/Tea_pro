@@ -1,6 +1,6 @@
 import type { PaymentFormValues } from "../../pages/Admin/pages/Payment/PaymentLayout";
 
-const API_BASE_URL = `${import.meta.env.REACT_APP_API_URL || "http://localhost:8000"}/api`;
+const API_BASE_URL = `${import.meta.env.REACT_APP_API_URL}/api`;
 
 function getAuthHeaders(isFormData = false) {
   const token = localStorage.getItem("token");
