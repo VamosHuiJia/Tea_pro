@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ChevronDown,
   Search,
@@ -12,61 +12,8 @@ import type { CustomerItem } from "./CustomerList";
 import CustomerModal from "./CustomerModal";
 import type { CustomerFormValues } from "./CustomerModal";
 import { exportToExcel, importFromExcel } from "../../../../utils/excel";
-
-const mockCustomers: CustomerItem[] = [
-  {
-    id: 2001,
-    publicId: "cus_001",
-    username: "ngocanh",
-    fullName: "Nguyễn Ngọc Anh",
-    email: "ngocanh@gmail.com",
-    phone: "0901234567",
-    avatar_url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=500&q=80",
-    roleName: "Khách hàng thân thiết",
-    roleLevel: "customer",
-    created_at: "2026-03-04T09:20:00",
-    updated_at: "2026-03-17T14:05:00",
-  },
-  {
-    id: 2002,
-    publicId: "cus_002",
-    username: "minhthu",
-    fullName: "Trần Minh Thư",
-    email: "minhthu@gmail.com",
-    phone: "0912987654",
-    avatar_url: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=500&q=80",
-    roleName: "Khách hàng mới",
-    roleLevel: "customer",
-    created_at: "2026-03-08T10:45:00",
-    updated_at: "2026-03-18T09:30:00",
-  },
-  {
-    id: 2003,
-    publicId: "cus_003",
-    username: "quanghuy",
-    fullName: "Lê Quang Huy",
-    email: "quanghuy@gmail.com",
-    phone: "0988111222",
-    avatar_url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=500&q=80",
-    roleName: "Khách hàng",
-    roleLevel: "customer",
-    created_at: "2026-03-11T08:10:00",
-    updated_at: "2026-03-16T16:15:00",
-  },
-  {
-    id: 2004,
-    publicId: "cus_004",
-    username: "linhchi",
-    fullName: "Phạm Linh Chi",
-    email: "linhchi@gmail.com",
-    phone: "0977333444",
-    avatar_url: "",
-    roleName: "Khách hàng VIP",
-    roleLevel: "customer",
-    created_at: "2026-03-12T13:35:00",
-    updated_at: "2026-03-18T15:25:00",
-  },
-];
+import { getAllUsers, createUser, updateUser, deleteUser } from "../../../../api/admin/user.api";
+import { useToast } from "../../../../contexts/ToastContext";
 
 function normalizeImportedCustomer(row: Record<string, unknown>) {
   return {
@@ -90,14 +37,50 @@ function normalizeImportedCustomer(row: Record<string, unknown>) {
 }
 
 export default function CustomerLayout() {
-  const [customers, setCustomers] = useState<CustomerItem[]>(mockCustomers);
+  const [customers, setCustomers] = useState<CustomerItem[]>([]);
   const [keyword, setKeyword] = useState("");
   const [selectedRoleName, setSelectedRoleName] = useState("all");
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [listLoading, setListLoading] = useState(true);
   const [mode, setMode] = useState<"create" | "edit" | "delete">("create");
   const [selectedCustomer, setSelectedCustomer] = useState<CustomerItem | null>(null);
   const excelInputRef = useRef<HTMLInputElement | null>(null);
+  const { showToast } = useToast();
+
+  const fetchData = async () => {
+    setListLoading(true);
+    try {
+      const res = await getAllUsers();
+      // "Lưu ý ở Employees là chỉ hiển thị những tài khoản có rolelevel là staff và admin 
+      // còn Customers là những tài khoản có rolelevel là customer"
+      const customerData = res.filter((u: any) => String(u.role?.level).toLowerCase() === "customer");
+      
+      const mapped = customerData.map((c: any) => ({
+        id: c.id,
+        publicId: c.publicId,
+        username: c.username,
+        fullName: c.fullName || c.username,
+        email: c.email,
+        phone: c.phone || "",
+        avatar_url: c.avatar_url || "",
+        roleName: c.roleName || "Khách hàng",
+        roleLevel: "customer",
+        created_at: c.created_at,
+        updated_at: c.updated_at,
+      }));
+      setCustomers(mapped);
+    } catch (error: any) {
+      console.error(error);
+      showToast(error.message || "Lỗi lấy dữ liệu khách hàng", "error");
+    } finally {
+      setListLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const roleNameOptions = useMemo(() => {
     return Array.from(
@@ -156,59 +139,58 @@ export default function CustomerLayout() {
     setOpenModal(true);
   };
 
-  const handleSubmit = (values: CustomerFormValues) => {
+  const handleSubmit = async (values: CustomerFormValues) => {
     setLoading(true);
 
     try {
+      const formData = new FormData();
+      formData.append("username", values.username);
+      formData.append("fullName", values.fullName);
+      formData.append("email", values.email);
+      formData.append("phone", values.phone || "");
+      formData.append("roleName", values.roleName || "Khách hàng");
+      formData.append("roleLevel", "customer");
+      
       if (mode === "create") {
-        const now = new Date().toISOString();
-
-        const newCustomer: CustomerItem = {
-          id: Date.now(),
-          publicId: `cus_${Date.now()}`,
-          username: values.username,
-          fullName: values.fullName,
-          email: values.email,
-          phone: values.phone,
-          avatar_url: values.avatar_url,
-          roleName: values.roleName || "Khách hàng",
-          roleLevel: "customer",
-          created_at: now,
-          updated_at: now,
-        };
-
-        setCustomers((prev) => [newCustomer, ...prev]);
-      } else if (selectedCustomer) {
-        setCustomers((prev) =>
-          prev.map((item) =>
-            item.id === selectedCustomer.id
-              ? {
-                ...item,
-                username: values.username,
-                fullName: values.fullName,
-                email: values.email,
-                phone: values.phone,
-                avatar_url: values.avatar_url,
-                roleName: values.roleName || "Khách hàng",
-                roleLevel: "customer",
-                updated_at: new Date().toISOString(),
-              }
-              : item
-          )
-        );
+         formData.append("password", "123456"); 
       }
 
+      if (values.avatar_url && values.avatar_url.startsWith("data:image")) {
+        const fetchRes = await fetch(values.avatar_url);
+        const blob = await fetchRes.blob();
+        formData.append("avatar", blob, "avatar.png");
+      }
+
+      if (mode === "create") {
+        await createUser(formData);
+        showToast("Thêm khách hàng thành công", "success");
+      } else if (selectedCustomer) {
+        await updateUser(selectedCustomer.publicId || String(selectedCustomer.id), formData);
+        showToast("Cập nhật thành công", "success");
+      }
+
+      await fetchData();
       setOpenModal(false);
       setSelectedCustomer(null);
+    } catch (error: any) {
+      console.error(error);
+      showToast(error.message || "Lỗi lưu dữ liệu", "error");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleConfirmDelete = (customer: CustomerItem) => {
-    setCustomers((prev) => prev.filter((item) => item.id !== customer.id));
-    setOpenModal(false);
-    setSelectedCustomer(null);
+  const handleConfirmDelete = async (customer: CustomerItem) => {
+    try {
+        await deleteUser(customer.publicId || String(customer.id));
+        showToast("Xóa danh mục thành công", "success");
+        await fetchData();
+    } catch (error: any) {
+        showToast(error.message || "Lỗi khi xóa", "error");
+    } finally {
+        setOpenModal(false);
+        setSelectedCustomer(null);
+    }
   };
 
   const handleImportExcelClick = () => {
@@ -223,24 +205,28 @@ export default function CustomerLayout() {
 
     try {
       const rows = await importFromExcel<Record<string, unknown>>(file);
-      const mappedRows: CustomerItem[] = rows
+      const mappedRows = rows
         .map(normalizeImportedCustomer)
-        .filter((item) => item.fullName && item.email && item.username)
-        .map((item, index) => ({
-          id: Date.now() + index,
-          publicId: `cus_import_${Date.now() + index}`,
-          username: item.username,
-          fullName: item.fullName,
-          email: item.email,
-          phone: item.phone,
-          avatar_url: item.avatar_url,
-          roleName: item.roleName || "Khách hàng",
-          roleLevel: "customer",
-          created_at: item.created_at || new Date().toISOString(),
-          updated_at: item.updated_at || new Date().toISOString(),
-        }));
+        .filter((item) => item.fullName && item.email && item.username);
 
-      setCustomers((prev) => [...mappedRows, ...prev]);
+      for (const item of mappedRows) {
+        const formData = new FormData();
+        formData.append("username", item.username);
+        formData.append("fullName", item.fullName);
+        formData.append("email", item.email);
+        formData.append("phone", item.phone || "");
+        formData.append("roleName", item.roleName || "Khách hàng");
+        formData.append("roleLevel", "customer");
+        formData.append("password", "123456"); 
+        try {
+            await createUser(formData);
+        } catch (e) {
+            console.error("Lỗi khi thêm user import", e);
+        }
+      }
+      
+      showToast("Đã hoàn tất nhập dữ liệu Excel!", "success");
+      await fetchData();
     } catch (error) {
       console.error("Lỗi khi đọc file Excel khách hàng:", error);
     } finally {
@@ -318,7 +304,7 @@ export default function CustomerLayout() {
 
       <CustomerList
         customers={filteredCustomers}
-        loading={false}
+        loading={listLoading}
         onAdd={handleOpenCreate}
         onEdit={handleOpenEdit}
         onDelete={handleOpenDelete}

@@ -128,15 +128,10 @@ export default function PaymentModal({
 
         <div className="grid max-h-[95vh] overflow-y-auto lg:grid-cols-[1.35fr_0.9fr]">
           <div className="p-5 md:p-7">
-            <p className="text-sm font-medium text-n-500">
-              {mode === "create" ? "Thêm mới phương thức" : "Chỉnh sửa phương thức"}
-            </p>
+            
             <h2 className="mt-1 text-2xl font-bold text-n-800">
-              {mode === "create" ? "Payment Modal" : `Cập nhật ${initialData?.name ?? ""}`}
+              {mode === "create" ? "Thêm mới phương thức thanh toán" : `Cập nhật ${initialData?.name ?? ""}`}
             </h2>
-            <p className="mt-2 text-sm text-n-500">
-              Đây là modal giao diện chung cho thao tác thêm và sửa.
-            </p>
 
             <div className="mt-6 grid gap-5 md:grid-cols-2">
               <div className="md:col-span-2">
@@ -150,7 +145,7 @@ export default function PaymentModal({
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-semibold text-n-700">Method</label>
+                <label className="mb-2 block text-sm font-semibold text-n-700">Phương thức</label>
                 <select
                   value={form.method}
                   onChange={(e) => handleChange("method", e.target.value as PaymentMethodKey)}
@@ -231,7 +226,7 @@ export default function PaymentModal({
                     className="h-4 w-4 rounded border-p-200"
                   />
                   <span className="text-sm font-semibold text-n-700">
-                    Hiển thị phương thức này ở trang checkout
+                    Hiển thị phương thức này ở trang thanh toán
                   </span>
                 </label>
               </div>
@@ -304,11 +299,6 @@ export default function PaymentModal({
                     {form.transactionPrefix || "---"}
                   </p>
                 </div>
-              </div>
-
-              <div className="mt-5 rounded-2xl border border-dashed border-p-200 bg-p-50 px-4 py-3 text-sm text-n-600">
-                Gợi ý: sau này khi nối API, phần modal này có thể giữ nguyên, chỉ thay `onSubmit`
-                bằng call create / update thật.
               </div>
             </div>
           </div>

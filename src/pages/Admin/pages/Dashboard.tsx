@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
     ArrowUpRight,
     BadgeDollarSign,
@@ -8,6 +9,7 @@ import {
     Star,
     Users,
 } from "lucide-react";
+import { getDashboardStats } from "../../../api/admin/dashboard.api";
 
 type StatCardProps = {
     title: string;
@@ -24,74 +26,7 @@ type OrderItem = {
     status: "Đã thanh toán" | "Chờ xử lý" | "Đang giao";
 };
 
-const stats: StatCardProps[] = [
-    {
-        title: "Tổng doanh thu",
-        value: "84.500.000đ",
-        change: "+12.5% tháng này",
-        icon: <BadgeDollarSign className="h-5 w-5" />,
-    },
-    {
-        title: "Đơn hàng",
-        value: "1,286",
-        change: "+8.2% so với tuần trước",
-        icon: <ShoppingCart className="h-5 w-5" />,
-    },
-    {
-        title: "Sản phẩm",
-        value: "248",
-        change: "+14 sản phẩm mới",
-        icon: <Box className="h-5 w-5" />,
-    },
-    {
-        title: "Khách hàng",
-        value: "3,642",
-        change: "+5.1% khách quay lại",
-        icon: <Users className="h-5 w-5" />,
-    },
-];
-
-const recentOrders: OrderItem[] = [
-    {
-        id: "#DH001",
-        customer: "Nguyễn Minh Anh",
-        product: "Trà Oolong Sữa",
-        total: "245.000đ",
-        status: "Đã thanh toán",
-    },
-    {
-        id: "#DH002",
-        customer: "Trần Gia Hân",
-        product: "Trà Đào Cam Sả",
-        total: "168.000đ",
-        status: "Chờ xử lý",
-    },
-    {
-        id: "#DH003",
-        customer: "Lê Quốc Bảo",
-        product: "Combo Trà Trái Cây",
-        total: "320.000đ",
-        status: "Đang giao",
-    },
-    {
-        id: "#DH004",
-        customer: "Phạm Thanh Tâm",
-        product: "Matcha Latte",
-        total: "189.000đ",
-        status: "Đã thanh toán",
-    },
-];
-
-const topProducts = [
-    { name: "Trà Oolong Sữa", sold: 320, percent: 82 },
-    { name: "Trà Đào Cam Sả", sold: 274, percent: 70 },
-    { name: "Matcha Latte", sold: 231, percent: 61 },
-    { name: "Hồng Trà Sữa", sold: 198, percent: 54 },
-];
-
-const weeklyBars = [45, 62, 58, 80, 66, 91, 72];
-
-function getStatusClass(status: OrderItem["status"]) {
+function getStatusClass(status: OrderItem["status"] | string) {
     switch (status) {
         case "Đã thanh toán":
             return "bg-p-100 text-p-700 border border-p-200";
@@ -128,9 +63,60 @@ function StatCard({ title, value, change, icon }: StatCardProps) {
 }
 
 export default function Dashboard() {
+    const [data, setData] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        getDashboardStats().then(res => {
+            setData(res);
+            setLoading(false);
+        }).catch(e => {
+            console.error(e);
+            setLoading(false);
+        });
+    }, []);
+
+    if (loading || !data) {
+        return (
+            <div className="flex h-[80vh] items-center justify-center">
+                <div className="h-12 w-12 animate-spin rounded-full border-4 border-p-200 border-t-p-700"></div>
+            </div>
+        );
+    }
+
+    const vnCurrency = new Intl.NumberFormat("vi-VN");
+
+    const stats: StatCardProps[] = [
+        {
+            title: "Tổng doanh thu",
+            value: `${vnCurrency.format(data.totalRevenue)}đ`,
+            change: "Luôn cập nhật",
+            icon: <BadgeDollarSign className="h-5 w-5" />,
+        },
+        {
+            title: "Đơn hàng",
+            value: vnCurrency.format(data.totalOrders),
+            change: "Đơn hàng hệ thống",
+            icon: <ShoppingCart className="h-5 w-5" />,
+        },
+        {
+            title: "Sản phẩm",
+            value: vnCurrency.format(data.totalProducts),
+            change: "Mặt hàng đang bán",
+            icon: <Box className="h-5 w-5" />,
+        },
+        {
+            title: "Khách hàng",
+            value: vnCurrency.format(data.totalCustomers),
+            change: "Tài khoản User",
+            icon: <Users className="h-5 w-5" />,
+        },
+    ];
+
+    const topProduct = data.topProducts.length > 0 ? data.topProducts[0].name : "Chưa có SP";
+
     return (
         <div className="space-y-6">
-            {/* Hero heading */}
             <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-r from-p-900 via-p-700 to-p-500 p-6 text-white shadow-lg md:p-8">
                 <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
                 <div className="absolute bottom-0 right-10 h-24 w-24 rounded-full bg-white/10 blur-xl" />
@@ -150,37 +136,34 @@ export default function Dashboard() {
 
                     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                         <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm text-center">
-                            <p className="text-xs text-white/70">Hôm nay</p>
-                            <p className="mt-1 text-lg font-semibold">126 đơn</p>
+                            <p className="text-xs text-white/70">Tổng đơn</p>
+                            <p className="mt-1 text-lg font-semibold">{data.totalOrders} đơn</p>
                         </div>
                         <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm text-center">
                             <p className="text-xs text-white/70">Doanh thu</p>
-                            <p className="mt-1 text-lg font-semibold">12.8tr</p>
+                            <p className="mt-1 text-base font-semibold truncate max-w-[100px]">{vnCurrency.format(data.totalRevenue / 1000)}k</p>
                         </div>
                         <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm col-span-2 sm:col-span-1 text-center">
-                            <p className="text-xs text-white/70">Khách mới</p>
-                            <p className="mt-1 text-lg font-semibold">+48</p>
+                            <p className="text-xs text-white/70">Khách hàng</p>
+                            <p className="mt-1 text-lg font-semibold">{data.totalCustomers}</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Stats */}
             <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 {stats.map((item) => (
                     <StatCard key={item.title} {...item} />
                 ))}
             </section>
 
-            {/* Main grid */}
             <section className="grid grid-cols-1 gap-6 xl:grid-cols-3">
-                {/* Revenue panel */}
                 <div className="rounded-[28px] border border-p-100 bg-white p-5 shadow-sm xl:col-span-2">
                     <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                         <div>
-                            <p className="text-sm font-medium text-n-500">Doanh thu 7 ngày</p>
+                            <p className="text-sm font-medium text-n-500">Giả lập thống kê 7 ngày</p>
                             <h2 className="mt-1 text-xl font-bold text-n-800">
-                                Hiệu suất bán hàng trong tuần
+                                Hiệu suất bán hàng
                             </h2>
                         </div>
 
@@ -195,7 +178,7 @@ export default function Dashboard() {
                     </div>
 
                     <div className="grid h-[280px] grid-cols-7 items-end gap-3">
-                        {weeklyBars.map((value, index) => (
+                        {data.weeklyBars.map((value: number, index: number) => (
                             <div key={index} className="flex h-full flex-col items-center justify-end gap-3">
                                 <div className="w-full rounded-t-[18px] bg-gradient-to-t from-p-700 to-p-300 shadow-sm transition-all duration-300 hover:from-p-900 hover:to-p-400"
                                     style={{ height: `${value}%` }}
@@ -208,7 +191,6 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                {/* Right summary */}
                 <div className="space-y-6">
                     <div className="rounded-[28px] border border-p-100 bg-white p-5 shadow-sm">
                         <div className="mb-4 flex items-center justify-between">
@@ -257,8 +239,8 @@ export default function Dashboard() {
 
                         <div className="space-y-3">
                             <div className="rounded-2xl bg-p-50 p-4">
-                                <p className="text-sm text-n-500">Sản phẩm bán chạy</p>
-                                <p className="mt-1 font-semibold text-p-900">Trà Oolong Sữa</p>
+                                <p className="text-sm text-n-500">Sản phẩm bán chạy nhất</p>
+                                <p className="mt-1 font-semibold text-p-900">{topProduct}</p>
                             </div>
                             <div className="rounded-2xl bg-p-50 p-4">
                                 <p className="text-sm text-n-500">Khung giờ đông khách</p>
@@ -273,9 +255,7 @@ export default function Dashboard() {
                 </div>
             </section>
 
-            {/* Bottom grid */}
             <section className="grid grid-cols-1 gap-6 xl:grid-cols-3">
-                {/* Orders table */}
                 <div className="rounded-[28px] border border-p-100 bg-white p-5 shadow-sm xl:col-span-2">
                     <div className="mb-5 flex items-center justify-between">
                         <div>
@@ -296,19 +276,19 @@ export default function Dashboard() {
                                 <tr className="text-left text-sm text-n-500">
                                     <th className="pb-2 font-medium">Mã đơn</th>
                                     <th className="pb-2 font-medium">Khách hàng</th>
-                                    <th className="pb-2 font-medium">Sản phẩm</th>
+                                    <th className="pb-2 font-medium min-w-[150px]">Sản phẩm</th>
                                     <th className="pb-2 font-medium">Tổng tiền</th>
                                     <th className="pb-2 font-medium">Trạng thái</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {recentOrders.map((order) => (
-                                    <tr key={order.id} className="rounded-2xl bg-p-50/60">
+                                {data.recentOrders.map((order: any, idx: number) => (
+                                    <tr key={idx} className="rounded-2xl bg-p-50/60">
                                         <td className="rounded-l-2xl px-4 py-4 font-semibold text-n-800">
                                             {order.id}
                                         </td>
                                         <td className="px-4 py-4 text-n-700">{order.customer}</td>
-                                        <td className="px-4 py-4 text-n-700">{order.product}</td>
+                                        <td className="px-4 py-4 text-n-700 truncate max-w-[200px]">{order.product}</td>
                                         <td className="px-4 py-4 font-semibold text-p-900">
                                             {order.total}
                                         </td>
@@ -323,12 +303,18 @@ export default function Dashboard() {
                                         </td>
                                     </tr>
                                 ))}
+                                {data.recentOrders.length === 0 && (
+                                    <tr>
+                                        <td colSpan={5} className="py-4 text-center text-n-500">
+                                            Chưa có đơn hàng nào
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                {/* Top products */}
                 <div className="rounded-[28px] border border-p-100 bg-white p-5 shadow-sm">
                     <div className="mb-5 flex items-center justify-between">
                         <div>
@@ -339,11 +325,11 @@ export default function Dashboard() {
                     </div>
 
                     <div className="space-y-4">
-                        {topProducts.map((item) => (
-                            <div key={item.name} className="rounded-2xl bg-p-50 p-4">
+                        {data.topProducts.map((item: any, idx: number) => (
+                            <div key={idx} className="rounded-2xl bg-p-50 p-4">
                                 <div className="mb-2 flex items-center justify-between gap-3">
-                                    <p className="font-semibold text-n-800">{item.name}</p>
-                                    <span className="text-sm font-semibold text-p-700">
+                                    <p className="font-semibold text-n-800 truncate max-w-[150px]">{item.name}</p>
+                                    <span className="text-sm font-semibold text-p-700 whitespace-nowrap">
                                         {item.sold} ly
                                     </span>
                                 </div>
@@ -356,6 +342,9 @@ export default function Dashboard() {
                                 </div>
                             </div>
                         ))}
+                        {data.topProducts.length === 0 && (
+                            <p className="text-sm text-n-500 text-center py-4">Chưa có sản phẩm bán ra</p>
+                        )}
                     </div>
                 </div>
             </section>

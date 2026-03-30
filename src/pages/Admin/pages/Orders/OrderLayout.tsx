@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   CircleDollarSign,
   Eye,
@@ -10,6 +10,8 @@ import {
   UserRound,
 } from "lucide-react";
 import OrderList from "./OrderList";
+import { getAllOrders, updateOrderStatus, deleteOrder } from "../../../../api/admin/order.api";
+import { useToast } from "../../../../contexts/ToastContext";
 
 export type OrderStatus =
   | "pending"
@@ -49,167 +51,6 @@ export type OrderItem = {
   orderDetails: OrderDetailItem[];
 };
 
-const mockOrders: OrderItem[] = [
-  {
-    id: 1012,
-    userId: 12,
-    userName: "Nguyễn Minh Anh",
-    email: "minhanh@gmail.com",
-    phone: "0987654321",
-    shippingAddress: "18 Hàng Bông, Hoàn Kiếm, Hà Nội",
-    totalAmount: 345000,
-    status: "pending",
-    created_at: "2026-03-24T07:20:00.000Z",
-    updated_at: "2026-03-24T07:20:00.000Z",
-    payment: {
-      method: "cod",
-      status: "success",
-      transactionId: null,
-    },
-    orderDetails: [
-      {
-        id: 1,
-        productId: 31,
-        productName: "Trà Sen Tây Hồ",
-        image:
-          "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=900&auto=format&fit=crop",
-        quantity: 2,
-        price: 95000,
-      },
-      {
-        id: 2,
-        productId: 32,
-        productName: "Trà Oolong Đặc Biệt",
-        image:
-          "https://images.unsplash.com/photo-1515823662972-da6a2e4d3002?q=80&w=900&auto=format&fit=crop",
-        quantity: 1,
-        price: 155000,
-      },
-    ],
-  },
-  {
-    id: 1011,
-    userId: 13,
-    userName: "Lê Thu Hà",
-    email: "thuha@gmail.com",
-    phone: "0912233445",
-    shippingAddress: "88 Nguyễn Trãi, Thanh Xuân, Hà Nội",
-    totalAmount: 520000,
-    status: "confirmed",
-    created_at: "2026-03-23T09:15:00.000Z",
-    updated_at: "2026-03-23T11:30:00.000Z",
-    payment: {
-      method: "vnpay",
-      status: "pending",
-      transactionId: "VNP-928321",
-    },
-    orderDetails: [
-      {
-        id: 3,
-        productId: 29,
-        productName: "Trà Shan Tuyết",
-        image:
-          "https://images.unsplash.com/photo-1464306076886-da185f6a9d05?q=80&w=900&auto=format&fit=crop",
-        quantity: 4,
-        price: 130000,
-      },
-    ],
-  },
-  {
-    id: 1010,
-    userId: 18,
-    userName: "Phạm Đức Long",
-    email: "duclong@gmail.com",
-    phone: "0933555777",
-    shippingAddress: "2 Lê Lợi, Quận 1, TP.HCM",
-    totalAmount: 275000,
-    status: "shipping",
-    created_at: "2026-03-22T12:10:00.000Z",
-    updated_at: "2026-03-23T08:40:00.000Z",
-    payment: {
-      method: "momo",
-      status: "success",
-      transactionId: "MOMO-81273",
-    },
-    orderDetails: [
-      {
-        id: 4,
-        productId: 20,
-        productName: "Trà Lài Premium",
-        image:
-          "https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=900&auto=format&fit=crop",
-        quantity: 1,
-        price: 95000,
-      },
-      {
-        id: 5,
-        productId: 21,
-        productName: "Hộp Quà Trà Xuân",
-        image:
-          "https://images.unsplash.com/photo-1523920290228-4f321a939b4c?q=80&w=900&auto=format&fit=crop",
-        quantity: 1,
-        price: 180000,
-      },
-    ],
-  },
-  {
-    id: 1009,
-    userId: 9,
-    userName: "Trần Quỳnh",
-    email: "quynh@gmail.com",
-    phone: "0909888777",
-    shippingAddress: "15 Trần Phú, Hải Phòng",
-    totalAmount: 690000,
-    status: "delivered",
-    created_at: "2026-03-21T06:45:00.000Z",
-    updated_at: "2026-03-22T16:45:00.000Z",
-    payment: {
-      method: "zalopay",
-      status: "success",
-      transactionId: "ZLP-00313",
-    },
-    orderDetails: [
-      {
-        id: 6,
-        productId: 24,
-        productName: "Set Trà Tết",
-        image:
-          "https://images.unsplash.com/photo-1470337458703-46ad1756a187?q=80&w=900&auto=format&fit=crop",
-        quantity: 3,
-        price: 230000,
-      },
-    ],
-  },
-  {
-    id: 1008,
-    userId: 10,
-    userName: "Vũ Thành Nam",
-    email: "thanhnam@gmail.com",
-    phone: "0977888999",
-    shippingAddress: "9 Điện Biên Phủ, Đà Nẵng",
-    totalAmount: 180000,
-    status: "cancelled",
-    created_at: "2026-03-20T05:05:00.000Z",
-    updated_at: "2026-03-20T05:45:00.000Z",
-    payment: {
-      method: "cod",
-      status: "refunded",
-      transactionId: null,
-    },
-    orderDetails: [
-      {
-        id: 7,
-        productId: 11,
-        productName: "Trà Gừng Mật Ong",
-        image:
-          "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=900&auto=format&fit=crop",
-        quantity: 2,
-        price: 90000,
-      },
-    ],
-  },
-];
-
 const currency = new Intl.NumberFormat("vi-VN");
 
 const statusClasses: Record<OrderStatus, string> = {
@@ -220,7 +61,7 @@ const statusClasses: Record<OrderStatus, string> = {
   cancelled: "border-rose-200 bg-rose-50 text-rose-700",
 };
 
-const paymentMethodLabel: Record<PaymentMethod, string> = {
+const paymentMethodLabel: Record<string, string> = {
   cod: "COD",
   vnpay: "VNPay",
   momo: "MoMo",
@@ -228,8 +69,60 @@ const paymentMethodLabel: Record<PaymentMethod, string> = {
 };
 
 export default function OrderLayout() {
-  const [orders, setOrders] = useState<OrderItem[]>(mockOrders);
-  const [selectedOrder, setSelectedOrder] = useState<OrderItem | null>(mockOrders[0] ?? null);
+  const [orders, setOrders] = useState<OrderItem[]>([]);
+  const [selectedOrder, setSelectedOrder] = useState<OrderItem | null>(null);
+  const [loading, setLoading] = useState(true);
+  const { showToast } = useToast();
+
+  const fetchOrders = async () => {
+    setLoading(true);
+    try {
+      const data = await getAllOrders();
+      const mappedOrders: OrderItem[] = data.map((o: any) => ({
+        id: o.id,
+        userId: o.userId,
+        userName: o.user?.fullName || o.user?.username || "Khách",
+        email: o.user?.email || "",
+        phone: o.phone || "",
+        shippingAddress: o.shippingAddress,
+        totalAmount: Number(o.totalAmount),
+        status: o.status,
+        created_at: o.created_at,
+        updated_at: o.updated_at,
+        payment: {
+          method: o.payment?.method || "cod",
+          status: o.payment?.status || "pending",
+          transactionId: o.payment?.transactionId || null,
+        },
+        orderDetails: (o.orderDetails || []).map((d: any) => ({
+          id: d.id,
+          productId: d.productId,
+          productName: d.product?.name || "Sản phẩm",
+          image: d.product?.image_url || "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=900&auto=format&fit=crop",
+          quantity: Number(d.quantity),
+          price: Number(d.price),
+        }))
+      }));
+
+      setOrders(mappedOrders);
+      if (mappedOrders.length > 0 && !selectedOrder) {
+        setSelectedOrder(mappedOrders[0]);
+      } else if (selectedOrder) {
+        const updated = mappedOrders.find(o => o.id === selectedOrder.id);
+        setSelectedOrder(updated || null);
+      }
+    } catch (error: any) {
+      console.error(error);
+      showToast(error.message || "Lỗi tải đơn hàng", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchOrders();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const stats = useMemo(() => {
     return {
@@ -246,27 +139,30 @@ export default function OrderLayout() {
     setSelectedOrder(order);
   };
 
-  const handleDelete = (id: number) => {
-    const found = orders.find((item) => item.id === id);
-    if (!found) return;
-
+  const handleDelete = async (id: number) => {
     const confirmed = window.confirm(`Bạn có chắc muốn hủy / xóa đơn #${id} không?`);
     if (!confirmed) return;
 
-    setOrders((prev) => prev.filter((item) => item.id !== id));
-    setSelectedOrder((prev) => (prev?.id === id ? null : prev));
+    try {
+      await deleteOrder(id);
+      showToast("Xóa đơn hàng thành công", "success");
+      if (selectedOrder?.id === id) {
+        setSelectedOrder(null);
+      }
+      await fetchOrders();
+    } catch (e: any) {
+      showToast(e.message || "Lỗi xóa đơn", "error");
+    }
   };
 
-  const handleChangeStatus = (id: number, status: OrderStatus) => {
-    setOrders((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, status, updated_at: new Date().toISOString() } : item
-      )
-    );
-
-    setSelectedOrder((prev) =>
-      prev?.id === id ? { ...prev, status, updated_at: new Date().toISOString() } : prev
-    );
+  const handleChangeStatus = async (id: number, status: OrderStatus) => {
+    try {
+      await updateOrderStatus(id, status);
+      showToast(`Đã chuyển đơn hàng sang trạng thái: ${status}`, "success");
+      await fetchOrders();
+    } catch (e: any) {
+      showToast(e.message || "Lỗi cập nhật", "error");
+    }
   };
 
   return (
@@ -279,7 +175,6 @@ export default function OrderLayout() {
           <div>
             <p className="mb-2 text-sm font-medium text-white/80">Trang quản trị đơn hàng</p>
             <h1 className="text-2xl font-bold md:text-4xl">Quản lý đơn hàng</h1>
-            
           </div>
 
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -307,27 +202,33 @@ export default function OrderLayout() {
       </section>
 
       <section className="grid gap-6 2xl:grid-cols-[1.4fr_0.95fr]">
-        <OrderList
-          orders={orders.map((order) => ({
-            id: order.id,
-            customerName: order.userName,
-            email: order.email,
-            phone: order.phone || "",
-            itemCount: order.orderDetails.reduce((sum, item) => sum + item.quantity, 0),
-            paymentMethod: order.payment.method,
-            paymentStatus: order.payment.status,
-            totalAmount: order.totalAmount,
-            status: order.status,
-            createdAt: new Date(order.created_at).toLocaleDateString("vi-VN"),
-          }))}
-          selectedId={selectedOrder?.id}
-          onSelect={(item) => {
-            const found = orders.find((o) => o.id === item.id);
-            if (found) handleView(found);
-          }}
-          onDelete={(item) => handleDelete(item.id)}
-          onStatusChange={(item, status) => handleChangeStatus(item.id, status)}
-        />
+        {loading && orders.length === 0 ? (
+           <div className="h-64 flex items-center justify-center bg-white rounded-[28px] border border-p-100">
+               <p className="text-n-500 font-medium">Đang tải danh sách đơn hàng...</p>
+           </div>
+        ) : (
+          <OrderList
+            orders={orders.map((order) => ({
+              id: order.id,
+              customerName: order.userName,
+              email: order.email,
+              phone: order.phone || "",
+              itemCount: order.orderDetails.reduce((sum, item) => sum + item.quantity, 0),
+              paymentMethod: order.payment.method,
+              paymentStatus: order.payment.status,
+              totalAmount: order.totalAmount,
+              status: order.status,
+              createdAt: new Date(order.created_at).toLocaleDateString("vi-VN"),
+            }))}
+            selectedId={selectedOrder?.id}
+            onSelect={(item) => {
+              const found = orders.find((o) => o.id === item.id);
+              if (found) handleView(found);
+            }}
+            onDelete={(item) => handleDelete(item.id)}
+            onStatusChange={(item, status) => handleChangeStatus(item.id, status)}
+          />
+        )}
 
         <div className="rounded-[28px] border border-p-100 bg-white p-5 shadow-sm md:p-6">
           <div className="flex items-start justify-between gap-4">
@@ -345,7 +246,7 @@ export default function OrderLayout() {
 
           {!selectedOrder ? (
             <div className="mt-6 rounded-[24px] border border-dashed border-p-200 bg-p-50/60 px-4 py-12 text-center text-sm text-n-500">
-              Chọn icon mắt ở bảng bên trái để xem chi tiết đơn hàng.
+              {loading ? "Đang tải dữ liệu..." : "Chọn icon mắt ở bảng bên trái để xem chi tiết đơn hàng."}
             </div>
           ) : (
             <>
@@ -357,7 +258,7 @@ export default function OrderLayout() {
                 </span>
 
                 <span className="inline-flex rounded-full border border-p-100 bg-p-50 px-3 py-1 text-xs font-semibold text-n-700">
-                  {paymentMethodLabel[selectedOrder.payment.method]}
+                  {paymentMethodLabel[selectedOrder.payment.method] || selectedOrder.payment.method}
                 </span>
 
                 <span className="inline-flex rounded-full border border-p-100 bg-p-50 px-3 py-1 text-xs font-semibold text-n-700">
@@ -433,6 +334,11 @@ export default function OrderLayout() {
                       </p>
                     </div>
                   ))}
+                  {(!selectedOrder.orderDetails || selectedOrder.orderDetails.length === 0) && (
+                    <div className="p-4 text-center text-sm text-n-500">
+                      Không có sản phẩm nào
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -451,7 +357,7 @@ export default function OrderLayout() {
                     <p className="text-xs text-n-500">Tổng sản phẩm</p>
                   </div>
                   <p className="mt-2 text-sm font-semibold text-n-800">
-                    {selectedOrder.orderDetails.reduce((sum, item) => sum + item.quantity, 0)}
+                    {selectedOrder.orderDetails?.reduce((sum, item) => sum + item.quantity, 0) || 0}
                   </p>
                 </div>
 
@@ -460,7 +366,7 @@ export default function OrderLayout() {
                     <CircleDollarSign className="h-4 w-4 text-p-800" />
                     <p className="text-xs text-n-500">Thanh toán</p>
                   </div>
-                  <p className="mt-2 text-sm font-semibold text-n-800">
+                  <p className="mt-2 text-sm font-semibold text-n-800 truncate">
                     {selectedOrder.payment.transactionId || "Không có mã GD"}
                   </p>
                 </div>

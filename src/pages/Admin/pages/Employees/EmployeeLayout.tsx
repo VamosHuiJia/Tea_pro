@@ -1,65 +1,12 @@
-import { useMemo, useRef, useState } from "react";
-import { ChevronDown, Search, Shield, Sparkles, UserCheck, UsersRound } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ChevronDown, Search, Sparkles } from "lucide-react";
 import EmployeeList from "./EmployeeList";
 import type { EmployeeItem } from "./EmployeeList";
 import EmployeeModal from "./EmployeeModal";
 import type { EmployeeFormValues } from "./EmployeeModal";
 import { exportToExcel, importFromExcel } from "../../../../utils/excel";
-
-const mockEmployees: EmployeeItem[] = [
-  {
-    id: 3001,
-    publicId: "emp_001",
-    username: "admin.huy",
-    fullName: "Đỗ Huy Hoàng",
-    email: "admin.huy@gmail.com",
-    phone: "0905556661",
-    avatar_url: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=500&q=80",
-    roleName: "Quản trị hệ thống",
-    roleLevel: "admin",
-    created_at: "2026-03-01T08:00:00",
-    updated_at: "2026-03-18T09:25:00",
-  },
-  {
-    id: 3002,
-    publicId: "emp_002",
-    username: "staff.trang",
-    fullName: "Nguyễn Thu Trang",
-    email: "staff.trang@gmail.com",
-    phone: "0911222333",
-    avatar_url: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=500&q=80",
-    roleName: "Nhân viên bán hàng",
-    roleLevel: "staff",
-    created_at: "2026-03-06T10:20:00",
-    updated_at: "2026-03-17T15:50:00",
-  },
-  {
-    id: 3003,
-    publicId: "emp_003",
-    username: "staff.nam",
-    fullName: "Lê Hoài Nam",
-    email: "staff.nam@gmail.com",
-    phone: "0988456123",
-    avatar_url: "",
-    roleName: "Quản lý kho",
-    roleLevel: "staff",
-    created_at: "2026-03-09T11:40:00",
-    updated_at: "2026-03-18T08:45:00",
-  },
-  {
-    id: 3004,
-    publicId: "emp_004",
-    username: "admin.linh",
-    fullName: "Phạm Mỹ Linh",
-    email: "admin.linh@gmail.com",
-    phone: "0977000888",
-    avatar_url: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=500&q=80",
-    roleName: "Quản lý cửa hàng",
-    roleLevel: "admin",
-    created_at: "2026-03-10T14:30:00",
-    updated_at: "2026-03-18T16:00:00",
-  },
-];
+import { getAllUsers, createUser, updateUser, deleteUser } from "../../../../api/admin/user.api";
+import { useToast } from "../../../../contexts/ToastContext";
 
 function normalizeImportedEmployee(row: Record<string, unknown>) {
   const rawRoleLevel = String(
@@ -92,14 +39,52 @@ function normalizeImportedEmployee(row: Record<string, unknown>) {
 }
 
 export default function EmployeeLayout() {
-  const [employees, setEmployees] = useState<EmployeeItem[]>(mockEmployees);
+  const [employees, setEmployees] = useState<EmployeeItem[]>([]);
   const [keyword, setKeyword] = useState("");
   const [selectedPermission, setSelectedPermission] = useState("all");
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [listLoading, setListLoading] = useState(true);
   const [mode, setMode] = useState<"create" | "edit" | "delete">("create");
   const [selectedEmployee, setSelectedEmployee] = useState<EmployeeItem | null>(null);
   const excelInputRef = useRef<HTMLInputElement | null>(null);
+  const { showToast } = useToast();
+
+  const fetchData = async () => {
+    setListLoading(true);
+    try {
+      const res = await getAllUsers();
+      // "Lưu ý ở Employees là chỉ hiển thị những tài khoản có rolelevel là staff và admin"
+      const employeeData = res.filter((u: any) => 
+        String(u.role?.level).toLowerCase() === "staff" || 
+        String(u.role?.level).toLowerCase() === "admin"
+      );
+      
+      const mapped = employeeData.map((c: any) => ({
+        id: c.id,
+        publicId: c.publicId,
+        username: c.username,
+        fullName: c.fullName || c.username,
+        email: c.email,
+        phone: c.phone || "",
+        avatar_url: c.avatar_url || "",
+        roleName: c.roleName || "Nhân viên",
+        roleLevel: c.role?.level || "staff",
+        created_at: c.created_at,
+        updated_at: c.updated_at,
+      }));
+      setEmployees(mapped);
+    } catch (error: any) {
+      console.error(error);
+      showToast(error.message || "Lỗi lấy dữ liệu nhân viên", "error");
+    } finally {
+      setListLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const filteredEmployees = useMemo(() => {
     const normalized = keyword.trim().toLowerCase();
@@ -143,59 +128,58 @@ export default function EmployeeLayout() {
     setOpenModal(true);
   };
 
-  const handleSubmit = (values: EmployeeFormValues) => {
+  const handleSubmit = async (values: EmployeeFormValues) => {
     setLoading(true);
 
     try {
+      const formData = new FormData();
+      formData.append("username", values.username);
+      formData.append("fullName", values.fullName);
+      formData.append("email", values.email);
+      formData.append("phone", values.phone || "");
+      formData.append("roleName", values.roleName || "Nhân viên");
+      formData.append("roleLevel", values.roleLevel || "staff");
+      
       if (mode === "create") {
-        const now = new Date().toISOString();
-
-        const newEmployee: EmployeeItem = {
-          id: Date.now(),
-          publicId: `emp_${Date.now()}`,
-          username: values.username,
-          fullName: values.fullName,
-          email: values.email,
-          phone: values.phone,
-          avatar_url: values.avatar_url,
-          roleName: values.roleName || "Nhân viên",
-          roleLevel: values.roleLevel,
-          created_at: now,
-          updated_at: now,
-        };
-
-        setEmployees((prev) => [newEmployee, ...prev]);
-      } else if (selectedEmployee) {
-        setEmployees((prev) =>
-          prev.map((item) =>
-            item.id === selectedEmployee.id
-              ? {
-                  ...item,
-                  username: values.username,
-                  fullName: values.fullName,
-                  email: values.email,
-                  phone: values.phone,
-                  avatar_url: values.avatar_url,
-                  roleName: values.roleName || "Nhân viên",
-                  roleLevel: values.roleLevel,
-                  updated_at: new Date().toISOString(),
-                }
-              : item
-          )
-        );
+         formData.append("password", "123456"); 
       }
 
+      if (values.avatar_url && values.avatar_url.startsWith("data:image")) {
+        const fetchRes = await fetch(values.avatar_url);
+        const blob = await fetchRes.blob();
+        formData.append("avatar", blob, "avatar.png");
+      }
+
+      if (mode === "create") {
+        await createUser(formData);
+        showToast("Thêm nhân viên thành công", "success");
+      } else if (selectedEmployee) {
+        await updateUser(selectedEmployee.publicId || String(selectedEmployee.id), formData);
+        showToast("Cập nhật thành công", "success");
+      }
+
+      await fetchData();
       setOpenModal(false);
       setSelectedEmployee(null);
+    } catch (error: any) {
+      console.error(error);
+      showToast(error.message || "Lỗi lưu dữ liệu", "error");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleConfirmDelete = (employee: EmployeeItem) => {
-    setEmployees((prev) => prev.filter((item) => item.id !== employee.id));
-    setOpenModal(false);
-    setSelectedEmployee(null);
+  const handleConfirmDelete = async (employee: EmployeeItem) => {
+    try {
+        await deleteUser(employee.publicId || String(employee.id));
+        showToast("Xóa thành công", "success");
+        await fetchData();
+    } catch (error: any) {
+        showToast(error.message || "Lỗi khi xóa", "error");
+    } finally {
+        setOpenModal(false);
+        setSelectedEmployee(null);
+    }
   };
 
   const handleImportExcelClick = () => {
@@ -210,24 +194,28 @@ export default function EmployeeLayout() {
 
     try {
       const rows = await importFromExcel<Record<string, unknown>>(file);
-      const mappedRows: EmployeeItem[] = rows
+      const mappedRows = rows
         .map(normalizeImportedEmployee)
-        .filter((item) => item.fullName && item.email && item.username)
-        .map((item, index) => ({
-          id: Date.now() + index,
-          publicId: `emp_import_${Date.now() + index}`,
-          username: item.username,
-          fullName: item.fullName,
-          email: item.email,
-          phone: item.phone,
-          avatar_url: item.avatar_url,
-          roleName: item.roleName || "Nhân viên",
-          roleLevel: item.roleLevel,
-          created_at: item.created_at || new Date().toISOString(),
-          updated_at: item.updated_at || new Date().toISOString(),
-        }));
+        .filter((item) => item.fullName && item.email && item.username);
 
-      setEmployees((prev) => [...mappedRows, ...prev]);
+      for (const item of mappedRows) {
+        const formData = new FormData();
+        formData.append("username", item.username);
+        formData.append("fullName", item.fullName);
+        formData.append("email", item.email);
+        formData.append("phone", item.phone || "");
+        formData.append("roleName", item.roleName || "Nhân viên");
+        formData.append("roleLevel", item.roleLevel);
+        formData.append("password", "123456"); 
+        try {
+            await createUser(formData);
+        } catch (e) {
+            console.error("Lỗi khi thêm user import", e);
+        }
+      }
+      
+      showToast("Đã hoàn tất nhập dữ liệu Excel!", "success");
+      await fetchData();
     } catch (error) {
       console.error("Lỗi khi đọc file Excel nhân viên:", error);
     } finally {
@@ -315,7 +303,7 @@ export default function EmployeeLayout() {
 
       <EmployeeList
         employees={filteredEmployees}
-        loading={false}
+        loading={listLoading}
         onAdd={handleOpenCreate}
         onEdit={handleOpenEdit}
         onDelete={handleOpenDelete}

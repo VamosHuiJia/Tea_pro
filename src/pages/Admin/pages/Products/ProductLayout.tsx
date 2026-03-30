@@ -233,6 +233,9 @@ export default function ProductLayout() {
 
       setOpenModal(false);
       setSelectedProduct(null);
+    } catch (error: any) {
+      console.error(error);
+      showToast(error.message || "Có lỗi xảy ra", "error");
     } finally {
       setLoading(false);
     }

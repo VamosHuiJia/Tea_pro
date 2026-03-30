@@ -1,19 +1,30 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Banknote,
   CircleDollarSign,
   CreditCard,
-  Plus,
   QrCode,
   RefreshCcw,
-  ShieldCheck,
   Wallet,
 } from "lucide-react";
 import PaymentList from "./PaymentList";
 import PaymentModal from "./PaymentModal";
+import { getAllPaymentMethods, createPaymentMethod, updatePaymentMethod, deletePaymentMethod } from "../../../../api/admin/payment.api";
+import { useToast } from "../../../../contexts/ToastContext";
 
 export type PaymentMethodKey = "cod" | "vnpay" | "momo" | "zalopay";
 export type PaymentStatus = "pending" | "success" | "failed" | "refunded";
+
+export type PaymentFormValues = {
+  name: string;
+  method: PaymentMethodKey;
+  status: PaymentStatus;
+  description: string;
+  isActive: boolean;
+  feePercent: number;
+  sortOrder: number;
+  transactionPrefix: string;
+};
 
 export type PaymentItem = {
   id: number;
@@ -29,76 +40,10 @@ export type PaymentItem = {
   updated_at: string;
 };
 
-export type PaymentFormValues = {
-  name: string;
-  method: PaymentMethodKey;
-  status: PaymentStatus;
-  description: string;
-  isActive: boolean;
-  feePercent: number;
-  sortOrder: number;
-  transactionPrefix: string;
-};
-
-const mockPayments: PaymentItem[] = [
-  {
-    id: 1,
-    name: "Thanh toán khi nhận hàng",
-    method: "cod",
-    status: "success",
-    description: "Khách hàng thanh toán trực tiếp khi nhận đơn.",
-    isActive: true,
-    feePercent: 0,
-    sortOrder: 1,
-    transactionPrefix: "COD",
-    created_at: "2026-03-20T08:30:00.000Z",
-    updated_at: "2026-03-24T08:30:00.000Z",
-  },
-  {
-    id: 2,
-    name: "VNPay QR / ATM / Visa",
-    method: "vnpay",
-    status: "pending",
-    description: "Tích hợp cổng VNPay cho ATM, QR và thẻ quốc tế.",
-    isActive: true,
-    feePercent: 1.2,
-    sortOrder: 2,
-    transactionPrefix: "VNP",
-    created_at: "2026-03-21T09:00:00.000Z",
-    updated_at: "2026-03-24T11:45:00.000Z",
-  },
-  {
-    id: 3,
-    name: "Ví MoMo",
-    method: "momo",
-    status: "pending",
-    description: "Thanh toán bằng ví điện tử MoMo.",
-    isActive: true,
-    feePercent: 1,
-    sortOrder: 3,
-    transactionPrefix: "MOMO",
-    created_at: "2026-03-22T06:15:00.000Z",
-    updated_at: "2026-03-24T09:10:00.000Z",
-  },
-  {
-    id: 4,
-    name: "ZaloPay",
-    method: "zalopay",
-    status: "failed",
-    description: "Tạm khóa để kiểm tra lại cấu hình webhook.",
-    isActive: false,
-    feePercent: 1.1,
-    sortOrder: 4,
-    transactionPrefix: "ZLP",
-    created_at: "2026-03-23T04:20:00.000Z",
-    updated_at: "2026-03-24T10:25:00.000Z",
-  },
-];
-
 const currency = new Intl.NumberFormat("vi-VN");
 
 const methodMeta: Record<
-  PaymentMethodKey,
+  string, // using string because custom methods might appear
   { label: string; icon: typeof CreditCard; badgeClass: string }
 > = {
   cod: {
@@ -123,13 +68,41 @@ const methodMeta: Record<
   },
 };
 
+const defaultMeta = {
+  label: "Method",
+  icon: CircleDollarSign,
+  badgeClass: "bg-gray-50 text-gray-700 border-gray-200",
+};
+
 export default function PaymentLayout() {
-  const [payments, setPayments] = useState<PaymentItem[]>(mockPayments);
+  const [payments, setPayments] = useState<PaymentItem[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | PaymentStatus>("all");
   const [openModal, setOpenModal] = useState(false);
   const [mode, setMode] = useState<"create" | "edit">("create");
   const [selectedPayment, setSelectedPayment] = useState<PaymentItem | null>(null);
+  const [loading, setLoading] = useState(true);
+  const { showToast } = useToast();
+
+  const fetchPayments = async () => {
+    setLoading(true);
+    try {
+      const data = await getAllPaymentMethods();
+      setPayments(data.map((item: any) => ({
+        ...item,
+        feePercent: Number(item.feePercent)
+      })));
+    } catch (e: any) {
+      showToast(e.message || "Lỗi tải phương thức thanh toán", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPayments();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const filteredPayments = useMemo(() => {
     const keyword = searchTerm.trim().toLowerCase();
@@ -176,7 +149,7 @@ export default function PaymentLayout() {
     setOpenModal(true);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     const found = payments.find((item) => item.id === id);
     if (!found) return;
 
@@ -185,38 +158,33 @@ export default function PaymentLayout() {
     );
     if (!confirmed) return;
 
-    setPayments((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  const handleSubmit = (values: PaymentFormValues) => {
-    if (mode === "create") {
-      const newItem: PaymentItem = {
-        id: Date.now(),
-        ...values,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
-
-      setPayments((prev) => [newItem, ...prev]);
-    } else if (selectedPayment) {
-      setPayments((prev) =>
-        prev.map((item) =>
-          item.id === selectedPayment.id
-            ? {
-                ...item,
-                ...values,
-                updated_at: new Date().toISOString(),
-              }
-            : item
-        )
-      );
+    try {
+        await deletePaymentMethod(id);
+        showToast("Xóa thành công", "success");
+        await fetchPayments();
+    } catch (e: any) {
+        showToast(e.message || "Lỗi khi xóa", "error");
     }
-
-    setOpenModal(false);
-    setSelectedPayment(null);
   };
 
-  const featuredMeta = featuredMethod ? methodMeta[featuredMethod.method] : null;
+  const handleSubmit = async (values: PaymentFormValues) => {
+    try {
+        if (mode === "create") {
+            await createPaymentMethod(values);
+            showToast("Thêm mới thành công", "success");
+        } else if (selectedPayment) {
+            await updatePaymentMethod(selectedPayment.id, values);
+            showToast("Cập nhật thành công", "success");
+        }
+        await fetchPayments();
+        setOpenModal(false);
+        setSelectedPayment(null);
+    } catch (e: any) {
+        showToast(e.message || "Lỗi khi lưu", "error");
+    }
+  };
+
+  const featuredMeta = featuredMethod ? (methodMeta[featuredMethod.method] || defaultMeta) : null;
   const FeaturedIcon = featuredMeta?.icon ?? CircleDollarSign;
 
   return (
@@ -234,10 +202,10 @@ export default function PaymentLayout() {
           <div className="flex flex-wrap items-center gap-3">
             <button
               type="button"
-              onClick={() => setPayments([...mockPayments])}
+              onClick={fetchPayments}
               className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-4 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/15"
             >
-              <RefreshCcw className="h-4 w-4" />
+              <RefreshCcw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
               Tải lại trang
             </button>
           </div>
