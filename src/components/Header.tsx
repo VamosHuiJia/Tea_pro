@@ -242,17 +242,17 @@ const Header = () => {
                         <button
                           type="button"
                           className="px-4 py-2 text-sm text-left text-n-700 hover:bg-p-50 transition-colors border-0 bg-transparent"
-                          onClick={handleGoProfile}
+                          onClick={handleGoAdmin}
                         >
-                          Thông tin tài khoản
+                          Trang quản lý
                         </button>
 
                         <button
                           type="button"
                           className="px-4 py-2 text-sm text-left text-n-700 hover:bg-p-50 transition-colors border-0 bg-transparent"
-                          onClick={handleGoAdmin}
+                          onClick={handleGoProfile}
                         >
-                          Trang quản lý
+                          Thông tin tài khoản
                         </button>
                       </div>
                     </div>
@@ -294,7 +294,37 @@ const Header = () => {
                 <SearchIcon />
               </button>
 
-              <AvatarButton user={user} onClick={handleUserClick} />
+              <div className="relative">
+                <AvatarButton user={user} onClick={handleUserClick} />
+
+                {isManager && (
+                  <div
+                    className={`absolute z-50 left-1/2 -translate-x-1/2 top-full mt-2 w-48 rounded-2xl border border-p-100 bg-white shadow-[0_12px_30px_rgba(13,71,56,0.12)] transition-all duration-200 overflow-hidden ${
+                      isUserDropdownOpen
+                        ? "visible opacity-100 translate-y-0"
+                        : "invisible pointer-events-none opacity-0 -translate-y-2"
+                    }`}
+                  >
+                    <div className="flex flex-col py-2">
+                      <button
+                        type="button"
+                        className="px-4 py-2 text-sm text-left text-n-700 hover:bg-p-50 transition-colors border-0 bg-transparent"
+                        onClick={handleGoAdmin}
+                      >
+                        Trang quản lý
+                      </button>
+
+                      <button
+                        type="button"
+                        className="px-4 py-2 text-sm text-left text-n-700 hover:bg-p-50 transition-colors border-0 bg-transparent"
+                        onClick={handleGoProfile}
+                      >
+                        Thông tin tài khoản
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
 
               <CartButton count={itemCount} onClick={() => setIsCartOpen(true)} />
             </div>

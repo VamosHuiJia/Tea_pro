@@ -14,6 +14,9 @@ type CurrentUser = {
   avatar?: string;
   address?: string;
   roleLevel?: RoleLevel;
+  role?: {
+    level: string;
+  };
 };
 
 export function useHeader() {
@@ -86,8 +89,8 @@ export function useHeader() {
   useOnClickOutside(mobileSearchRef, () => setIsMobileSearchOpen(false));
   useOnClickOutside(userDropdownRef, () => setIsUserDropdownOpen(false));
 
-  const isManager =
-    user?.roleLevel === "admin" || user?.roleLevel === "staff";
+  const roleLvl = user?.roleLevel || user?.role?.level;
+  const isManager = roleLvl === "admin" || roleLvl === "staff";
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen((prev) => {
