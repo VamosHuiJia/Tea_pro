@@ -4,6 +4,7 @@ import { ToastProvider } from "./contexts/ToastContext";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 import Home from "./pages/Home/Home";
 import Products from "./pages/Products/Products";
@@ -47,10 +48,10 @@ function AppRoutes() {
           <Routes location={backgroundLocation || location}>
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<Products />} />
-            <Route path="/products/:id" element={<ProductDetail />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/products/:id" element={<ProtectedRoute><ProductDetail /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+            <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
           </Routes>
         </main>
       )}
@@ -61,7 +62,7 @@ function AppRoutes() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        <Route path="/admin" element={<AdminLayout />}>
+        <Route path="/admin" element={<ProtectedRoute allowedRoles={["admin", "staff"]}><AdminLayout /></ProtectedRoute>}>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="brands" element={<Brand />} />
