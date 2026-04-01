@@ -78,7 +78,6 @@ function EmptyState({
 
       <p className="mx-auto mt-3 max-w-2xl text-sm text-n-500">
         Bạn có thể thêm mới khách hàng thủ công hoặc nhập danh sách từ Excel.
-        Giao diện đang dùng mock data để bạn nối API sau.
       </p>
 
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">

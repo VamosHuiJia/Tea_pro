@@ -529,11 +529,6 @@ export default function ProductModal({
                     <p className="mt-2 font-bold text-emerald-800">{formatCurrency(form.currentPrice)}</p>
                   </div>
                 </div>
-
-                <div className="rounded-2xl border border-dashed border-p-200 bg-white p-4 text-sm text-n-500">
-                  Dữ liệu danh mục và thương hiệu đang lấy từ danh sách có sẵn để bạn nối
-                  API sau. Giá hiện tại được tự tính theo <span className="font-semibold text-p-700">giá gốc - giảm giá</span>.
-                </div>
               </div>
             </div>
           </div>

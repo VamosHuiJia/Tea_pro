@@ -181,11 +181,6 @@ export default function EmployeeModal({
                 </p>
               </div>
             </div>
-
-            <p className="mt-5 text-sm leading-7 text-n-600">
-              Xóa nhân viên khỏi danh sách mô phỏng FE. Khi nối API, bạn chỉ cần thay
-              hành động này bằng service delete tương ứng.
-            </p>
           </div>
 
           <div className="mt-6 flex flex-wrap items-center justify-end gap-3">

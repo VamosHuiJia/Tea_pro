@@ -54,7 +54,7 @@ export default function EmployeeLayout() {
     setListLoading(true);
     try {
       const res = await getAllUsers();
-      // "Lưu ý ở Employees là chỉ hiển thị những tài khoản có rolelevel là staff và admin"
+      // rolelevel là staff và admin"
       const employeeData = res.filter((u: any) => 
         String(u.role?.level).toLowerCase() === "staff" || 
         String(u.role?.level).toLowerCase() === "admin"

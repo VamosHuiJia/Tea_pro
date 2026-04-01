@@ -181,11 +181,6 @@ export default function CustomerModal({
                 </p>
               </div>
             </div>
-
-            <p className="mt-5 text-sm leading-7 text-n-600">
-              Bạn có chắc muốn xóa khách hàng này khỏi danh sách quản lý không?
-              Đây là bước mô phỏng ở FE, sau này bạn chỉ cần thay bằng API delete.
-            </p>
           </div>
 
           <div className="mt-6 flex flex-wrap items-center justify-end gap-3">
@@ -438,12 +433,6 @@ export default function CustomerModal({
                     </div>
                     <p className="mt-2 font-semibold text-p-800">{form.roleName || "Khách hàng"}</p>
                   </div>
-                </div>
-
-                <div className="rounded-2xl border border-dashed border-p-200 bg-white p-4 text-sm text-n-500">
-                  Theo nghiệp vụ bạn mô tả, khi thêm user từ màn hình khách hàng thì
-                  <span className="font-semibold text-p-700"> RoleLevel luôn cố định là customer</span>.
-                  Bạn chỉ cần nối API create/update vào submit là dùng được.
                 </div>
               </div>
             </div>

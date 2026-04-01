@@ -80,7 +80,6 @@ function EmptyState({
 
       <p className="mx-auto mt-3 max-w-2xl text-sm text-n-500">
         Tạo nhanh nhân viên mới hoặc nhập danh sách nhân sự bằng Excel.
-        Màn hình đã tách rõ quyền staff/admin để bạn nối BE sau.
       </p>
 
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">

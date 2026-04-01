@@ -258,7 +258,6 @@ export default function ProductLayout() {
         .map(row => normalizeImportedRow(row, categories, brands))
         .filter((item) => item.name && item.categoryId && item.brandId);
 
-      // Nhập qua API thay vì list tĩnh
       for (const row of normalizedRows) {
         const formData = new FormData();
         formData.append("name", row.name);

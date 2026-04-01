@@ -52,8 +52,7 @@ export default function CustomerLayout() {
     setListLoading(true);
     try {
       const res = await getAllUsers();
-      // "Lưu ý ở Employees là chỉ hiển thị những tài khoản có rolelevel là staff và admin 
-      // còn Customers là những tài khoản có rolelevel là customer"
+      // rolelevel là staff và admin 
       const customerData = res.filter((u: any) => String(u.role?.level).toLowerCase() === "customer");
       
       const mapped = customerData.map((c: any) => ({

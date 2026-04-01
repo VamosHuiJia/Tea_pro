@@ -81,7 +81,6 @@ function EmptyState({
 
       <p className="mx-auto mt-3 max-w-2xl text-sm text-n-500">
         Bắt đầu bằng cách thêm sản phẩm mới hoặc nhập dữ liệu hàng loạt từ Excel.
-        Giao diện đã sẵn sàng để bạn nối API quản lý sản phẩm sau.
       </p>
 
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
