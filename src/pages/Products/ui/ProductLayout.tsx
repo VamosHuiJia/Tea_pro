@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
     ChevronDown,
@@ -8,6 +8,8 @@ import {
 } from "lucide-react";
 import ProductCard from "./ProductCard";
 import { productList } from "../../../animations/data";
+
+const ITEMS_PER_PAGE = 12;
 
 const PRICE_RANGES = [
     { id: "all", label: "Tất cả mức giá", min: 0, max: Number.POSITIVE_INFINITY },
@@ -96,6 +98,67 @@ export default function ProductLayout() {
         });
     }, [activeBrand, activeCategory, activePrice]);
 
+    const totalPages = Math.max(1, Math.ceil(filteredProducts.length / ITEMS_PER_PAGE));
+    const rawCurrentPage = Number(searchParams.get("page") || "1");
+    const currentPage = Number.isFinite(rawCurrentPage)
+        ? Math.min(Math.max(rawCurrentPage, 1), totalPages)
+        : 1;
+
+    const [visiblePageLimit, setVisiblePageLimit] = useState(() => {
+        if (typeof window === "undefined") {
+            return 5;
+        }
+
+        return window.innerWidth >= 768 ? 5 : 3;
+    });
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia("(min-width: 768px)");
+
+        const handlePaginationResize = (event: MediaQueryListEvent | MediaQueryList) => {
+            setVisiblePageLimit(event.matches ? 5 : 3);
+        };
+
+        handlePaginationResize(mediaQuery);
+
+        const onChange = (event: MediaQueryListEvent) => handlePaginationResize(event);
+
+        mediaQuery.addEventListener("change", onChange);
+
+        return () => {
+            mediaQuery.removeEventListener("change", onChange);
+        };
+    }, []);
+
+    const paginatedProducts = useMemo(() => {
+        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        return filteredProducts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    }, [currentPage, filteredProducts]);
+
+    const visiblePageNumbers = useMemo(() => {
+        if (totalPages <= visiblePageLimit) {
+            return Array.from({ length: totalPages }, (_, index) => index + 1);
+        }
+
+        const halfWindow = Math.floor(visiblePageLimit / 2);
+        let startPage = Math.max(1, currentPage - halfWindow);
+        let endPage = startPage + visiblePageLimit - 1;
+
+        if (endPage > totalPages) {
+            endPage = totalPages;
+            startPage = Math.max(1, endPage - visiblePageLimit + 1);
+        }
+
+        return Array.from(
+            { length: endPage - startPage + 1 },
+            (_, index) => startPage + index
+        );
+    }, [currentPage, totalPages, visiblePageLimit]);
+
+    const startItem =
+        filteredProducts.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1;
+    const endItem = Math.min(currentPage * ITEMS_PER_PAGE, filteredProducts.length);
+
     const updateFilter = (key: string, value: string) => {
         const nextParams = new URLSearchParams(searchParams);
 
@@ -105,7 +168,22 @@ export default function ProductLayout() {
             nextParams.set(key, value);
         }
 
+        nextParams.delete("page");
         setSearchParams(nextParams);
+    };
+
+    const updatePage = (page: number) => {
+        const safePage = Math.min(Math.max(page, 1), totalPages);
+        const nextParams = new URLSearchParams(searchParams);
+
+        if (safePage <= 1) {
+            nextParams.delete("page");
+        } else {
+            nextParams.set("page", String(safePage));
+        }
+
+        setSearchParams(nextParams);
+        window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     const hasAnyFilter =
@@ -151,10 +229,11 @@ export default function ProductLayout() {
                                                     onClick={() =>
                                                         updateFilter("filter-category", category.slug)
                                                     }
-                                                    className={`whitespace-nowrap rounded-full px-5 py-3 text-sm font-semibold transition ${isActive
+                                                    className={`whitespace-nowrap rounded-full px-5 py-3 text-sm font-semibold transition ${
+                                                        isActive
                                                             ? "border-p-900 bg-p-900 text-white shadow-[0_10px_24px_rgba(15,109,81,0.18)]"
                                                             : "border border-p-100 bg-white text-n-700 hover:bg-p-50"
-                                                        }`}
+                                                    }`}
                                                 >
                                                     {category.name}
                                                 </button>
@@ -239,13 +318,19 @@ export default function ProductLayout() {
                     )}
                 </div>
 
-                <div className="mt-10 flex items-center justify-between gap-4">
+                <div className="mt-10 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                     <div>
                         <p className="text-sm text-n-500">Kết quả hiển thị</p>
                         <h2 className="text-2xl font-bold text-n-800">
                             {filteredProducts.length} sản phẩm
                         </h2>
                     </div>
+
+                    {filteredProducts.length > 0 && (
+                        <div className="rounded-full border border-p-100 bg-p-50 px-4 py-2 text-sm font-medium text-n-700">
+                            Hiển thị {startItem}-{endItem} / {filteredProducts.length} sản phẩm
+                        </div>
+                    )}
                 </div>
 
                 {filteredProducts.length === 0 ? (
@@ -258,11 +343,74 @@ export default function ProductLayout() {
                         </p>
                     </div>
                 ) : (
-                    <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
-                        {filteredProducts.map((product) => (
-                            <ProductCard key={product.id} product={product} />
-                        ))}
-                    </div>
+                    <>
+                        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+                            {paginatedProducts.map((product) => (
+                                <ProductCard key={product.id} product={product} />
+                            ))}
+                        </div>
+
+                        {totalPages > 1 && (
+                            <div className="mt-10 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => updatePage(1)}
+                                    disabled={currentPage === 1}
+                                    className="rounded-2xl border border-p-100 bg-white px-3 py-3 text-sm font-semibold text-n-700 transition hover:border-p-300 hover:bg-p-50 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4"
+                                >
+                                    Đầu
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={() => updatePage(currentPage - 1)}
+                                    disabled={currentPage === 1}
+                                    className="rounded-2xl border border-p-100 bg-white px-3 py-3 text-sm font-semibold text-n-700 transition hover:border-p-300 hover:bg-p-50 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4"
+                                >
+                                    Trước
+                                </button>
+
+                                <div className="flex flex-wrap items-center justify-center gap-2">
+                                    {visiblePageNumbers.map((page) => {
+                                        const isActive = page === currentPage;
+
+                                        return (
+                                            <button
+                                                key={page}
+                                                type="button"
+                                                onClick={() => updatePage(page)}
+                                                className={`flex h-11 min-w-11 items-center justify-center rounded-2xl px-4 text-sm font-semibold transition ${
+                                                    isActive
+                                                        ? "border-p-900 bg-p-900 text-white shadow-[0_12px_24px_rgba(15,109,81,0.18)]"
+                                                        : "border border-p-100 bg-white text-n-700 hover:border-p-300 hover:bg-p-50"
+                                                }`}
+                                            >
+                                                {page}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+
+                                <button
+                                    type="button"
+                                    onClick={() => updatePage(currentPage + 1)}
+                                    disabled={currentPage === totalPages}
+                                    className="rounded-2xl border border-p-100 bg-white px-3 py-3 text-sm font-semibold text-n-700 transition hover:border-p-300 hover:bg-p-50 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4"
+                                >
+                                    Sau
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={() => updatePage(totalPages)}
+                                    disabled={currentPage === totalPages}
+                                    className="rounded-2xl border border-p-100 bg-white px-3 py-3 text-sm font-semibold text-n-700 transition hover:border-p-300 hover:bg-p-50 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4"
+                                >
+                                    Cuối
+                                </button>
+                            </div>
+                        )}
+                    </>
                 )}
             </main>
         </section>
