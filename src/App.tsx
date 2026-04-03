@@ -5,6 +5,7 @@ import { ToastProvider } from "./contexts/ToastContext";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ScrollToTop from "./components/ScrollToTop";
 
 import Home from "./pages/Home/Home";
 import Products from "./pages/Products/Products";
@@ -83,6 +84,7 @@ function App() {
     <CartProvider>
       <ToastProvider>
         <BrowserRouter>
+          <ScrollToTop />
           <AppRoutes />
         </BrowserRouter>
       </ToastProvider>
