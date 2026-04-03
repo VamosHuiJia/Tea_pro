@@ -7,6 +7,7 @@ export type ProductCategory = {
 export type ProductBrand = {
   id: number;
   name: string;
+  slug?: string;
 };
 
 export type ProductItem = {
