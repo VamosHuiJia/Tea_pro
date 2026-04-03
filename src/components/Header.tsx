@@ -149,6 +149,7 @@ const Header = () => {
     desktopSearchRef,
     mobileSearchRef,
     userDropdownRef,
+    mobileUserDropdownRef,
     toggleMobileMenu,
     handleLinkClick,
     handleUserClick,
@@ -294,7 +295,7 @@ const Header = () => {
                 <SearchIcon />
               </button>
 
-              <div className="relative">
+              <div className="relative" ref={mobileUserDropdownRef}>
                 <AvatarButton user={user} onClick={handleUserClick} />
 
                 {isManager && (
@@ -366,13 +367,13 @@ const Header = () => {
             >
               Sản phẩm
             </Link>
-            <Link
+            {/* <Link
               to="/cart"
               className="py-3 text-lg navLink mobileNavLink"
               onClick={handleLinkClick}
             >
               Giỏ hàng
-            </Link>
+            </Link> */}
             <a
               href="/#story"
               className="py-3 text-lg navLink mobileNavLink"

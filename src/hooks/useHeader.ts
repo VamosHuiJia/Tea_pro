@@ -32,6 +32,7 @@ export function useHeader() {
   const desktopSearchRef = useRef<HTMLDivElement | null>(null);
   const mobileSearchRef = useRef<HTMLDivElement | null>(null);
   const userDropdownRef = useRef<HTMLDivElement | null>(null);
+  const mobileUserDropdownRef = useRef<HTMLDivElement | null>(null);
 
   const syncUserFromStorage = () => {
     const userStr = localStorage.getItem("user");
@@ -87,7 +88,7 @@ export function useHeader() {
 
   useOnClickOutside(desktopSearchRef, () => setIsDesktopSearchOpen(false));
   useOnClickOutside(mobileSearchRef, () => setIsMobileSearchOpen(false));
-  useOnClickOutside(userDropdownRef, () => setIsUserDropdownOpen(false));
+  useOnClickOutside([userDropdownRef, mobileUserDropdownRef], () => setIsUserDropdownOpen(false));
 
   const roleLvl = user?.roleLevel || user?.role?.level;
   const isManager = roleLvl === "admin" || roleLvl === "staff";
@@ -160,6 +161,7 @@ export function useHeader() {
     desktopSearchRef,
     mobileSearchRef,
     userDropdownRef,
+    mobileUserDropdownRef,
     toggleMobileMenu,
     handleLinkClick,
     handleUserClick,
