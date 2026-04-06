@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { ChevronLeft, Minus, Plus, ShoppingCart } from "lucide-react";
 import { useCart } from "../../../contexts/CartContext";
 import { productList } from "../../../animations/data";
+import { toSlug } from "../../../utils/slug";
 
 function formatCurrency(value: number) {
     return new Intl.NumberFormat("vi-VN", {
@@ -18,7 +19,7 @@ export default function ProductDetail() {
     const { addToCart } = useCart();
 
     const product = useMemo(
-        () => productList.find((item) => item.id === Number(id)),
+        () => productList.find((item) => toSlug(item.name) === id || item.id === Number(id)),
         [id]
     );
 

@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import ProductCard from "./ProductCard";
 import { productList } from "../../../animations/data";
+import { toSlug } from "../../../utils/slug";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -19,15 +20,6 @@ const PRICE_RANGES = [
     { id: "above-350k", label: "Trên 350.000đ", min: 350_000, max: Number.POSITIVE_INFINITY },
 ] as const;
 
-function toSlug(value: string) {
-    return value
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/đ/g, "d")
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "");
-}
 
 export default function ProductLayout() {
     const [searchParams, setSearchParams] = useSearchParams();

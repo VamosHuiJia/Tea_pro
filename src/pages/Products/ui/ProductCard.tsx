@@ -4,6 +4,7 @@ import { useCart } from "../../../contexts/CartContext";
 import { useToast } from "../../../contexts/ToastContext";
 import type { ProductItem } from "../../../animations/data";
 import { useTruncate } from "../../../hooks/useTruncate";
+import { toSlug } from "../../../utils/slug";
 
 type ProductCardProps = {
     product: ProductItem;
@@ -54,7 +55,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
     return (
         <Link
-            to={`/products/${product.id}`}
+            to={`/products/${toSlug(product.name)}`}
             className="group relative block overflow-hidden rounded-[28px] border border-p-100 bg-white shadow-[0_16px_40px_rgba(6,40,32,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(6,40,32,0.12)]"
         >
             {hasDiscount && (
