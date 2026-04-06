@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "aos": "^2.3.4",
+    "axios": "^1.14.0",
     "framer-motion": "^12.36.0",
     "jquery": "^3.7.1",
     "lucide-react": "^0.577.0",

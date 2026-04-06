@@ -1,29 +1,11 @@
 import type { PaymentFormValues } from "../../pages/Admin/pages/Payment/PaymentLayout";
+import axiosClient from "../../services/axiosClient";
 
-const API_BASE_URL = `${import.meta.env.REACT_APP_API_URL}/api`;
-
-function getAuthHeaders(isFormData = false) {
-  const token = localStorage.getItem("token");
-  const headers = new Headers();
-  if (!isFormData) {
-    headers.append("Content-Type", "application/json");
-  }
-  if (token) {
-    headers.append("Authorization", `Bearer ${token}`);
-  }
-  return headers;
-}
-
-export const getAllPaymentMethods = async () => {
-    const response = await fetch(`${API_BASE_URL}/payment-methods`, {
-        headers: getAuthHeaders(),
-    });
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.message || "Lỗi lấy danh sách thanh toán");
-    return result;
+export const getAllPaymentMethods = async (): Promise<any> => {
+    return await axiosClient.get(`/payment-methods`);
 };
 
-export const createPaymentMethod = async (data: PaymentFormValues) => {
+export const createPaymentMethod = async (data: PaymentFormValues): Promise<any> => {
     const formData = new FormData();
     Object.keys(data).forEach((key) => {
         if (key === "image" && data.image) {
@@ -33,17 +15,10 @@ export const createPaymentMethod = async (data: PaymentFormValues) => {
         }
     });
 
-    const response = await fetch(`${API_BASE_URL}/payment-methods`, {
-        method: "POST",
-        headers: getAuthHeaders(true),
-        body: formData
-    });
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.message || "Lỗi tạo PT thanh toán");
-    return result;
+    return await axiosClient.post(`/payment-methods`, formData);
 };
 
-export const updatePaymentMethod = async (id: number, data: PaymentFormValues) => {
+export const updatePaymentMethod = async (id: number, data: PaymentFormValues): Promise<any> => {
     const formData = new FormData();
     Object.keys(data).forEach((key) => {
         if (key === "image" && data.image) {
@@ -53,22 +28,9 @@ export const updatePaymentMethod = async (id: number, data: PaymentFormValues) =
         }
     });
 
-    const response = await fetch(`${API_BASE_URL}/payment-methods/${id}`, {
-        method: "PUT",
-        headers: getAuthHeaders(true),
-        body: formData
-    });
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.message || "Lỗi cập nhật PT thanh toán");
-    return result;
+    return await axiosClient.put(`/payment-methods/${id}`, formData);
 };
 
-export const deletePaymentMethod = async (id: number) => {
-    const response = await fetch(`${API_BASE_URL}/payment-methods/${id}`, {
-        method: "DELETE",
-        headers: getAuthHeaders(),
-    });
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.message || "Lỗi xóa PT thanh toán");
-    return result;
+export const deletePaymentMethod = async (id: number): Promise<any> => {
+    return await axiosClient.delete(`/payment-methods/${id}`);
 };

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import axios from "axios";
 import { ChevronDown, Search, Sparkles } from "lucide-react";
 import EmployeeList from "./EmployeeList";
 import type { EmployeeItem } from "./EmployeeList";
@@ -145,8 +146,8 @@ export default function EmployeeLayout() {
       }
 
       if (values.avatar_url && values.avatar_url.startsWith("data:image")) {
-        const fetchRes = await fetch(values.avatar_url);
-        const blob = await fetchRes.blob();
+        const fetchRes = await axios.get(values.avatar_url, { responseType: 'blob' });
+        const blob = fetchRes.data;
         formData.append("avatar", blob, "avatar.png");
       }
 

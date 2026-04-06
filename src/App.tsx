@@ -49,7 +49,7 @@ function AppRoutes() {
           <Routes location={backgroundLocation || location}>
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<Products />} />
-            <Route path="/products/:id" element={<ProtectedRoute><ProductDetail /></ProtectedRoute>} />
+            <Route path="/products/:id" element={<ProductDetail />} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
             <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import axios from "axios";
 import {
   ChevronDown,
   Search,
@@ -155,8 +156,8 @@ export default function CustomerLayout() {
       }
 
       if (values.avatar_url && values.avatar_url.startsWith("data:image")) {
-        const fetchRes = await fetch(values.avatar_url);
-        const blob = await fetchRes.blob();
+        const fetchRes = await axios.get(values.avatar_url, { responseType: 'blob' });
+        const blob = fetchRes.data;
         formData.append("avatar", blob, "avatar.png");
       }
 
