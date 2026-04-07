@@ -42,7 +42,7 @@ const HeroSection = () => {
                     <button
                         data-aos="zoom-in"
                         data-aos-delay="300">
-                        <a className="btn" href="#products">
+                        <a className="btn" href="/products">
                             Tìm hiểu sản phẩm
                             <img
                                 src="../../../../public/images/right-arrow.svg"

@@ -198,7 +198,6 @@ export default function CategoryLayout() {
 
         <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="mb-2 text-sm font-medium text-white/80">Trang quản trị danh mục</p>
             <h1 className="text-2xl font-bold md:text-4xl">Quản lý Danh mục</h1>
           </div>
 

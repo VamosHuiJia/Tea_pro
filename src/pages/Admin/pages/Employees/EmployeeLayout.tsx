@@ -56,11 +56,11 @@ export default function EmployeeLayout() {
     try {
       const res = await getAllUsers();
       // rolelevel là staff và admin"
-      const employeeData = res.filter((u: any) => 
-        String(u.role?.level).toLowerCase() === "staff" || 
+      const employeeData = res.filter((u: any) =>
+        String(u.role?.level).toLowerCase() === "staff" ||
         String(u.role?.level).toLowerCase() === "admin"
       );
-      
+
       const mapped = employeeData.map((c: any) => ({
         id: c.id,
         publicId: c.publicId,
@@ -140,9 +140,9 @@ export default function EmployeeLayout() {
       formData.append("phone", values.phone || "");
       formData.append("roleName", values.roleName || "Nhân viên");
       formData.append("roleLevel", values.roleLevel || "staff");
-      
+
       if (mode === "create") {
-         formData.append("password", "123456"); 
+        formData.append("password", "123456");
       }
 
       if (values.avatar_url && values.avatar_url.startsWith("data:image")) {
@@ -172,14 +172,14 @@ export default function EmployeeLayout() {
 
   const handleConfirmDelete = async (employee: EmployeeItem) => {
     try {
-        await deleteUser(employee.publicId || String(employee.id));
-        showToast("Xóa thành công", "success");
-        await fetchData();
+      await deleteUser(employee.publicId || String(employee.id));
+      showToast("Xóa thành công", "success");
+      await fetchData();
     } catch (error: any) {
-        showToast(error.message || "Lỗi khi xóa", "error");
+      showToast(error.message || "Lỗi khi xóa", "error");
     } finally {
-        setOpenModal(false);
-        setSelectedEmployee(null);
+      setOpenModal(false);
+      setSelectedEmployee(null);
     }
   };
 
@@ -207,14 +207,14 @@ export default function EmployeeLayout() {
         formData.append("phone", item.phone || "");
         formData.append("roleName", item.roleName || "Nhân viên");
         formData.append("roleLevel", item.roleLevel);
-        formData.append("password", "123456"); 
+        formData.append("password", "123456");
         try {
-            await createUser(formData);
+          await createUser(formData);
         } catch (e) {
-            console.error("Lỗi khi thêm user import", e);
+          console.error("Lỗi khi thêm user import", e);
         }
       }
-      
+
       showToast("Đã hoàn tất nhập dữ liệu Excel!", "success");
       await fetchData();
     } catch (error) {
@@ -246,13 +246,12 @@ export default function EmployeeLayout() {
         <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
         <div className="absolute bottom-0 left-1/3 h-28 w-28 rounded-full bg-emerald-200/10 blur-2xl" />
 
-        <div className="relative z-10 flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
-          <div className="max-w-3xl">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-white/85 backdrop-blur-sm">
-              <Sparkles className="h-4 w-4" />
-              Trang quản trị nhân viên
-            </div>
-            <h1 className="text-3xl font-bold md:text-5xl">Quản lý nhân viên</h1>
+        <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold md:text-4xl">Quản lý nhân viên</h1>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-white/80">
+              Mỗi ngày đi làm là một ngày vui
+            </p>
           </div>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">

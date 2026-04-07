@@ -311,13 +311,9 @@ export default function ProductLayout() {
         <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
         <div className="absolute bottom-0 left-1/3 h-28 w-28 rounded-full bg-emerald-200/10 blur-2xl" />
 
-        <div className="relative z-10 flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
-          <div className="max-w-3xl">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-white/85 backdrop-blur-sm">
-              <Sparkles className="h-4 w-4" />
-              Trang quản trị sản phẩm
-            </div>
-            <h1 className="text-3xl font-bold md:text-5xl">Quản lý sản phẩm</h1>
+        <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold md:text-4xl">Quản lý sản phẩm</h1>
           </div>
 
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
