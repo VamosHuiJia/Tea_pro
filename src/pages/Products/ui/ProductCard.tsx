@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ShoppingCart } from "lucide-react";
 import { useCart } from "../../../contexts/CartContext";
 import { useToast } from "../../../contexts/ToastContext";
+import { useAuth } from "../../../contexts/AuthContext";
 import type { ProductItem } from "../../../animations/data";
 import { useTruncate } from "../../../hooks/useTruncate";
 import { toSlug } from "../../../utils/slug";
@@ -21,6 +22,7 @@ function formatCurrency(value: number) {
 export default function ProductCard({ product }: ProductCardProps) {
     const { addToCart } = useCart();
     const { showToast } = useToast();
+    const { user } = useAuth();
     const navigate = useNavigate();
 
     const hasDiscount = Number(product.discountPercent) > 0;
@@ -37,8 +39,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         if (!product.isActive) return;
 
-        const token = localStorage.getItem("token");
-        if (!token) {
+        if (!user) {
             showToast("Vui lòng đăng nhập để thêm vào giỏ hàng!", "error");
             navigate("/login");
             return;

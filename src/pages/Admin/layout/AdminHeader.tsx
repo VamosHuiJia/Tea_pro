@@ -1,12 +1,6 @@
 import { Bell, Menu, Search } from "lucide-react";
 import { useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
-
-type CurrentUser = {
-  username?: string;
-  roleName?: string;
-  role?: { level?: string };
-};
+import { useAuth } from "../../../contexts/AuthContext";
 
 type AdminHeaderProps = {
   onOpenMobileMenu: () => void;
@@ -14,18 +8,7 @@ type AdminHeaderProps = {
 
 export default function AdminHeader({ onOpenMobileMenu }: AdminHeaderProps) {
   const location = useLocation();
-  const [user, setUser] = useState<CurrentUser | null>(null);
-
-  useEffect(() => {
-    const userStr = localStorage.getItem("user");
-    if (userStr) {
-      try {
-        setUser(JSON.parse(userStr));
-      } catch (e) {
-        console.error("Failed to parse user from localStorage");
-      }
-    }
-  }, []);
+  const { user } = useAuth();
 
   const getPageTitle = (pathname: string) => {
     if (pathname.startsWith("/admin/brands")) return "Quản lý thương hiệu";

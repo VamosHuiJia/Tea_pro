@@ -1,16 +1,8 @@
-import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye, PackageCheck, Clock3, ShoppingBag } from "lucide-react";
+import { useAuth } from "../../contexts/AuthContext";
 
-type UserInfo = {
-    username?: string;
-    fullName?: string;
-    email?: string;
-    phone?: string;
-    address?: string;
-    avatar?: string;
-    roleLevel?: string;
-};
+
 
 type OrderItem = {
     id: string;
@@ -125,17 +117,7 @@ function StatCard({ icon, label, value, tone = "soft" }: StatCardProps) {
 
 export default function Profile() {
     const navigate = useNavigate();
-
-    const user: UserInfo | null = useMemo(() => {
-        const raw = localStorage.getItem("user");
-        if (!raw) return null;
-
-        try {
-            return JSON.parse(raw);
-        } catch {
-            return null;
-        }
-    }, []);
+    const { user, logout } = useAuth();
 
     const totalOrders = mockOrders.length;
     const completedOrders = mockOrders.filter((item) => item.status === "completed").length;
@@ -143,11 +125,8 @@ export default function Profile() {
         (item) => item.status === "pending" || item.status === "confirmed" || item.status === "shipping"
     ).length;
 
-    const handleLogout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        window.dispatchEvent(new Event("auth-changed"));
-        navigate("/");
+    const handleLogout = async () => {
+        await logout();
     };
 
     const handleViewOrder = (orderId: string) => {
@@ -179,8 +158,8 @@ export default function Profile() {
                     <aside className="flex h-full flex-col rounded-[28px] border border-p-100 bg-gradient-to-b from-white via-white to-p-50/40 p-5 shadow-[0_14px_40px_rgba(13,71,56,0.06)]">
                         <div className="flex flex-col items-center text-center">
                             <div className="relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-p-100 bg-gradient-to-br from-p-50 to-p-100 shadow-inner">
-                                {user.avatar ? (
-                                    <img src={user.avatar} alt="avatar" className="h-full w-full object-cover" />
+                                {user.avatar_url ? (
+                                    <img src={user.avatar_url} alt="avatar" className="h-full w-full object-cover" />
                                 ) : (
                                     <span className="text-3xl font-bold text-p-900">
                                         {(user.fullName || user.username || "U").charAt(0).toUpperCase()}

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthLayout } from "./AuthLayout";
 import { loginUser } from "../../api/shop/auth.api";
 import { useToast } from "../../contexts/ToastContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -11,6 +12,7 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { showToast } = useToast();
+  const { fetchUser } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,11 +20,9 @@ const LoginPage = () => {
     setIsLoading(true);
 
     try {
-      const data = await loginUser(email, password);
+      await loginUser(email, password);
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      window.dispatchEvent(new Event("auth-changed"));
+      await fetchUser();
 
       showToast("Đăng nhập thành công!", "success");
       navigate("/");

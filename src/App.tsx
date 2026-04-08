@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { CartProvider } from "./contexts/CartContext";
 import { ToastProvider } from "./contexts/ToastContext";
+import { AuthProvider } from "./contexts/AuthContext";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -81,14 +82,16 @@ function AppRoutes() {
 
 function App() {
   return (
-    <CartProvider>
-      <ToastProvider>
-        <BrowserRouter>
-          <ScrollToTop />
-          <AppRoutes />
-        </BrowserRouter>
-      </ToastProvider>
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <ToastProvider>
+          <BrowserRouter>
+            <ScrollToTop />
+            <AppRoutes />
+          </BrowserRouter>
+        </ToastProvider>
+      </CartProvider>
+    </AuthProvider>
   );
 }
 

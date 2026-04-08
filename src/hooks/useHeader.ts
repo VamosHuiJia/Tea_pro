@@ -2,22 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { initNavbarScrollBehavior } from "../animations/HideShowNavbar";
 import { useOnClickOutside } from "./useOnClickOutside";
+import { useAuth } from "../contexts/AuthContext";
 
-type RoleLevel = "admin" | "staff" | "user" | string;
 
-type CurrentUser = {
-  id?: number | string;
-  username?: string;
-  fullName?: string;
-  email?: string;
-  phone?: string;
-  avatar?: string;
-  address?: string;
-  roleLevel?: RoleLevel;
-  role?: {
-    level: string;
-  };
-};
 
 export function useHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -25,45 +12,15 @@ export function useHeader() {
   const [isDesktopSearchOpen, setIsDesktopSearchOpen] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [user, setUser] = useState<CurrentUser | null>(null);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
 
+  const { user } = useAuth();
+  
   const navigate = useNavigate();
   const desktopSearchRef = useRef<HTMLDivElement | null>(null);
   const mobileSearchRef = useRef<HTMLDivElement | null>(null);
   const userDropdownRef = useRef<HTMLDivElement | null>(null);
   const mobileUserDropdownRef = useRef<HTMLDivElement | null>(null);
-
-  const syncUserFromStorage = () => {
-    const userStr = localStorage.getItem("user");
-    if (!userStr) {
-      setUser(null);
-      return;
-    }
-
-    try {
-      setUser(JSON.parse(userStr));
-    } catch (e) {
-      console.error("Error parsing user from localStorage:", e);
-      setUser(null);
-    }
-  };
-
-  useEffect(() => {
-    syncUserFromStorage();
-
-    const handleAuthChanged = () => {
-      syncUserFromStorage();
-    };
-
-    window.addEventListener("auth-changed", handleAuthChanged);
-    window.addEventListener("storage", handleAuthChanged);
-
-    return () => {
-      window.removeEventListener("auth-changed", handleAuthChanged);
-      window.removeEventListener("storage", handleAuthChanged);
-    };
-  }, []);
 
   useEffect(() => {
     const cleanup = initNavbarScrollBehavior({

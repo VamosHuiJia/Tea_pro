@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useToast } from "../contexts/ToastContext";
+import { useAuth } from "../contexts/AuthContext";
 
 type ProtectedRouteProps = {
   children: ReactNode;
@@ -11,30 +12,21 @@ type ProtectedRouteProps = {
 export default function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
   const { showToast } = useToast();
   const location = useLocation();
+  const { user, isLoading } = useAuth();
 
   const [shouldRedirectLogin, setShouldRedirectLogin] = useState(false);
   const [shouldRedirectHome, setShouldRedirectHome] = useState(false);
 
-  // Parse user once for synchronous render check
-  const token = localStorage.getItem("token");
-  const userStr = localStorage.getItem("user");
-  let user = null;
-  if (userStr) {
-    try {
-      user = JSON.parse(userStr);
-    } catch (e) {
-      // ignore
-    }
-  }
-
-  const isAuth = !!(token && user);
+  const isAuth = !!user;
   let isAuthz = true;
   if (isAuth && allowedRoles && allowedRoles.length > 0) {
     const roleLvl = user?.roleLevel || user?.role?.level;
-    isAuthz = allowedRoles.includes(roleLvl);
+    isAuthz = allowedRoles.includes(roleLvl as string);
   }
 
   useEffect(() => {
+    if (isLoading) return;
+
     if (!isAuth) {
       showToast("Vui lòng đăng nhập để tiếp tục!", "error");
       setShouldRedirectLogin(true);
@@ -46,7 +38,7 @@ export default function ProtectedRoute({ children, allowedRoles }: ProtectedRout
       setShouldRedirectHome(true);
       return;
     }
-  }, [isAuth, isAuthz, showToast]);
+  }, [isAuth, isAuthz, showToast, isLoading]);
 
   if (shouldRedirectLogin) {
     return <Navigate to="/login" state={{ from: location }} replace />;
@@ -54,6 +46,14 @@ export default function ProtectedRoute({ children, allowedRoles }: ProtectedRout
 
   if (shouldRedirectHome) {
     return <Navigate to="/" replace />;
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-neutral-900 text-white">
+        Đang tải thông tin...
+      </div>
+    );
   }
 
   // Prevent flashing unauthorized content
