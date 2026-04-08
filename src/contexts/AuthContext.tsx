@@ -54,12 +54,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(null);
       // Clean up localStorage for user just in case anything was there
       localStorage.removeItem("user");
+      localStorage.removeItem("token");
       window.location.href = "/login";
     }
   };
 
   useEffect(() => {
+    // Clean up legacy tokens from old versions to assure user nothing is stored
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
     fetchUser();
+
+    const handleAuthFailed = () => {
+      setUser(null);
+    };
+
+    window.addEventListener("auth-failed", handleAuthFailed);
+    return () => {
+      window.removeEventListener("auth-failed", handleAuthFailed);
+    };
   }, []);
 
   return (

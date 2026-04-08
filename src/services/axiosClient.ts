@@ -61,15 +61,13 @@ axiosClient.interceptors.response.use(
       } catch (err) {
         processQueue(err, null);
         isRefreshing = false;
-        localStorage.removeItem('user');
-        window.location.href = '/login';
+        window.dispatchEvent(new Event("auth-failed"));
         return Promise.reject(err);
       }
     }
     
     if (error.response && error.response.status === 403 && !originalRequest.url?.includes('refresh-token')) {
-        localStorage.removeItem('user');
-        window.location.href = '/login';
+        window.dispatchEvent(new Event("auth-failed"));
     }
 
     return Promise.reject(error.response?.data || error.response || error);
