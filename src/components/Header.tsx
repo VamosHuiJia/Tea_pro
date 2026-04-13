@@ -72,13 +72,13 @@ const AvatarButton = ({
 }: AvatarButtonProps) => {
   const currentUser =
     user as
-      | {
-          avatar?: string;
-          avatarUrl?: string;
-          image?: string;
-          photoURL?: string;
-        }
-      | null;
+    | {
+      avatar?: string;
+      avatarUrl?: string;
+      image?: string;
+      photoURL?: string;
+    }
+    | null;
 
   const avatarSrc =
     currentUser?.avatar ||
@@ -168,7 +168,7 @@ const Header = () => {
           <div className="max-w-[1536px] w-full px-4 py-4 md:px-[72px] mx-auto relative">
             <div className="grid items-center grid-cols-[auto_1fr_auto] gap-4 lg:gap-8">
               <Link
-                to="/"
+                to="/home"
                 className="flex items-center flex-none gap-3"
                 onClick={handleLinkClick}
               >
@@ -179,7 +179,7 @@ const Header = () => {
               </Link>
 
               <nav className="items-center justify-center hidden gap-8 lg:flex">
-                <Link to="/" className="navLink">
+                <Link to="/home" className="navLink">
                   Trang chủ
                 </Link>
                 <Link to="/products" className="navLink">
@@ -204,11 +204,10 @@ const Header = () => {
                   </button>
 
                   <div
-                    className={`absolute right-0 top-full mt-4 w-[460px] rounded-[22px] border border-p-100 bg-white px-4 py-4 shadow-[0_12px_30px_rgba(13,71,56,0.12)] transition-all duration-200 ${
-                      isDesktopSearchOpen
+                    className={`absolute right-0 top-full mt-4 w-[460px] rounded-[22px] border border-p-100 bg-white px-4 py-4 shadow-[0_12px_30px_rgba(13,71,56,0.12)] transition-all duration-200 ${isDesktopSearchOpen
                         ? "visible opacity-100 translate-y-0"
                         : "invisible pointer-events-none opacity-0 -translate-y-2"
-                    }`}
+                      }`}
                   >
                     <form onSubmit={handleSearchSubmit} className="flex items-center gap-3">
                       <input
@@ -233,11 +232,10 @@ const Header = () => {
 
                   {isManager && (
                     <div
-                      className={`absolute right-0 top-full mt-4 w-52 rounded-2xl border border-p-100 bg-white shadow-[0_12px_30px_rgba(13,71,56,0.12)] transition-all duration-200 overflow-hidden ${
-                        isUserDropdownOpen
+                      className={`absolute right-0 top-full mt-4 w-52 rounded-2xl border border-p-100 bg-white shadow-[0_12px_30px_rgba(13,71,56,0.12)] transition-all duration-200 overflow-hidden ${isUserDropdownOpen
                           ? "visible opacity-100 translate-y-0"
                           : "invisible pointer-events-none opacity-0 -translate-y-2"
-                      }`}
+                        }`}
                     >
                       <div className="flex flex-col py-2">
                         <button
@@ -279,11 +277,10 @@ const Header = () => {
 
         <div
           id="mobileMenu"
-          className={`lg:hidden fixed inset-x-0 top-[80px] bg-white/90 backdrop-blur-md shadow-xl transition-all duration-300 ease-in-out ${
-            isMobileMenuOpen && !isNavbarHidden
+          className={`lg:hidden fixed inset-x-0 top-[80px] bg-white/90 backdrop-blur-md shadow-xl transition-all duration-300 ease-in-out ${isMobileMenuOpen && !isNavbarHidden
               ? "opacity-100 translate-y-0 visible"
               : "opacity-0 -translate-y-4 pointer-events-none invisible"
-          }`}
+            }`}
         >
           <div className="max-w-[1536px] mx-auto px-6 py-8 flex flex-col gap-6 text-center">
             <div className="flex items-center justify-center gap-3 pb-2 border-b border-p-100">
@@ -300,11 +297,10 @@ const Header = () => {
 
                 {isManager && (
                   <div
-                    className={`absolute z-50 left-1/2 -translate-x-1/2 top-full mt-2 w-48 rounded-2xl border border-p-100 bg-white shadow-[0_12px_30px_rgba(13,71,56,0.12)] transition-all duration-200 overflow-hidden ${
-                      isUserDropdownOpen
+                    className={`absolute z-50 left-1/2 -translate-x-1/2 top-full mt-2 w-48 rounded-2xl border border-p-100 bg-white shadow-[0_12px_30px_rgba(13,71,56,0.12)] transition-all duration-200 overflow-hidden ${isUserDropdownOpen
                         ? "visible opacity-100 translate-y-0"
                         : "invisible pointer-events-none opacity-0 -translate-y-2"
-                    }`}
+                      }`}
                   >
                     <div className="flex flex-col py-2">
                       <button
@@ -332,9 +328,8 @@ const Header = () => {
 
             <div
               ref={mobileSearchRef}
-              className={`overflow-hidden transition-all duration-300 ${
-                isMobileSearchOpen ? "max-h-32 opacity-100" : "max-h-0 opacity-0"
-              }`}
+              className={`overflow-hidden transition-all duration-300 ${isMobileSearchOpen ? "max-h-32 opacity-100" : "max-h-0 opacity-0"
+                }`}
             >
               <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 pt-2">
                 <input
@@ -354,7 +349,7 @@ const Header = () => {
             </div>
 
             <Link
-              to="/"
+              to="/home"
               className="py-3 text-lg navLink mobileNavLink"
               onClick={handleLinkClick}
             >

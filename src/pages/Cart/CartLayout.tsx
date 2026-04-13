@@ -16,7 +16,6 @@ export default function CartPage() {
     return (
         <section className="container !pt-10 !pb-14">
             <div className="mb-8">
-                <p className="text-sm text-n-500">Mua sắm / Giỏ hàng</p>
                 <h1 className="mt-2 text-3xl font-bold text-n-800">Giỏ hàng</h1>
             </div>
 

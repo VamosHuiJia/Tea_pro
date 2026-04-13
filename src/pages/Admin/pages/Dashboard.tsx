@@ -141,7 +141,7 @@ export default function Dashboard() {
                         </div>
                         <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm text-center">
                             <p className="text-xs text-white/70">Doanh thu</p>
-                            <p className="mt-1 text-base font-semibold truncate max-w-[100px]">{vnCurrency.format(data.totalRevenue / 1000)}k</p>
+                            <p className="mt-1 text-lg font-semibold">{vnCurrency.format(data.totalRevenue / 1000)}k</p>
                         </div>
                         <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm col-span-2 sm:col-span-1 text-center">
                             <p className="text-xs text-white/70">Khách hàng</p>

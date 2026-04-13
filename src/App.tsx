@@ -48,7 +48,7 @@ function AppRoutes() {
       {!isAdminPage && showSiteChrome && (
         <main>
           <Routes location={backgroundLocation || location}>
-            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/products" element={<Products />} />
             <Route path="/products/:id" element={<ProductDetail />} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
