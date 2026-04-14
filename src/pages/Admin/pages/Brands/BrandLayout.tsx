@@ -7,6 +7,7 @@ import BrandModal from "./BrandModal";
 import type { BrandFormValues } from "./BrandModal";
 import { getAllBrands, createBrand, updateBrand, deleteBrand } from "../../../../api/admin/brand.api";
 import { useToast } from "../../../../contexts/ToastContext";
+import { useConfirm } from "../../../../contexts/ConfirmContext";
 
 function normalizeImportedRow(row: Record<string, unknown>): BrandFormValues {
   return {
@@ -29,6 +30,7 @@ export default function BrandLayout() {
   const [mode, setMode] = useState<"create" | "edit">("create");
   const [selectedBrand, setSelectedBrand] = useState<BrandItem | null>(null);
   const { showToast } = useToast();
+  const { confirm } = useConfirm();
 
   const excelInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -77,7 +79,7 @@ export default function BrandLayout() {
   };
 
   const handleDelete = async (brand: BrandItem) => {
-    const confirmed = window.confirm(
+    const confirmed = await confirm(
       `Bạn có chắc muốn xóa thương hiệu "${brand.name}" không?`
     );
     if (!confirmed) return;
@@ -152,13 +154,29 @@ export default function BrandLayout() {
       let successCount = 0;
       for (const row of normalizedRows) {
         try {
+          const existingBrand = brands.find(b => b.name.toLowerCase() === row.name.toLowerCase());
+          let isUpdate = false;
+          let brandIdToUpdate: number | null = null;
+  
+          if (existingBrand) {
+            const userConfirmed = await confirm(`Thương hiệu "${row.name}" đã tồn tại. Bạn có muốn cập nhật thông tin không?`);
+            if (!userConfirmed) continue;
+            
+            isUpdate = true;
+            brandIdToUpdate = Number(existingBrand.id);
+          }
+
           const formData = new FormData();
           formData.append("name", row.name);
           formData.append("description", row.description);
           formData.append("isActive", String(row.isActive));
           // Import excel không hỗ trợ trực tiếp ảnh dưới dạng file
 
-          await createBrand(formData);
+          if (isUpdate && brandIdToUpdate) {
+            await updateBrand(brandIdToUpdate, formData);
+          } else {
+            await createBrand(formData);
+          }
           successCount++;
         } catch (err) {
           console.error(`Lỗi nhập mục ${row.name}:`, err);

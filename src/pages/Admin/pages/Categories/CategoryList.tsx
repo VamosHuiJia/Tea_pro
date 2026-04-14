@@ -3,6 +3,7 @@ import { Download, FileEdit, Plus, Trash2, Upload } from "lucide-react";
 export type CategoryItem = {
   id: string | number;
   name: string;
+  title?: string;
   description?: string;
   image?: string;
   isActive: boolean;
@@ -151,6 +152,7 @@ export default function CategoryList({
             <tr className="text-left text-sm text-n-500">
               <th className="pb-2 font-medium">Hình ảnh</th>
               <th className="pb-2 font-medium">Tên danh mục</th>
+              <th className="pb-2 font-medium">Tiêu đề</th>
               <th className="pb-2 font-medium">Mô tả</th>
               <th className="pb-2 font-medium">Trạng thái</th>
               <th className="pb-2 font-medium">Tạo lúc</th>
@@ -178,6 +180,10 @@ export default function CategoryList({
 
                 <td className="px-4 py-4 font-semibold text-n-800">
                   {category.name}
+                </td>
+
+                <td className="px-4 py-4 font-semibold text-n-800">
+                  {category.title || "--"}
                 </td>
 
                 <td className="max-w-[280px] px-4 py-4">

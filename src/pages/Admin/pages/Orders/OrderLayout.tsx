@@ -12,6 +12,7 @@ import {
 import OrderList from "./OrderList";
 import { getAllOrders, updateOrderStatus, deleteOrder } from "../../../../api/admin/order.api";
 import { useToast } from "../../../../contexts/ToastContext";
+import { useConfirm } from "../../../../contexts/ConfirmContext";
 
 export type OrderStatus =
   | "pending"
@@ -73,6 +74,7 @@ export default function OrderLayout() {
   const [selectedOrder, setSelectedOrder] = useState<OrderItem | null>(null);
   const [loading, setLoading] = useState(true);
   const { showToast } = useToast();
+  const { confirm } = useConfirm();
 
   const fetchOrders = async () => {
     setLoading(true);
@@ -140,7 +142,7 @@ export default function OrderLayout() {
   };
 
   const handleDelete = async (id: number) => {
-    const confirmed = window.confirm(`Bạn có chắc muốn hủy / xóa đơn #${id} không?`);
+    const confirmed = await confirm(`Bạn có chắc muốn hủy / xóa đơn #${id} không?`);
     if (!confirmed) return;
 
     try {

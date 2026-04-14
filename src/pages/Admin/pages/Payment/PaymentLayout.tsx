@@ -11,6 +11,7 @@ import PaymentList from "./PaymentList";
 import PaymentModal from "./PaymentModal";
 import { getAllPaymentMethods, createPaymentMethod, updatePaymentMethod, deletePaymentMethod } from "../../../../api/admin/payment.api";
 import { useToast } from "../../../../contexts/ToastContext";
+import { useConfirm } from "../../../../contexts/ConfirmContext";
 
 export type PaymentMethodKey = "cod" | "vnpay" | "momo" | "zalopay";
 export type PaymentStatus = "pending" | "success" | "failed" | "refunded";
@@ -87,6 +88,7 @@ export default function PaymentLayout() {
   const [viewedPayment, setViewedPayment] = useState<PaymentItem | null>(null);
   const [loading, setLoading] = useState(true);
   const { showToast } = useToast();
+  const { confirm } = useConfirm();
 
   const fetchPayments = async () => {
     setLoading(true);
@@ -157,7 +159,7 @@ export default function PaymentLayout() {
     const found = payments.find((item) => item.id === id);
     if (!found) return;
 
-    const confirmed = window.confirm(
+    const confirmed = await confirm(
       `Bạn có chắc muốn xóa phương thức "${found.name}" không?`
     );
     if (!confirmed) return;

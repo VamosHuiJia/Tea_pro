@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-route
 import { CartProvider } from "./contexts/CartContext";
 import { ToastProvider } from "./contexts/ToastContext";
 import { AuthProvider } from "./contexts/AuthContext";
+import { ConfirmProvider } from "./contexts/ConfirmContext";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -85,10 +86,12 @@ function App() {
     <AuthProvider>
       <CartProvider>
         <ToastProvider>
-          <BrowserRouter>
-            <ScrollToTop />
-            <AppRoutes />
-          </BrowserRouter>
+          <ConfirmProvider>
+            <BrowserRouter>
+              <ScrollToTop />
+              <AppRoutes />
+            </BrowserRouter>
+          </ConfirmProvider>
         </ToastProvider>
       </CartProvider>
     </AuthProvider>

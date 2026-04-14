@@ -6,6 +6,7 @@ import type { CategoryItem } from "./CategoryList";
 export type CategoryFormValues = {
     id?: string | number;
     name: string;
+    title: string;
     description: string;
     image: string;
     imageFile?: File;
@@ -25,6 +26,7 @@ type CategoryModalProps = {
 
 const defaultValues: CategoryFormValues = {
     name: "",
+    title: "",
     description: "",
     image: "",
     isActive: true,
@@ -58,6 +60,7 @@ export default function CategoryModal({
             setForm({
                 id: initialData.id,
                 name: initialData.name || "",
+                title: initialData.title || "",
                 description: initialData.description || "",
                 image: initialData.image || "",
                 isActive: initialData.isActive,
@@ -103,6 +106,7 @@ export default function CategoryModal({
         onSubmit({
             ...form,
             name: form.name.trim(),
+            title: form.title.trim(),
             description: form.description.trim(),
         });
     };
@@ -139,6 +143,21 @@ export default function CategoryModal({
                                         setForm((prev) => ({ ...prev, name: event.target.value }))
                                     }
                                     placeholder="Nhập tên danh mục"
+                                    className="w-full rounded-2xl border border-p-100 bg-white px-4 py-3 text-sm outline-none transition focus:border-p-400"
+                                />
+                            </div>
+
+                            <div className="md:col-span-2">
+                                <label className="mb-2 block text-sm font-semibold text-n-700">
+                                    Tiêu đề
+                                </label>
+                                <input
+                                    type="text"
+                                    value={form.title}
+                                    onChange={(event) =>
+                                        setForm((prev) => ({ ...prev, title: event.target.value }))
+                                    }
+                                    placeholder="Nhập tiêu đề danh mục"
                                     className="w-full rounded-2xl border border-p-100 bg-white px-4 py-3 text-sm outline-none transition focus:border-p-400"
                                 />
                             </div>

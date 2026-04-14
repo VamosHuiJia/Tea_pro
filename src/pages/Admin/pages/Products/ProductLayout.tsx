@@ -16,6 +16,7 @@ import { getAllCategories } from "../../../../api/admin/category.api";
 import { getAllBrands } from "../../../../api/admin/brand.api";
 import { getAllProducts, createProduct, updateProduct, deleteProduct } from "../../../../api/admin/product.api";
 import { useToast } from "../../../../contexts/ToastContext";
+import { useConfirm } from "../../../../contexts/ConfirmContext";
 
 function normalizeImportedRow(row: Record<string, unknown>, categories: ProductOption[], brands: ProductOption[]) {
   const categoryName = String(
@@ -84,6 +85,7 @@ export default function ProductLayout() {
   const [mode, setMode] = useState<"create" | "edit">("create");
   const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
   const { showToast } = useToast();
+  const { confirm } = useConfirm();
 
   const excelInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -167,8 +169,8 @@ export default function ProductLayout() {
   };
 
   const handleDelete = async (product: ProductItem) => {
-    const confirmed = window.confirm(
-      `Bạn có chắc muốn xóa sản phẩm "${product.name}" không?`
+    const confirmed = await confirm(
+      `Bạn có chắc chắn muốn xóa sản phẩm "${product.name}" không?`
     );
     if (!confirmed) return;
 
@@ -259,6 +261,18 @@ export default function ProductLayout() {
         .filter((item) => item.name && item.categoryId && item.brandId);
 
       for (const row of normalizedRows) {
+        const existingProduct = products.find(p => p.name.toLowerCase() === row.name.toLowerCase());
+        let isUpdate = false;
+        let productIdToUpdate: number | null = null;
+
+        if (existingProduct) {
+          const userConfirmed = await confirm(`Sản phẩm "${row.name}" đã tồn tại. Bạn có muốn cập nhật thông tin không?`);
+          if (!userConfirmed) continue;
+          
+          isUpdate = true;
+          productIdToUpdate = Number(existingProduct.id);
+        }
+
         const formData = new FormData();
         formData.append("name", row.name);
         formData.append("description", row.description || "");
@@ -270,7 +284,11 @@ export default function ProductLayout() {
         formData.append("isActive", String(row.isActive));
         
         try {
-          await createProduct(formData);
+          if (isUpdate && productIdToUpdate) {
+            await updateProduct(productIdToUpdate, formData);
+          } else {
+            await createProduct(formData);
+          }
         } catch (e) {
           console.error("Lỗi dòng:", row.name, e);
         }

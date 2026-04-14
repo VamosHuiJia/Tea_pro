@@ -7,10 +7,12 @@ import CategoryModal from "./CategoryModal";
 import type { CategoryFormValues } from "./CategoryModal";
 import { getAllCategories, createCategory, updateCategory, deleteCategory } from "../../../../api/admin/category.api";
 import { useToast } from "../../../../contexts/ToastContext";
+import { useConfirm } from "../../../../contexts/ConfirmContext";
 
 function normalizeImportedRow(row: Record<string, unknown>): CategoryFormValues {
   return {
     name: String(row.name ?? row["Tên danh mục"] ?? "").trim(),
+    title: String(row.title ?? row["Tiêu đề"] ?? "").trim(),
     description: String(row.description ?? row["Mô tả"] ?? "").trim(),
     image: String(row.image ?? row["Hình ảnh"] ?? "").trim(),
     isActive: ["true", "1", "hoạt động", "active", "true", "yes"].includes(
@@ -29,6 +31,7 @@ export default function CategoryLayout() {
   const [mode, setMode] = useState<"create" | "edit">("create");
   const [selectedCategory, setSelectedCategory] = useState<CategoryItem | null>(null);
   const { showToast } = useToast();
+  const { confirm } = useConfirm();
 
   const excelInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -37,7 +40,7 @@ export default function CategoryLayout() {
     if (!normalized) return categories;
 
     return categories.filter((category) =>
-      [category.name, category.description].some((value) =>
+      [category.name, category.title, category.description].some((value) =>
         String(value || "").toLowerCase().includes(normalized)
       )
     );
@@ -80,7 +83,7 @@ export default function CategoryLayout() {
   };
 
   const handleDelete = async (category: CategoryItem) => {
-    const confirmed = window.confirm(
+    const confirmed = await confirm(
       `Bạn có chắc muốn xóa danh mục "${category.name}" không?`
     );
     if (!confirmed) return;
@@ -101,6 +104,7 @@ export default function CategoryLayout() {
     try {
       const formData = new FormData();
       formData.append("name", values.name);
+      formData.append("title", values.title);
       formData.append("description", values.description);
       formData.append("isActive", String(values.isActive));
       
@@ -155,12 +159,29 @@ export default function CategoryLayout() {
       let successCount = 0;
       for (const row of normalizedRows) {
         try {
+          const existingCategory = categories.find(c => c.name.toLowerCase() === row.name.toLowerCase());
+          let isUpdate = false;
+          let categoryIdToUpdate: number | null = null;
+  
+          if (existingCategory) {
+            const userConfirmed = await confirm(`Danh mục "${row.name}" đã tồn tại. Bạn có muốn cập nhật thông tin không?`);
+            if (!userConfirmed) continue;
+            
+            isUpdate = true;
+            categoryIdToUpdate = Number(existingCategory.id);
+          }
+
           const formData = new FormData();
           formData.append("name", row.name);
+          formData.append("title", row.title);
           formData.append("description", row.description);
           formData.append("isActive", String(row.isActive));
 
-          await createCategory(formData);
+          if (isUpdate && categoryIdToUpdate) {
+            await updateCategory(categoryIdToUpdate, formData);
+          } else {
+            await createCategory(formData);
+          }
           successCount++;
         } catch (err) {
           console.error(`Lỗi nhập mục ${row.name}:`, err);
@@ -180,6 +201,7 @@ export default function CategoryLayout() {
   const handleExportAllCategories = () => {
     const data = categories.map((category) => ({
       "Tên danh mục": category.name,
+      "Tiêu đề": category.title || "",
       "Mô tả": category.description || "",
       "Hình ảnh": category.image || "",
       "Trạng thái": category.isActive ? "Hoạt động" : "Không hoạt động",
