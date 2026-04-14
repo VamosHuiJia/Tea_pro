@@ -16,7 +16,7 @@ export default function CartPage() {
     return (
         <section className="container !pt-10 !pb-14">
             <div className="mb-8">
-                <h1 className="mt-2 text-3xl font-bold text-n-800">Giỏ hàng</h1>
+                <h1 className="mt-20 text-3xl font-bold text-n-800">Giỏ hàng</h1>
             </div>
 
             <div className="mx-auto flex w-full justify-center">

@@ -192,7 +192,7 @@ export default function CheckoutPage() {
                 </div> */}
 
                 <Link
-                    to="/home"
+                    to="/"
                     className="inline-flex items-center gap-2 rounded-2xl border border-p-100 bg-white px-4 py-3 text-sm font-semibold text-n-700 transition hover:bg-p-50"
                 >
                     <ArrowLeft className="h-4 w-4" />

@@ -82,7 +82,7 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
         </div>
 
         <NavLink
-          to="/home"
+          to="/"
           onClick={onClose}
           className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-sm font-medium text-white transition hover:bg-white/15"
         >

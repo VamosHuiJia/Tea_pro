@@ -168,7 +168,7 @@ const Header = () => {
           <div className="max-w-[1536px] w-full px-4 py-4 md:px-[72px] mx-auto relative">
             <div className="grid items-center grid-cols-[auto_1fr_auto] gap-4 lg:gap-8">
               <Link
-                to="/home"
+                to="/"
                 className="flex items-center flex-none gap-3"
                 onClick={handleLinkClick}
               >
@@ -179,7 +179,7 @@ const Header = () => {
               </Link>
 
               <nav className="items-center justify-center hidden gap-8 lg:flex">
-                <Link to="/home" className="navLink">
+                <Link to="/" className="navLink">
                   Trang chủ
                 </Link>
                 <Link to="/products" className="navLink">
@@ -349,7 +349,7 @@ const Header = () => {
             </div>
 
             <Link
-              to="/home"
+              to="/"
               className="py-3 text-lg navLink mobileNavLink"
               onClick={handleLinkClick}
             >
