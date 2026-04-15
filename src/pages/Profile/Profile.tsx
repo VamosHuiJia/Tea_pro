@@ -176,31 +176,31 @@ export default function Profile() {
                         </div>
 
                         <div className="mt-6 space-y-3">
-                            <div className="rounded-2xl border border-transparent bg-white px-4 py-3 shadow-sm ring-1 ring-n-100">
+                            <div className="rounded-2xl border border-transparent bg-white px-4 py-7 shadow-sm ring-1 ring-n-100">
                                 <p className="text-[11px] uppercase tracking-[0.18em] text-n-500">Tên đăng nhập</p>
                                 <p className="mt-1 text-sm font-semibold text-n-800">{user.username || "-"}</p>
                             </div>
 
-                            <div className="rounded-2xl border border-transparent bg-white px-4 py-3 shadow-sm ring-1 ring-n-100">
+                            <div className="rounded-2xl border border-transparent bg-white px-4 py-7 shadow-sm ring-1 ring-n-100">
                                 <p className="text-[11px] uppercase tracking-[0.18em] text-n-500">Email</p>
                                 <p className="mt-1 break-all text-sm font-semibold text-n-800">{user.email || "-"}</p>
                             </div>
 
-                            <div className="rounded-2xl border border-transparent bg-white px-4 py-3 shadow-sm ring-1 ring-n-100">
+                            <div className="rounded-2xl border border-transparent bg-white px-4 py-7 shadow-sm ring-1 ring-n-100">
                                 <p className="text-[11px] uppercase tracking-[0.18em] text-n-500">Số điện thoại</p>
                                 <p className="mt-1 text-sm font-semibold text-n-800">{user.phone || "-"}</p>
                             </div>
 
-                            <div className="rounded-2xl border border-transparent bg-white px-4 py-3 shadow-sm ring-1 ring-n-100">
+                            {/* <div className="rounded-2xl border border-transparent bg-white px-4 py-3 shadow-sm ring-1 ring-n-100">
                                 <p className="text-[11px] uppercase tracking-[0.18em] text-n-500">Địa chỉ</p>
                                 <p className="mt-1 text-sm font-semibold text-n-800">{user.address || "-"}</p>
-                            </div>
+                            </div> */}
                         </div>
 
                         <button
                             type="button"
                             onClick={handleLogout}
-                            className="mt-6 w-full rounded-2xl border-0 bg-gradient-to-r from-red-600 to-red-500 px-4 py-3 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(220,38,38,0.22)] hover:from-red-700 hover:to-red-600"
+                            className="mt-10 w-full rounded-2xl border-0 bg-gradient-to-r from-red-600 to-red-500 px-4 py-3 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(220,38,38,0.22)] hover:from-red-700 hover:to-red-600"
                         >
                             Đăng xuất
                         </button>
