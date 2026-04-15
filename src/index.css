@@ -289,6 +289,19 @@
   .activeFilter {
     @apply !text-p-900 border-b-2 border-b-p-900;
   }
+
+  .hide-scrollbar-y {
+    -ms-overflow-style: auto;
+    scrollbar-width: thin;
+  }
+
+  .hide-scrollbar-y::-webkit-scrollbar:vertical {
+    width: 0;
+  }
+
+  .hide-scrollbar-y::-webkit-scrollbar-button:vertical {
+    display: none;
+  }
 }
 
 @keyframes partner-marquee {

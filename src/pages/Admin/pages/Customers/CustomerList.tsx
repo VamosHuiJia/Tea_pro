@@ -132,7 +132,7 @@ export default function CustomerList({
   }
 
   return (
-    <div className="rounded-[32px] border border-p-100 bg-white p-4 shadow-sm md:p-5">
+    <section className="flex min-h-[680px] w-full flex-col overflow-hidden rounded-[32px] border border-p-100 bg-white p-4 shadow-[0_18px_50px_rgba(6,40,32,0.06)] md:p-5">
       <div className="mb-5 flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
         <div>
           <p className="text-sm font-medium text-n-500">Danh sách khách hàng</p>
@@ -169,111 +169,113 @@ export default function CustomerList({
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-[1400px] w-full border-separate border-spacing-y-3">
-          <thead>
-            <tr className="text-left text-sm text-n-500">
-              <th className="pb-2 font-medium">Hình ảnh</th>
-              <th className="pb-2 font-medium">Họ tên</th>
-              <th className="pb-2 font-medium">Email</th>
-              <th className="pb-2 font-medium">Số điện thoại</th>
-              <th className="pb-2 font-medium">Chức vụ</th>
-              <th className="pb-2 font-medium">Tạo lúc</th>
-              <th className="pb-2 font-medium">Cập nhật lúc</th>
-              <th className="pb-2 font-medium text-center">Hành động</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {customers.map((customer) => (
-              <tr
-                key={customer.id}
-                className="bg-white text-sm text-n-700 shadow-[0_8px_30px_rgba(17,24,39,0.05)]"
-              >
-                <td className="rounded-l-3xl px-4 py-4">
-                  {customer.avatar_url ? (
-                    <img
-                      src={customer.avatar_url}
-                      alt={customer.fullName}
-                      className="h-16 w-16 rounded-2xl border border-p-100 object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-dashed border-p-200 bg-p-50 text-sm font-semibold text-p-700">
-                      {getInitials(customer.fullName)}
-                    </div>
-                  )}
-                </td>
-
-                <td className="px-4 py-4">
-                  <div className="min-w-[220px]">
-                    <p className="font-semibold text-n-800">{customer.fullName}</p>
-                    <p className="mt-1 text-xs text-n-500">@{customer.username}</p>
-                  </div>
-                </td>
-
-                <td className="px-4 py-4">
-                  <div className="inline-flex items-center gap-2 rounded-2xl bg-sky-50 px-3 py-2 text-sky-700">
-                    <Mail className="h-4 w-4" />
-                    <span className="font-medium">{customer.email}</span>
-                  </div>
-                </td>
-
-                <td className="px-4 py-4">
-                  <div className="inline-flex items-center gap-2 rounded-2xl bg-amber-50 px-3 py-2 text-amber-700">
-                    <Phone className="h-4 w-4" />
-                    <span className="font-medium">{customer.phone || "--"}</span>
-                  </div>
-                </td>
-
-                <td className="px-4 py-4">
-                  <span className="inline-flex rounded-full border border-p-200 bg-p-50 px-3 py-1 text-xs font-semibold text-p-700">
-                    {customer.roleName || "Khách hàng"}
-                  </span>
-                </td>
-
-                <td className="px-4 py-4 text-sm text-n-600">
-                  {formatDateTime(customer.created_at)}
-                </td>
-
-                <td className="px-4 py-4 text-sm text-n-600">
-                  {formatDateTime(customer.updated_at)}
-                </td>
-
-                <td className="rounded-r-3xl px-4 py-4">
-                  <div className="flex items-center justify-center gap-2">
-                    <button
-                      type="button"
-                      onClick={onAdd}
-                      className="flex h-10 w-10 items-center justify-center rounded-xl border border-p-200 bg-white text-p-700 transition hover:bg-p-50"
-                      title="Thêm mới"
-                    >
-                      <Plus className="h-4 w-4" />
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => onEdit(customer)}
-                      className="flex h-10 w-10 items-center justify-center rounded-xl border border-amber-200 bg-amber-50 text-amber-700 transition hover:bg-amber-100"
-                      title="Sửa"
-                    >
-                      <FileEdit className="h-4 w-4" />
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => onDelete(customer)}
-                      className="flex h-10 w-10 items-center justify-center rounded-xl border border-rose-200 bg-rose-50 text-rose-700 transition hover:bg-rose-100"
-                      title="Xóa"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </div>
-                </td>
+      <div className="min-h-0 flex-1 overflow-hidden rounded-[28px] border border-p-100 bg-white">
+        <div className="max-h-[560px] min-h-0 flex-1 overflow-auto hide-scrollbar-y">
+          <table className="min-w-[1400px] w-full table-fixed border-separate border-spacing-0">
+            <thead className="sticky top-0 z-10 bg-p-50">
+              <tr>
+                <th className="border-b border-p-100 px-4 py-3.5 text-left text-sm font-semibold text-n-500">Hình ảnh</th>
+                <th className="border-b border-p-100 px-4 py-3.5 text-left text-sm font-semibold text-n-500">Họ tên</th>
+                <th className="border-b border-p-100 px-4 py-3.5 text-left text-sm font-semibold text-n-500">Email</th>
+                <th className="border-b border-p-100 px-4 py-3.5 text-left text-sm font-semibold text-n-500">Số điện thoại</th>
+                <th className="border-b border-p-100 px-4 py-3.5 text-left text-sm font-semibold text-n-500">Chức vụ</th>
+                <th className="border-b border-p-100 px-4 py-3.5 text-left text-sm font-semibold text-n-500">Tạo lúc</th>
+                <th className="border-b border-p-100 px-4 py-3.5 text-left text-sm font-semibold text-n-500">Cập nhật lúc</th>
+                <th className="border-b border-p-100 px-4 py-3.5 text-center text-sm font-semibold text-n-500">Hành động</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              {customers.map((customer) => (
+                <tr
+                  key={customer.id}
+                  className="transition hover:bg-p-50/70"
+                >
+                  <td className="border-b border-p-100 px-4 py-4">
+                    {customer.avatar_url ? (
+                      <img
+                        src={customer.avatar_url}
+                        alt={customer.fullName}
+                        className="h-16 w-16 rounded-2xl border border-p-100 object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-dashed border-p-200 bg-p-50 text-sm font-semibold text-p-700">
+                        {getInitials(customer.fullName)}
+                      </div>
+                    )}
+                  </td>
+
+                  <td className="border-b border-p-100 px-4 py-4 align-top">
+                    <div className="min-w-[220px]">
+                      <p className="break-words font-semibold text-n-800">{customer.fullName}</p>
+                      <p className="mt-1 text-xs text-n-500">@{customer.username}</p>
+                    </div>
+                  </td>
+
+                  <td className="border-b border-p-100 px-4 py-4 align-top">
+                    <div className="inline-flex max-w-full items-center gap-2 rounded-2xl bg-sky-50 px-3 py-2 text-sky-700">
+                      <Mail className="h-4 w-4 shrink-0" />
+                      <span className="break-all font-medium">{customer.email}</span>
+                    </div>
+                  </td>
+
+                  <td className="border-b border-p-100 px-4 py-4 align-top">
+                    <div className="inline-flex max-w-full items-center gap-2 rounded-2xl bg-amber-50 px-3 py-2 text-amber-700">
+                      <Phone className="h-4 w-4 shrink-0" />
+                      <span className="break-words font-medium">{customer.phone || "--"}</span>
+                    </div>
+                  </td>
+
+                  <td className="border-b border-p-100 px-4 py-4 align-top">
+                    <span className="inline-flex rounded-full border border-p-200 bg-p-50 px-3 py-1 text-xs font-semibold text-p-700">
+                      {customer.roleName || "Khách hàng"}
+                    </span>
+                  </td>
+
+                  <td className="border-b border-p-100 px-4 py-4 align-top text-sm text-n-600">
+                    {formatDateTime(customer.created_at)}
+                  </td>
+
+                  <td className="border-b border-p-100 px-4 py-4 align-top text-sm text-n-600">
+                    {formatDateTime(customer.updated_at)}
+                  </td>
+
+                  <td className="border-b border-p-100 px-4 py-4 align-top">
+                    <div className="flex items-center justify-center gap-2">
+                      <button
+                        type="button"
+                        onClick={onAdd}
+                        className="flex h-10 w-10 items-center justify-center rounded-xl border border-p-200 bg-white text-p-700 transition hover:bg-p-50"
+                        title="Thêm mới"
+                      >
+                        <Plus className="h-4 w-4" />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => onEdit(customer)}
+                        className="flex h-10 w-10 items-center justify-center rounded-xl border border-amber-200 bg-amber-50 text-amber-700 transition hover:bg-amber-100"
+                        title="Sửa"
+                      >
+                        <FileEdit className="h-4 w-4" />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => onDelete(customer)}
+                        className="flex h-10 w-10 items-center justify-center rounded-xl border border-rose-200 bg-rose-50 text-rose-700 transition hover:bg-rose-100"
+                        title="Xóa"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }

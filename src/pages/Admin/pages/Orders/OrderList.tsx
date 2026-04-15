@@ -254,7 +254,7 @@ export default function OrderList({
       </div>
 
       <div className="mt-5 flex min-h-0 flex-1 flex-col overflow-hidden rounded-[28px] border border-p-100 bg-white">
-        <div className="max-h-[560px] min-h-0 flex-1 overflow-auto">
+        <div className="max-h-[560px] min-h-0 flex-1 overflow-auto hide-scrollbar-y">
           <table className="w-full min-w-[1080px] table-fixed border-separate border-spacing-0">
             <colgroup>
               <col style={{ width: "12%" }} />
