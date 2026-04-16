@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { CartProvider } from "./contexts/CartContext";
 import { ToastProvider } from "./contexts/ToastContext";
-import { AuthProvider } from "./contexts/AuthContext";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { ConfirmProvider } from "./contexts/ConfirmContext";
 
 import Header from "./components/Header";
@@ -18,6 +18,7 @@ import Profile from "./pages/Profile/Profile";
 import Cart from "./pages/Cart/CartLayout";
 import Checkout from "./pages/Payment/Checkout";
 import PaymentPage from "./pages/Payment/Payment";
+import LoadingPage from "./components/LoadingPage";
 
 import AdminLayout from "./pages/Admin/layout/AdminLayout";
 import Dashboard from "./pages/Admin/pages/Dashboard";
@@ -31,9 +32,14 @@ import Payment from "./pages/Admin/pages/Payment/PaymentLayout";
 
 
 function AppRoutes() {
+  const { isLoading } = useAuth();
   const location = useLocation();
   const state = location.state as { backgroundLocation?: Location };
   const backgroundLocation = state?.backgroundLocation;
+
+  if (isLoading) {
+    return <LoadingPage />;
+  }
 
   const isAuthPage =
     location.pathname === "/login" || location.pathname === "/register";
