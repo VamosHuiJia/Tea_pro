@@ -1,7 +1,7 @@
 import axiosClient from "../../services/axiosClient";
 
 export const getAllCategories = async (): Promise<any> => {
-    return await axiosClient.get(`/categories/all-categories`);
+    return await axiosClient.get(`/categories/all-categories?all=true`);
 };
 
 export const getCategoryById = async (id: number): Promise<any> => {

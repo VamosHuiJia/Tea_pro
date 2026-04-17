@@ -191,6 +191,7 @@ export default function ProductLayout() {
       formData.append("name", values.name);
       formData.append("description", values.description || "");
       formData.append("quantity", String(values.quantity || 0));
+      formData.append("sold", String(values.sold || 0));
       formData.append("categoryId", String(values.categoryId));
       formData.append("brandId", String(values.brandId));
       formData.append("originalPrice", String(values.originalPrice || 0));
@@ -277,6 +278,7 @@ export default function ProductLayout() {
         formData.append("name", row.name);
         formData.append("description", row.description || "");
         formData.append("quantity", String(row.quantity || 0));
+        formData.append("sold", String(row.sold || 0));
         formData.append("categoryId", String(row.categoryId));
         formData.append("brandId", String(row.brandId));
         formData.append("originalPrice", String(row.originalPrice || 0));

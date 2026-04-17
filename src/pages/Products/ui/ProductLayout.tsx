@@ -7,10 +7,14 @@ import {
     Wallet,
 } from "lucide-react";
 import ProductCard from "./ProductCard";
-import { productList } from "../../../animations/data";
+import type { ProductItem } from "../../../animations/data";
 import { toSlug } from "../../../utils/slug";
+import { getAllProducts } from "../../../api/shop/product.api";
+import { getAllCategories } from "../../../api/admin/category.api";
+import { getAllBrands } from "../../../api/admin/brand.api";
+import LoadingPage from "../../../components/LoadingPage";
 
-const ITEMS_PER_PAGE = 12;
+const ITEMS_PER_PAGE = 8;
 
 const PRICE_RANGES = [
     { id: "all", label: "Tất cả mức giá", min: 0, max: Number.POSITIVE_INFINITY },
@@ -23,43 +27,66 @@ const PRICE_RANGES = [
 
 export default function ProductLayout() {
     const [searchParams, setSearchParams] = useSearchParams();
+    const [productList, setProductList] = useState<ProductItem[]>([]);
+    const [categories, setCategories] = useState<{ id: number; name: string; slug: string }[]>([{ id: 0, name: "Tất cả", slug: "all" }]);
+    const [brands, setBrands] = useState<{ id: number; name: string; slug: string }[]>([{ id: 0, name: "Tất cả nhãn hàng", slug: "all" }]);
+    const [isLoading, setIsLoading] = useState(true);
 
     const activeCategory = searchParams.get("filter-category") || "all";
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [prodRes, catRes, brandRes] = await Promise.all([
+                    getAllProducts(),
+                    getAllCategories(),
+                    getAllBrands()
+                ]);
+
+                setProductList(prodRes);
+
+                if (catRes && catRes.data) {
+                    const fetchedCategories = catRes.data
+                        .filter((c: any) => c.isActive !== false)
+                        .map((c: any) => ({
+                            id: c.id,
+                            name: c.name,
+                            slug: c.slug || toSlug(c.name)
+                        }));
+                    setCategories([{ id: 0, name: "Tất cả", slug: "all" }, ...fetchedCategories]);
+                }
+
+                if (brandRes && brandRes.data) {
+                    const fetchedBrands = brandRes.data
+                        .filter((b: any) => b.isActive !== false)
+                        .map((b: any) => ({
+                            id: b.id,
+                            name: b.name,
+                            slug: b.slug || toSlug(b.name)
+                        }));
+                    setBrands([{ id: 0, name: "Tất cả nhãn hàng", slug: "all" }, ...fetchedBrands]);
+                }
+
+            } catch (error) {
+                console.error("Failed to fetch data:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
     const activeBrand = searchParams.get("filter-brand") || "all";
     const activePrice = searchParams.get("filter-price") || "all";
 
-    const categories = useMemo(() => {
-        const mapped = productList.map((item) => item.category);
-        const unique = mapped.filter(
-            (category, index, arr) =>
-                arr.findIndex((c) => c.slug === category.slug) === index
-        );
 
-        return [{ id: 0, name: "Tất cả", slug: "all" }, ...unique];
-    }, []);
-
-    const brands = useMemo(() => {
-        const mapped = productList
-            .map((item, index) => {
-                const name = item.brand?.name || `Nhãn hàng ${index + 1}`;
-                const slug = item.brand?.slug || toSlug(name);
-
-                return {
-                    id: item.brand?.id ?? index + 1,
-                    name,
-                    slug,
-                };
-            })
-            .filter((brand, index, arr) =>
-                arr.findIndex((b) => b.slug === brand.slug) === index
-            );
-
-        return [{ id: 0, name: "Tất cả nhãn hàng", slug: "all" }, ...mapped];
-    }, []);
 
     const filteredProducts = useMemo(() => {
+        if (!productList) return [];
         return productList.filter((product) => {
-            const productCategorySlug = product.category?.slug || "";
+            const productCategorySlug = product.category?.slug
+                ? product.category.slug
+                : toSlug(product.category?.name || "");
+            
             const productBrandSlug = product.brand?.slug
                 ? product.brand.slug
                 : toSlug(product.brand?.name || "");
@@ -88,7 +115,7 @@ export default function ProductLayout() {
 
             return true;
         });
-    }, [activeBrand, activeCategory, activePrice]);
+    }, [productList, activeBrand, activeCategory, activePrice]);
 
     const totalPages = Math.max(1, Math.ceil(filteredProducts.length / ITEMS_PER_PAGE));
     const rawCurrentPage = Number(searchParams.get("page") || "1");
@@ -147,9 +174,7 @@ export default function ProductLayout() {
         );
     }, [currentPage, totalPages, visiblePageLimit]);
 
-    const startItem =
-        filteredProducts.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1;
-    const endItem = Math.min(currentPage * ITEMS_PER_PAGE, filteredProducts.length);
+
 
     const updateFilter = (key: string, value: string) => {
         const nextParams = new URLSearchParams(searchParams);
@@ -180,6 +205,10 @@ export default function ProductLayout() {
 
     const hasAnyFilter =
         activeCategory !== "all" || activeBrand !== "all" || activePrice !== "all";
+
+    if (isLoading) {
+        return <LoadingPage />;
+    }
 
     return (
         <section id="products">
@@ -221,11 +250,10 @@ export default function ProductLayout() {
                                                     onClick={() =>
                                                         updateFilter("filter-category", category.slug)
                                                     }
-                                                    className={`whitespace-nowrap rounded-full px-5 py-3 text-sm font-semibold transition ${
-                                                        isActive
-                                                            ? "border-p-900 bg-p-900 text-white shadow-[0_10px_24px_rgba(15,109,81,0.18)]"
-                                                            : "border border-p-100 bg-white text-n-700 hover:bg-p-50"
-                                                    }`}
+                                                    className={`whitespace-nowrap rounded-full px-5 py-3 text-sm font-semibold transition ${isActive
+                                                        ? "border-p-900 bg-p-900 text-white shadow-[0_10px_24px_rgba(15,109,81,0.18)]"
+                                                        : "border border-p-100 bg-white text-n-700 hover:bg-p-50"
+                                                        }`}
                                                 >
                                                     {category.name}
                                                 </button>
@@ -318,11 +346,11 @@ export default function ProductLayout() {
                         </h2>
                     </div>
 
-                    {filteredProducts.length > 0 && (
+                    {/* {filteredProducts.length > 0 && (
                         <div className="rounded-full border border-p-100 bg-p-50 px-4 py-2 text-sm font-medium text-n-700">
                             Hiển thị {startItem}-{endItem} / {filteredProducts.length} sản phẩm
                         </div>
-                    )}
+                    )} */}
                 </div>
 
                 {filteredProducts.length === 0 ? (
@@ -371,11 +399,10 @@ export default function ProductLayout() {
                                                 key={page}
                                                 type="button"
                                                 onClick={() => updatePage(page)}
-                                                className={`flex h-11 min-w-11 items-center justify-center rounded-2xl px-4 text-sm font-semibold transition ${
-                                                    isActive
-                                                        ? "border-p-900 bg-p-900 text-white shadow-[0_12px_24px_rgba(15,109,81,0.18)]"
-                                                        : "border border-p-100 bg-white text-n-700 hover:border-p-300 hover:bg-p-50"
-                                                }`}
+                                                className={`flex h-11 min-w-11 items-center justify-center rounded-2xl px-4 text-sm font-semibold transition ${isActive
+                                                    ? "border-p-900 bg-p-900 text-white shadow-[0_12px_24px_rgba(15,109,81,0.18)]"
+                                                    : "border border-p-100 bg-white text-n-700 hover:border-p-300 hover:bg-p-50"
+                                                    }`}
                                             >
                                                 {page}
                                             </button>

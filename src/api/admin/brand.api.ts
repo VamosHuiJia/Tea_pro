@@ -1,7 +1,7 @@
 import axiosClient from "../../services/axiosClient";
 
 export const getAllBrands = async (): Promise<any> => {
-    return await axiosClient.get(`/brands/all-brands`);
+    return await axiosClient.get(`/brands/all-brands?all=true`);
 };
 
 export const getBrandById = async (id: number): Promise<any> => {

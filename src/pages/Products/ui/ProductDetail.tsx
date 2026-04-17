@@ -1,9 +1,10 @@
-import { useMemo, useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ChevronLeft, Minus, Plus, ShoppingCart } from "lucide-react";
 import { useCart } from "../../../contexts/CartContext";
-import { productList } from "../../../animations/data";
-import { toSlug } from "../../../utils/slug";
+import type { ProductItem } from "../../../animations/data";
+import { getSingleProduct } from "../../../api/shop/product.api";
+import LoadingPage from "../../../components/LoadingPage";
 
 function formatCurrency(value: number) {
     return new Intl.NumberFormat("vi-VN", {
@@ -18,22 +19,39 @@ export default function ProductDetail() {
     const navigate = useNavigate();
     const { addToCart } = useCart();
 
-    const product = useMemo(
-        () => productList.find((item) => toSlug(item.name) === id || item.id === Number(id)),
-        [id]
-    );
+    const [product, setProduct] = useState<ProductItem | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchProduct = async () => {
+            if (!id) return;
+            try {
+                const data = await getSingleProduct(id);
+                setProduct(data);
+            } catch (error) {
+                console.error("Failed to fetch product:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchProduct();
+    }, [id]);
 
     const [quantity, setQuantity] = useState(1);
+
+    if (isLoading) {
+        return <LoadingPage />;
+    }
 
     if (!product) {
         return (
             <section className="container !pt-10 !pb-16">
-                <div className="rounded-[32px] border border-p-100 bg-white px-6 py-16 text-center shadow-[0_16px_40px_rgba(6,40,32,0.06)]">
+                <div className="mt-20 rounded-[32px] border border-p-100 bg-white px-6 py-56 text-center shadow-[0_16px_40px_rgba(6,40,32,0.06)]">
                     <h1 className="text-3xl font-bold text-n-800">
                         Không tìm thấy sản phẩm
                     </h1>
                     <p className="mt-3 text-sm text-n-500">
-                        Sản phẩm bạn đang xem không tồn tại trong dữ liệu tạm thời.
+                        Sản phẩm bạn đang xem không tồn tại.
                     </p>
                     <Link
                         to="/products"
@@ -96,13 +114,13 @@ export default function ProductDetail() {
                 <div className="order-2 rounded-[34px] border border-p-100 bg-white p-6 shadow-[0_20px_60px_rgba(6,40,32,0.08)] lg:order-1 lg:p-8">
                     <div className="flex flex-wrap items-center gap-3">
                         <span className="rounded-full bg-p-50 px-4 py-2 text-sm font-semibold text-p-900">
-                            {product.category.name}
+                            {product.category?.name}
                         </span>
 
                         <span
                             className={`rounded-full px-4 py-2 text-sm font-semibold ${product.isActive
-                                    ? "bg-emerald-50 text-emerald-700"
-                                    : "bg-rose-50 text-rose-700"
+                                ? "bg-emerald-50 text-emerald-700"
+                                : "bg-rose-50 text-rose-700"
                                 }`}
                         >
                             {product.isActive ? "Còn hàng" : "Hết hàng"}
@@ -117,14 +135,14 @@ export default function ProductDetail() {
                         <div>
                             <p className="text-sm text-n-500">Danh mục</p>
                             <p className="mt-1 text-base font-semibold text-n-800">
-                                {product.category.name}
+                                {product.category?.name}
                             </p>
                         </div>
 
                         <div>
                             <p className="text-sm text-n-500">Thương hiệu</p>
                             <p className="mt-1 text-base font-semibold text-n-800">
-                                {product.brand.name}
+                                {product.brand?.name}
                             </p>
                         </div>
 

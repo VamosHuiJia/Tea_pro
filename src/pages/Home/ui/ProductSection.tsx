@@ -47,10 +47,7 @@ const ProductSection = () => {
                         <div className="tabContainer">
                             <img src="../../../../public/images/product_1.jpg" alt="matcha" className="productImg" />
                             <div>
-                                <h3>Matcha Magic</h3>
-                                <h4>
-                                    Khám phá những lợi ích tiềm năng của "vàng xanh" từ Nhật Bản
-                                </h4>
+                                <h3>Trà trắng ngọt ngào với hương trái cây nhiệt đới và chút vỏ cam chanh đầy sảng khoái.</h3>
                                 <p>
                                     Sẵn sàng nâng cao sức khỏe của bạn? Hãy làm quen với matcha,
                                     loại bột màu xanh lá cây rực rỡ đang làm khuynh đảo thế giới
@@ -75,10 +72,7 @@ const ProductSection = () => {
                         <div className="tabContainer">
                             <img src="../../../../public/images/product_2.jpg" alt="whiteTea" className="productImg" />
                             <div>
-                                <h3>Tinh Chất Tinh Tế Từ Trà Trắng</h3>
-                                <h4>
-                                    Hành trình khám phá hương vị tinh khiết nhất từ thiên nhiên
-                                </h4>
+                                <h3>Hành trình khám phá hương vị tinh khiết nhất từ thiên nhiên</h3>
                                 <p>
                                     Trà trắng, được tôn sùng vì sự nhẹ nhàng và tinh tế của nó,
                                     được chế biến từ lá non và nụ của cây Camellia sinensis.
@@ -103,10 +97,7 @@ const ProductSection = () => {
                         <div className="tabContainer">
                             <img src="../../../../public/images/product_3.jpg" alt="oolongTea" className="productImg" />
                             <div>
-                                <h3>Cuộc Cách Mạng Trà Ô Long</h3>
-                                <h4>
-                                    Mở khóa bí mật của loại trà lành mạnh nhất từ ​​thiên nhiên
-                                </h4>
+                                <h3>Mở khóa bí mật của loại trà lành mạnh nhất từ ​​thiên nhiên</h3>
                                 <p>
                                     Bạn có tò mò về bí quyết trường thọ và sống lâu không? Không cần tìm đâu xa, hãy tìm đến
                                     trà xanh! Thức uống cổ xưa này, được tôn sùng trong nhiều nền văn hóa trên thế giới,
@@ -131,9 +122,6 @@ const ProductSection = () => {
                             <div>
                                 <h3>Đánh Thức Các Giác Quan Của Bạn Cùng Trà Đen
                                 </h3>
-                                <h4>
-                                    Hương vị đậm đà truyền thống vượt thời gian
-                                </h4>
                                 <p>
                                     Hãy thưởng thức hương vị đậm đà, mạnh mẽ của trà đen, được chế tác hoàn hảo cho khẩu vị
                                     sành điệu. Mỗi ngụm trà mang đến sự pha trộn hài hòa giữa hương vị sâu lắng và hương
