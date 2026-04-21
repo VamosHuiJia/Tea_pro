@@ -1,11 +1,43 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { initProductTabs } from "../../../animations/productTabs";
+import { getActiveCategories } from "../../../api/shop/category.api";
+import { toSlug } from "../../../utils/slug";
+
+interface Category {
+    id: number;
+    name: string;
+    title: string | null;
+    description: string | null;
+    image: string | null;
+    slug?: string;
+}
 
 const ProductSection = () => {
+    const [categories, setCategories] = useState<Category[]>([]);
+
     useEffect(() => {
-        const cleanup = initProductTabs();
-        return cleanup;
+        const fetchCategories = async () => {
+            try {
+                const response = await getActiveCategories();
+                if (response.success) {
+                    setCategories(response.data);
+                }
+            } catch (error) {
+                console.error("Error fetching categories:", error);
+            }
+        };
+        fetchCategories();
     }, []);
+
+    useEffect(() => {
+        if (categories.length > 0) {
+            const panelIds = categories.map(c => `#category-${c.id}`);
+            const defaultTab = panelIds[0];
+            const cleanup = initProductTabs({ panelIds, defaultTab });
+            return cleanup;
+        }
+    }, [categories]);
 
     return (
         <section id="products">
@@ -23,121 +55,47 @@ const ProductSection = () => {
 
                 {/* <!-- Tab --> */}
                 <div id="products-tabs">
-                    <ul
-                        className="flex bg-p-50 px-4 md:px-10 xl:px-[200px] py-4 md:py-6 gap-4 md:gap-8 justify-center mb-9 text-center">
-                        <li>
-                            <a href="#matcha" className="tab-link"><span>Trà</span> Match</a>
-                        </li>
-                        <li>|</li>
-                        <li>
-                            <a href="#whiteTea" className="tab-link"><span>Trà</span> Trắng</a>
-                        </li>
-                        <li>|</li>
-                        <li>
-                            <a href="#oolongTea" className="tab-link"><span>Trà</span> Ô Long</a>
-                        </li>
-                        <li>|</li>
-                        <li>
-                            <a href="#blackTea" className="tab-link"><span>Trà</span> Đen</a>
-                        </li>
-                    </ul>
+                    {categories.length > 0 ? (
+                        <>
+                            <ul className="flex flex-wrap bg-p-50 px-4 md:px-10 xl:px-[200px] py-4 md:py-6 gap-4 md:gap-8 justify-center mb-9 text-center">
+                                {categories.map((category, index) => (
+                                    <div key={category.id} className="flex gap-4 md:gap-8 items-center">
+                                        <li>
+                                            <a href={`#category-${category.id}`} className="tab-link whitespace-nowrap font-bold text-p-900">
+                                                {category.name}
+                                            </a>
+                                        </li>
+                                        {index < categories.length - 1 && <li className="text-p-400">|</li>}
+                                    </div>
+                                ))}
+                            </ul>
 
-                    {/* <!-- Fake data products introduction --> */}
-                    <div id="matcha">
-                        <div className="tabContainer">
-                            <img src="../../../../public/images/product_1.jpg" alt="matcha" className="productImg" />
-                            <div>
-                                <h3>Trà trắng ngọt ngào với hương trái cây nhiệt đới và chút vỏ cam chanh đầy sảng khoái.</h3>
-                                <p>
-                                    Sẵn sàng nâng cao sức khỏe của bạn? Hãy làm quen với matcha,
-                                    loại bột màu xanh lá cây rực rỡ đang làm khuynh đảo thế giới
-                                    chăm sóc sức khỏe. Chứa đầy chất chống oxy hóa và chất dinh dưỡng,
-                                    matcha cung cấp nguồn năng lượng mạnh mẽ mà không gây bồn chồn,
-                                    nhờ sự kết hợp độc đáo giữa caffeine và L-theanine. <br />
-                                    Loại trà này không chỉ tăng cường sự tập trung và trao đổi chất mà
-                                    còn thêm hương vị thơm ngon cho sinh tố, đồ nướng và cà phê latte.
-                                    Hãy đắm mình vào thế giới matcha và trải nghiệm cách siêu thực phẩm
-                                    cổ xưa này có thể tiếp thêm sinh lực cho cơ thể và trí óc của bạn!
-                                </p>
-                                <button>
-                                    <a href="" className="btn">Xem sản phẩm ngay
-                                        <img src="../../../../public/images/right-arrow.svg" alt="right-arrow" />
-                                    </a>
-                                </button>
-                            </div>
+                            {categories.map((category) => (
+                                <div id={`category-${category.id}`} key={category.id}>
+                                    <div className="tabContainer">
+                                        {category.image ? (
+                                            <img src={category.image} alt={category.name} className="productImg" />
+                                        ) : (
+                                            <img src="../../../../public/images/product_1.jpg" alt={category.name} className="productImg" />
+                                        )}
+                                        <div>
+                                            <h3>{category.title || category.name}</h3>
+                                            <p>{category.description}</p>
+                                            <button>
+                                                <Link to={`/products?filter-category=${category.slug || toSlug(category.name)}`} className="btn">Xem sản phẩm ngay
+                                                    <img src="../../../../public/images/right-arrow.svg" alt="right-arrow" />
+                                                </Link>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </>
+                    ) : (
+                        <div className="text-center py-10 text-gray-500">
+                            Không có danh mục nào.
                         </div>
-                    </div>
-
-                    <div id="whiteTea">
-                        <div className="tabContainer">
-                            <img src="../../../../public/images/product_2.jpg" alt="whiteTea" className="productImg" />
-                            <div>
-                                <h3>Hành trình khám phá hương vị tinh khiết nhất từ thiên nhiên</h3>
-                                <p>
-                                    Trà trắng, được tôn sùng vì sự nhẹ nhàng và tinh tế của nó,
-                                    được chế biến từ lá non và nụ của cây Camellia sinensis.
-                                    Với hương hoa nhẹ nhàng và vị ngọt tự nhiên, loại trà này
-                                    mang đến trải nghiệm nhẹ nhàng nhưng sảng khoái. Giàu chất
-                                    chống oxy hóa và ít caffeine, trà trắng không chỉ làm hài lòng
-                                    khẩu vị mà còn hỗ trợ sức khỏe, khiến nó trở thành lựa chọn
-                                    hoàn hảo cho những khoảnh khắc thư giãn hoặc trẻ hóa.
-                                    Khám phá vẻ đẹp thanh bình của trà trắng và nâng tầm nghi
-                                    thức uống trà của bạn lên một tầm cao mới.
-                                </p>
-                                <button>
-                                    <a href="" className="btn">Xem sản phẩm ngay
-                                        <img src="../../../../public/images/right-arrow.svg" alt="right-arrow" />
-                                    </a>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="oolongTea">
-                        <div className="tabContainer">
-                            <img src="../../../../public/images/product_3.jpg" alt="oolongTea" className="productImg" />
-                            <div>
-                                <h3>Mở khóa bí mật của loại trà lành mạnh nhất từ ​​thiên nhiên</h3>
-                                <p>
-                                    Bạn có tò mò về bí quyết trường thọ và sống lâu không? Không cần tìm đâu xa, hãy tìm đến
-                                    trà xanh! Thức uống cổ xưa này, được tôn sùng trong nhiều nền văn hóa trên thế giới,
-                                    chứa đầy chất chống oxy hóa mạnh mẽ có thể thúc đẩy quá trình trao đổi chất, tăng cường
-                                    chức năng não và thúc đẩy sức khỏe tim mạch. <br />
-                                    Với hương vị tinh tế và vô số lợi ích cho sức khỏe, trà xanh không chỉ là một thức uống
-                                    mà còn là một lựa chọn về lối sống. Hãy tham gia cuộc cách mạng trà xanh và khám phá
-                                    cách thức pha chế đơn giản này có thể biến đổi sức khỏe của bạn từng ngụm một!
-                                </p>
-                                <button>
-                                    <a href="" className="btn">Xem sản phẩm ngay
-                                        <img src="../../../../public/images/right-arrow.svg" alt="right-arrow" />
-                                    </a>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="blackTea">
-                        <div className="tabContainer">
-                            <img src="../../../../public/images/product_4.png" alt="blackTea" className="productImg" />
-                            <div>
-                                <h3>Đánh Thức Các Giác Quan Của Bạn Cùng Trà Đen
-                                </h3>
-                                <p>
-                                    Hãy thưởng thức hương vị đậm đà, mạnh mẽ của trà đen, được chế tác hoàn hảo cho khẩu vị
-                                    sành điệu. Mỗi ngụm trà mang đến sự pha trộn hài hòa giữa hương vị sâu lắng và hương
-                                    thơm sảng khoái, khiến đây trở thành lựa chọn lý tưởng cho cả nghi lễ buổi sáng và giờ
-                                    nghỉ trưa. Trải nghiệm sự ấm áp dễ chịu và những phẩm chất tràn đầy năng lượng đã khiến
-                                    trà đen trở thành thức uống cổ điển được yêu thích trong nhiều thế kỷ.
-                                </p>
-                                <button>
-                                    <a href="" className="btn">Xem sản phẩm ngay
-                                        <img src="../../../../public/images/right-arrow.svg" alt="right-arrow" />
-                                    </a>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
+                    )}
                 </div>
             </div>
         </section>

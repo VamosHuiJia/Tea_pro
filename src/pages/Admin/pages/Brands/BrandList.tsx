@@ -6,8 +6,8 @@ export type BrandItem = {
   description?: string;
   image?: string;
   isActive: boolean;
-  create_at?: string;
-  update_at?: string;
+  created_at?: string;
+  updated_at?: string;
 };
 
 type BrandListProps = {
@@ -197,11 +197,11 @@ export default function BrandList({
                   </td>
 
                   <td className="border-b border-p-100 px-4 py-4 text-sm text-n-600">
-                    {formatDateTime(brand.create_at)}
+                    {formatDateTime(brand.created_at)}
                   </td>
 
                   <td className="border-b border-p-100 px-4 py-4 text-sm text-n-600">
-                    {formatDateTime(brand.update_at)}
+                    {formatDateTime(brand.updated_at)}
                   </td>
 
                   <td className="border-b border-p-100 px-4 py-4">

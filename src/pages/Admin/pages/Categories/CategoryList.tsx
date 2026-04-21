@@ -7,8 +7,8 @@ export type CategoryItem = {
   description?: string;
   image?: string;
   isActive: boolean;
-  create_at?: string;
-  update_at?: string;
+  created_at?: string;
+  updated_at?: string;
 };
 
 type CategoryListProps = {
@@ -205,11 +205,11 @@ export default function CategoryList({
                   </td>
 
                   <td className="border-b border-p-100 px-4 py-4 text-sm text-n-600">
-                    {formatDateTime(category.create_at)}
+                    {formatDateTime(category.created_at)}
                   </td>
 
                   <td className="border-b border-p-100 px-4 py-4 text-sm text-n-600">
-                    {formatDateTime(category.update_at)}
+                    {formatDateTime(category.updated_at)}
                   </td>
 
                   <td className="border-b border-p-100 px-4 py-4">
