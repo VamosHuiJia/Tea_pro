@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ChevronLeft, Minus, Plus, ShoppingCart } from "lucide-react";
 import { useCart } from "../../../contexts/CartContext";
+import { useToast } from "../../../contexts/ToastContext";
+import { useAuth } from "../../../contexts/AuthContext";
 import type { ProductItem } from "../../../animations/data";
 import { getSingleProduct } from "../../../api/shop/product.api";
 import LoadingPage from "../../../components/LoadingPage";
@@ -18,6 +20,8 @@ export default function ProductDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
     const { addToCart } = useCart();
+    const { showToast } = useToast();
+    const { user } = useAuth();
 
     const [product, setProduct] = useState<ProductItem | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -89,6 +93,12 @@ export default function ProductDetail() {
 
     const handleAddToCart = () => {
         if (!product.isActive) return;
+
+        if (!user) {
+            showToast("Vui lòng đăng nhập để thêm vào giỏ hàng!", "error");
+            navigate("/login");
+            return;
+        }
 
         addToCart({
             productId: product.id,

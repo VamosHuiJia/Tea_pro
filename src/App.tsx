@@ -8,6 +8,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ScrollToTop from "./components/ScrollToTop";
+import LoadingPage from "./components/LoadingPage";
 
 import Home from "./pages/Home/Home";
 import Products from "./pages/Products/Products";
@@ -18,7 +19,6 @@ import Profile from "./pages/Profile/Profile";
 import Cart from "./pages/Cart/CartLayout";
 import Checkout from "./pages/Payment/Checkout";
 import PaymentPage from "./pages/Payment/Payment";
-import LoadingPage from "./components/LoadingPage";
 
 import AdminLayout from "./pages/Admin/layout/AdminLayout";
 import Dashboard from "./pages/Admin/pages/Dashboard";
@@ -92,16 +92,16 @@ function AppRoutes() {
 function App() {
   return (
     <AuthProvider>
-      <CartProvider>
-        <ToastProvider>
+      <ToastProvider>
+        <CartProvider>
           <ConfirmProvider>
             <BrowserRouter>
               <ScrollToTop />
               <AppRoutes />
             </BrowserRouter>
           </ConfirmProvider>
-        </ToastProvider>
-      </CartProvider>
+        </CartProvider>
+      </ToastProvider>
     </AuthProvider>
   );
 }
