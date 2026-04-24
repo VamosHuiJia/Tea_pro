@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useCart } from "../../contexts/CartContext";
 import { useToast } from "../../contexts/ToastContext";
+import { createOrder } from "../../api/shop/order.api";
 
 type PendingOrder = {
   customer: {
@@ -134,10 +135,23 @@ export default function PaymentPage() {
       setIsSubmitting(true);
       await new Promise((resolve) => window.setTimeout(resolve, 500));
 
+      if (order) {
+        const payload = {
+          items: order.items.map(item => ({
+            productId: item.productId,
+            quantity: item.quantity,
+          })),
+          shippingAddress: order.address,
+          phone: order.customer.phone,
+          method: selectedChannelId, // Use the selected method (momo, zalopay, vietcombank)
+        };
+        await createOrder(payload);
+      }
+
       sessionStorage.removeItem("pending-payment-order");
       clearCart();
       showToast("Thanh toán đơn hàng thành công.", "success");
-      navigate("/", { replace: true });
+      navigate("/profile", { replace: true });
     } catch {
       showToast("Có lỗi xảy ra khi xác nhận thanh toán.", "error");
     } finally {
@@ -149,7 +163,6 @@ export default function PaymentPage() {
     <section className="container !pb-14 !pt-10">
       <div className="mb-8 mt-20 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <p className="text-sm text-n-500">Thanh toán / Quét mã QR</p>
           <h1 className="mt-2 text-3xl font-bold text-n-800">Hoàn tất thanh toán</h1>
         </div>
 
@@ -185,11 +198,10 @@ export default function PaymentPage() {
                     key={channel.id}
                     type="button"
                     onClick={() => setSelectedChannelId(channel.id)}
-                    className={`rounded-[28px] border p-4 text-left transition ${
-                      active
-                        ? "border-p-500 bg-p-50 shadow-sm"
-                        : "border-p-100 bg-white hover:bg-p-50/50"
-                    }`}
+                    className={`rounded-[28px] border p-4 text-left transition ${active
+                      ? "border-p-500 bg-p-50 shadow-sm"
+                      : "border-p-100 bg-white hover:bg-p-50/50"
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-p-700">

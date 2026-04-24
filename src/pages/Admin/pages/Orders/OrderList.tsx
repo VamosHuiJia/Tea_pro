@@ -23,6 +23,7 @@ type OrderListProps = {
   selectedId?: number;
   onSelect?: (order: OrderListItem) => void;
   onStatusChange?: (order: OrderListItem, status: OrderStatus) => void;
+  onPaymentStatusChange?: (order: OrderListItem, status: PaymentStatus) => void;
   onDelete?: (order: OrderListItem) => void;
   className?: string;
 };
@@ -159,10 +160,10 @@ const orderStatusLabel: Record<OrderStatus, string> = {
 };
 
 const paymentStatusLabel: Record<PaymentStatus, string> = {
-  pending: "Pending",
-  success: "Success",
-  failed: "Failed",
-  refunded: "Refunded",
+  pending: "Chưa thanh toán",
+  success: "Đã thanh toán",
+  failed: "Thất bại",
+  refunded: "Hoàn tiền",
 };
 
 function formatCurrency(value: number) {
@@ -182,6 +183,7 @@ export default function OrderList({
   selectedId,
   onSelect,
   onStatusChange,
+  onPaymentStatusChange,
   onDelete,
   className,
 }: OrderListProps) {
@@ -334,7 +336,7 @@ export default function OrderList({
                               paymentStatusBadge[order.paymentStatus],
                             )}
                           >
-                            Payment: {paymentStatusLabel[order.paymentStatus]}
+                            {paymentStatusLabel[order.paymentStatus]}
                           </span>
                         </div>
                       </td>
@@ -361,7 +363,7 @@ export default function OrderList({
                       </td>
 
                       <td className="border-b border-p-100 px-4 py-4 align-top">
-                        <div className="rounded-2xl border border-p-100 bg-p-50/70 p-2.5">
+                        <div className="flex flex-col gap-2 rounded-2xl border border-p-100 bg-p-50/70 p-2.5">
                           <div className="flex items-center gap-2">
                             <button
                               type="button"
@@ -375,26 +377,50 @@ export default function OrderList({
                               <Eye className="h-4.5 w-4.5" />
                             </button>
 
+                            {order.status !== 'cancelled' && (
+                              <select
+                                value={order.status}
+                                onChange={(event) => {
+                                  const nextStatus = event.target.value as OrderStatus;
+                                  setTableData((current) =>
+                                    current.map((item) =>
+                                      item.id === order.id ? { ...item, status: nextStatus } : item,
+                                    ),
+                                  );
+                                  onStatusChange?.(order, nextStatus);
+                                }}
+                                className="h-9 min-w-0 flex-1 rounded-xl border border-p-100 bg-white px-3 text-[13px] text-n-700 outline-none transition focus:border-p-400"
+                              >
+                                {ORDER_STATUS_OPTIONS.map((status) => (
+                                  <option key={status} value={status}>
+                                    {orderStatusLabel[status]}
+                                  </option>
+                                ))}
+                              </select>
+                            )}
+                          </div>
+                            
+                          {order.status !== 'cancelled' && (
                             <select
-                              value={order.status}
+                              value={order.paymentStatus}
                               onChange={(event) => {
-                                const nextStatus = event.target.value as OrderStatus;
+                                const nextStatus = event.target.value as PaymentStatus;
                                 setTableData((current) =>
                                   current.map((item) =>
-                                    item.id === order.id ? { ...item, status: nextStatus } : item,
+                                    item.id === order.id ? { ...item, paymentStatus: nextStatus } : item,
                                   ),
                                 );
-                                onStatusChange?.(order, nextStatus);
+                                onPaymentStatusChange?.(order, nextStatus);
                               }}
-                              className="h-9 min-w-0 flex-1 rounded-xl border border-p-100 bg-white px-3 text-[13px] text-n-700 outline-none transition focus:border-p-400"
+                              className="h-9 w-full rounded-xl border border-p-100 bg-white px-3 text-[13px] text-n-700 outline-none transition focus:border-p-400"
                             >
-                              {ORDER_STATUS_OPTIONS.map((status) => (
+                              {Object.keys(paymentStatusLabel).map((status) => (
                                 <option key={status} value={status}>
-                                  {orderStatusLabel[status]}
+                                  {paymentStatusLabel[status as PaymentStatus]}
                                 </option>
                               ))}
                             </select>
-                          </div>
+                          )}
 
                           <button
                             type="button"
@@ -403,10 +429,10 @@ export default function OrderList({
                               if (internalSelectedId === order.id) setInternalSelectedId(undefined);
                               onDelete?.(order);
                             }}
-                            className="mt-2 inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-xl border border-rose-100 bg-white text-[13px] font-semibold text-rose-600 transition hover:border-rose-200 hover:bg-rose-50"
+                            className="inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-xl border border-rose-100 bg-white text-[13px] font-semibold text-rose-600 transition hover:border-rose-200 hover:bg-rose-50"
                           >
                             <Trash2 className="h-4 w-4" />
-                            Hủy đơn
+                            Xóa đơn
                           </button>
                         </div>
                       </td>

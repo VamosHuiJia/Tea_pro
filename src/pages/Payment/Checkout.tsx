@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useCart } from "../../contexts/CartContext";
 import { useToast } from "../../contexts/ToastContext";
+import { createOrder } from "../../api/shop/order.api";
 
 type PaymentMethodType = "cash" | "bank_transfer";
 
@@ -199,10 +200,20 @@ export default function CheckoutPage() {
       await new Promise((resolve) => window.setTimeout(resolve, 400));
 
       if (selectedPaymentMethod.type === "cash") {
+        const payload = {
+          items: items.map(item => ({
+            productId: item.productId,
+            quantity: item.quantity,
+          })),
+          shippingAddress: address.trim(),
+          phone: customer.phone,
+          method: "cod",
+        };
+        await createOrder(payload);
         clearCart();
         sessionStorage.removeItem("pending-payment-order");
         showToast("Đơn hàng của bạn đã được xác nhận.", "success");
-        navigate("/", { replace: true });
+        navigate("/profile", { replace: true });
         return;
       }
 
@@ -236,7 +247,6 @@ export default function CheckoutPage() {
     <section className="container !pb-14 !pt-10">
       <div className="mb-8 mt-20 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <p className="text-sm text-n-500">Thanh toán / Xác nhận đơn hàng</p>
           <h1 className="mt-2 text-3xl font-bold text-n-800">Trang thanh toán</h1>
         </div>
 
@@ -379,11 +389,10 @@ export default function CheckoutPage() {
               return (
                 <label
                   key={method.id}
-                  className={`block cursor-pointer rounded-[24px] border p-4 transition ${
-                    isSelected
+                  className={`block cursor-pointer rounded-[24px] border p-4 transition ${isSelected
                       ? "border-p-500 bg-p-50 shadow-sm"
                       : "border-p-100 bg-white hover:bg-p-50/50"
-                  }`}
+                    }`}
                 >
                   <div className="flex items-start gap-3">
                     <input
@@ -443,8 +452,8 @@ export default function CheckoutPage() {
               {isSubmitting
                 ? "Đang xử lý..."
                 : selectedPaymentMethod?.type === "bank_transfer"
-                ? "Tiếp tục thanh toán"
-                : "Xác nhận đơn hàng"}
+                  ? "Tiếp tục thanh toán"
+                  : "Xác nhận đơn hàng"}
               <ChevronRight className="h-4 w-4" />
             </button>
 

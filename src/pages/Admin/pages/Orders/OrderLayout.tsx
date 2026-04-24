@@ -10,7 +10,7 @@ import {
   UserRound,
 } from "lucide-react";
 import OrderList from "./OrderList";
-import { getAllOrders, updateOrderStatus, deleteOrder } from "../../../../api/admin/order.api";
+import { getAllOrders, updateOrderStatus, updatePaymentStatus, deleteOrder } from "../../../../api/admin/order.api";
 import { useToast } from "../../../../contexts/ToastContext";
 import { useConfirm } from "../../../../contexts/ConfirmContext";
 
@@ -100,7 +100,7 @@ export default function OrderLayout() {
           id: d.id,
           productId: d.productId,
           productName: d.product?.name || "Sản phẩm",
-          image: d.product?.image_url || "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=900&auto=format&fit=crop",
+          image: d.product?.urlImg || "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=900&auto=format&fit=crop",
           quantity: Number(d.quantity),
           price: Number(d.price),
         }))
@@ -167,6 +167,16 @@ export default function OrderLayout() {
     }
   };
 
+  const handleChangePaymentStatus = async (id: number, status: PaymentStatus) => {
+    try {
+      await updatePaymentStatus(id, status);
+      showToast(`Đã cập nhật trạng thái thanh toán`, "success");
+      await fetchOrders();
+    } catch (e: any) {
+      showToast(e.message || "Lỗi cập nhật thanh toán", "error");
+    }
+  };
+
   return (
     <div className="space-y-6">
       <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-r from-p-900 via-p-700 to-p-500 p-6 text-white shadow-lg md:p-8">
@@ -228,6 +238,7 @@ export default function OrderLayout() {
             }}
             onDelete={(item) => handleDelete(item.id)}
             onStatusChange={(item, status) => handleChangeStatus(item.id, status)}
+            onPaymentStatusChange={(item, status) => handleChangePaymentStatus(item.id, status)}
           />
         )}
 
@@ -262,8 +273,14 @@ export default function OrderLayout() {
                   {paymentMethodLabel[selectedOrder.payment.method] || selectedOrder.payment.method}
                 </span>
 
-                <span className="inline-flex rounded-full border border-p-100 bg-p-50 px-3 py-1 text-xs font-semibold text-n-700">
-                  Payment: {selectedOrder.payment.status}
+                <span className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold ${
+                  selectedOrder.payment.status === 'success' ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : 
+                  selectedOrder.payment.status === 'pending' ? 'border-amber-200 bg-amber-50 text-amber-700' :
+                  'border-rose-200 bg-rose-50 text-rose-700'
+                }`}>
+                  {selectedOrder.payment.status === 'success' ? 'Đã thanh toán' : 
+                   selectedOrder.payment.status === 'pending' ? 'Chưa thanh toán' : 
+                   selectedOrder.payment.status}
                 </span>
               </div>
 
