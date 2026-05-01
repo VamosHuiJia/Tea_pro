@@ -8,6 +8,29 @@
 
 **Tea Shop** là một website mua bán trà trực tuyến cao cấp. Giao diện được thiết kế với phong cách tối giản, sang trọng, mang lại cảm giác thư thái cho người dùng khi mua sắm các sản phẩm trà. Dự án bao gồm cả trang dành cho Khách hàng (Client) và Trang quản trị (Admin Dashboard).
 
+## 🖼️ Giao diện Demo (Screenshots)
+
+### 🏠 Trang Khách hàng (Client)
+
+<div align="center">
+  <img src="https://res.cloudinary.com/dhx2urakb/image/upload/v1777643847/Screenshot_2026-05-01_205637_urndc4.png" alt="Trang chủ" width="800">
+  <p><i>Giao diện trang chủ hiện đại, tinh tế</i></p>
+</div>
+
+<div align="center">
+  <img src="https://res.cloudinary.com/dhx2urakb/image/upload/v1777643927/Screenshot_2026-05-01_205805_wxfwlj.png" alt="Danh sách sản phẩm" width="800">
+  <p><i>Trang hiển thị và lọc danh sách các loại trà</i></p>
+</div>
+
+### ⚙️ Trang Quản trị (Admin Dashboard)
+
+<div align="center">
+  <img src="https://res.cloudinary.com/dhx2urakb/image/upload/v1777643929/Screenshot_2026-05-01_205834_zko0eh.png" alt="Admin Dashboard" width="800">
+  <p><i>Giao diện thống kê và quản lý dành cho Admin</i></p>
+</div>
+
+---
+
 ## 🚀 Công nghệ sử dụng
 
 - **Core**: React 19, TypeScript, Vite
