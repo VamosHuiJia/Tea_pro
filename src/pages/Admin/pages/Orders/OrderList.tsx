@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Eye, Search, Trash2 } from "lucide-react";
+import PermissionGate from "../../../../components/PermissionGate";
 
 export type OrderStatus = "pending" | "confirmed" | "shipping" | "delivered" | "cancelled";
 export type PaymentMethod = "cod" | "vnpay" | "momo" | "zalopay";
@@ -277,7 +278,6 @@ export default function OrderList({
                   "Tổng tiền",
                   "Trạng thái",
                   "Ngày tạo",
-                  "Hành động",
                 ].map((label) => (
                   <th
                     key={label}
@@ -286,6 +286,9 @@ export default function OrderList({
                     {label}
                   </th>
                 ))}
+                <th className="border-b border-p-100 px-4 py-3.5 text-left text-sm font-semibold text-n-500">
+                  Hành động
+                </th>
               </tr>
             </thead>
 
@@ -362,80 +365,84 @@ export default function OrderList({
                         {order.createdAt}
                       </td>
 
-                      <td className="border-b border-p-100 px-4 py-4 align-top">
-                        <div className="flex flex-col gap-2 rounded-2xl border border-p-100 bg-p-50/70 p-2.5">
-                          <div className="flex items-center gap-2">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setInternalSelectedId(order.id);
-                                onSelect?.(order);
-                              }}
-                              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-p-100 bg-white text-n-600 transition hover:border-p-300 hover:text-p-700"
-                              aria-label={`Xem chi tiết đơn #${order.id}`}
-                            >
-                              <Eye className="h-4.5 w-4.5" />
-                            </button>
-
-                            {order.status !== 'cancelled' && (
-                              <select
-                                value={order.status}
-                                onChange={(event) => {
-                                  const nextStatus = event.target.value as OrderStatus;
-                                  setTableData((current) =>
-                                    current.map((item) =>
-                                      item.id === order.id ? { ...item, status: nextStatus } : item,
-                                    ),
-                                  );
-                                  onStatusChange?.(order, nextStatus);
+                        <td className="border-b border-p-100 px-4 py-4 align-top">
+                          <div className="flex flex-col gap-2 rounded-2xl border border-p-100 bg-p-50/70 p-2.5">
+                            <div className="flex items-center gap-2">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setInternalSelectedId(order.id);
+                                  onSelect?.(order);
                                 }}
-                                className="h-9 min-w-0 flex-1 rounded-xl border border-p-100 bg-white px-3 text-[13px] text-n-700 outline-none transition focus:border-p-400"
+                                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-p-100 bg-white text-n-600 transition hover:border-p-300 hover:text-p-700"
+                                aria-label={`Xem chi tiết đơn #${order.id}`}
                               >
-                                {ORDER_STATUS_OPTIONS.map((status) => (
-                                  <option key={status} value={status}>
-                                    {orderStatusLabel[status]}
-                                  </option>
-                                ))}
-                              </select>
-                            )}
-                          </div>
-                            
-                          {order.status !== 'cancelled' && (
-                            <select
-                              value={order.paymentStatus}
-                              onChange={(event) => {
-                                const nextStatus = event.target.value as PaymentStatus;
-                                setTableData((current) =>
-                                  current.map((item) =>
-                                    item.id === order.id ? { ...item, paymentStatus: nextStatus } : item,
-                                  ),
-                                );
-                                onPaymentStatusChange?.(order, nextStatus);
-                              }}
-                              className="h-9 w-full rounded-xl border border-p-100 bg-white px-3 text-[13px] text-n-700 outline-none transition focus:border-p-400"
-                            >
-                              {Object.keys(paymentStatusLabel).map((status) => (
-                                <option key={status} value={status}>
-                                  {paymentStatusLabel[status as PaymentStatus]}
-                                </option>
-                              ))}
-                            </select>
-                          )}
+                                <Eye className="h-4.5 w-4.5" />
+                              </button>
 
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setTableData((current) => current.filter((item) => item.id !== order.id));
-                              if (internalSelectedId === order.id) setInternalSelectedId(undefined);
-                              onDelete?.(order);
-                            }}
-                            className="inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-xl border border-rose-100 bg-white text-[13px] font-semibold text-rose-600 transition hover:border-rose-200 hover:bg-rose-50"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                            Xóa đơn
-                          </button>
-                        </div>
-                      </td>
+                              <PermissionGate>
+                                {order.status !== 'cancelled' && (
+                                  <select
+                                    value={order.status}
+                                    onChange={(event) => {
+                                      const nextStatus = event.target.value as OrderStatus;
+                                      setTableData((current) =>
+                                        current.map((item) =>
+                                          item.id === order.id ? { ...item, status: nextStatus } : item,
+                                        ),
+                                      );
+                                      onStatusChange?.(order, nextStatus);
+                                    }}
+                                    className="h-9 min-w-0 flex-1 rounded-xl border border-p-100 bg-white px-3 text-[13px] text-n-700 outline-none transition focus:border-p-400"
+                                  >
+                                    {ORDER_STATUS_OPTIONS.map((status) => (
+                                      <option key={status} value={status}>
+                                        {orderStatusLabel[status]}
+                                      </option>
+                                    ))}
+                                  </select>
+                                )}
+                              </PermissionGate>
+                            </div>
+                              
+                            <PermissionGate>
+                              {order.status !== 'cancelled' && (
+                                <select
+                                  value={order.paymentStatus}
+                                  onChange={(event) => {
+                                    const nextStatus = event.target.value as PaymentStatus;
+                                    setTableData((current) =>
+                                      current.map((item) =>
+                                        item.id === order.id ? { ...item, paymentStatus: nextStatus } : item,
+                                      ),
+                                    );
+                                    onPaymentStatusChange?.(order, nextStatus);
+                                  }}
+                                  className="h-9 w-full rounded-xl border border-p-100 bg-white px-3 text-[13px] text-n-700 outline-none transition focus:border-p-400"
+                                >
+                                  {Object.keys(paymentStatusLabel).map((status) => (
+                                    <option key={status} value={status}>
+                                      {paymentStatusLabel[status as PaymentStatus]}
+                                    </option>
+                                  ))}
+                                </select>
+                              )}
+
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setTableData((current) => current.filter((item) => item.id !== order.id));
+                                  if (internalSelectedId === order.id) setInternalSelectedId(undefined);
+                                  onDelete?.(order);
+                                }}
+                                className="inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-xl border border-rose-100 bg-white text-[13px] font-semibold text-rose-600 transition hover:border-rose-200 hover:bg-rose-50"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                                Xóa đơn
+                              </button>
+                            </PermissionGate>
+                          </div>
+                        </td>
                     </tr>
                   );
                 })

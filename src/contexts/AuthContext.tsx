@@ -15,6 +15,7 @@ export type CurrentUser = {
   address?: string;
   roleName?: string;
   roleLevel?: RoleLevel;
+  actionPermission?: "Chỉ xem" | "Có thể chỉnh sửa" | string;
   role?: {
     level: string;
   };

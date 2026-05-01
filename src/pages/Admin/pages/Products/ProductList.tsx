@@ -9,6 +9,7 @@ import {
   Trash2,
   Upload,
 } from "lucide-react";
+import PermissionGate from "../../../../components/PermissionGate";
 
 export type ProductItem = {
   id: string | number;
@@ -83,25 +84,27 @@ function EmptyState({
         Bắt đầu bằng cách thêm sản phẩm mới hoặc nhập dữ liệu hàng loạt từ Excel.
       </p>
 
-      <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-        <button
-          type="button"
-          onClick={onAdd}
-          className="inline-flex items-center gap-2 rounded-2xl border border-p-900 bg-p-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-p-700"
-        >
-          <Plus className="h-4 w-4" />
-          Thêm mới sản phẩm
-        </button>
+      <PermissionGate>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+          <button
+            type="button"
+            onClick={onAdd}
+            className="inline-flex items-center gap-2 rounded-2xl border border-p-900 bg-p-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-p-700"
+          >
+            <Plus className="h-4 w-4" />
+            Thêm mới sản phẩm
+          </button>
 
-        <button
-          type="button"
-          onClick={onImportExcel}
-          className="inline-flex items-center gap-2 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-3 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-100"
-        >
-          <Upload className="h-4 w-4" />
-          Nhập Excel
-        </button>
-      </div>
+          <button
+            type="button"
+            onClick={onImportExcel}
+            className="inline-flex items-center gap-2 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-3 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-100"
+          >
+            <Upload className="h-4 w-4" />
+            Nhập Excel
+          </button>
+        </div>
+      </PermissionGate>
     </div>
   );
 }
@@ -142,34 +145,36 @@ export default function ProductList({
           <h3 className="text-xl font-bold text-n-800">Quản lý sản phẩm bán hàng</h3>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
-          <button
-            type="button"
-            onClick={onImportExcel}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-100"
-          >
-            <Upload className="h-4 w-4" />
-            Nhập Excel
-          </button>
+        <PermissionGate>
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={onImportExcel}
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-100"
+            >
+              <Upload className="h-4 w-4" />
+              Nhập Excel
+            </button>
 
-          <button
-            type="button"
-            onClick={onExportExcel}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm font-semibold text-sky-700 transition hover:bg-sky-100"
-          >
-            <Download className="h-4 w-4" />
-            Xuất tất cả Excel
-          </button>
+            <button
+              type="button"
+              onClick={onExportExcel}
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm font-semibold text-sky-700 transition hover:bg-sky-100"
+            >
+              <Download className="h-4 w-4" />
+              Xuất tất cả Excel
+            </button>
 
-          <button
-            type="button"
-            onClick={onAdd}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-p-900 bg-p-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-p-700"
-          >
-            <Plus className="h-4 w-4" />
-            Thêm mới
-          </button>
-        </div>
+            <button
+              type="button"
+              onClick={onAdd}
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-p-900 bg-p-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-p-700"
+            >
+              <Plus className="h-4 w-4" />
+              Thêm mới
+            </button>
+          </div>
+        </PermissionGate>
       </div>
 
       <div className="min-h-0 flex-1 overflow-hidden rounded-[28px] border border-p-100 bg-white">
@@ -190,7 +195,9 @@ export default function ProductList({
                 <th className="border-b border-p-100 px-4 py-3.5 text-left text-sm font-semibold text-n-500">Trạng thái</th>
                 <th className="border-b border-p-100 px-4 py-3.5 text-left text-sm font-semibold text-n-500">Tạo lúc</th>
                 <th className="border-b border-p-100 px-4 py-3.5 text-left text-sm font-semibold text-n-500">Cập nhật lúc</th>
-                <th className="border-b border-p-100 px-4 py-3.5 text-center text-sm font-semibold text-n-500">Hành động</th>
+                <PermissionGate>
+                  <th className="border-b border-p-100 px-4 py-3.5 text-center text-sm font-semibold text-n-500">Hành động</th>
+                </PermissionGate>
               </tr>
             </thead>
 
@@ -285,36 +292,38 @@ export default function ProductList({
                     {formatDateTime(product.updated_at)}
                   </td>
 
-                  <td className="border-b border-p-100 px-4 py-4 align-top">
-                    <div className="flex items-center justify-center gap-2">
-                      <button
-                        type="button"
-                        onClick={onAdd}
-                        className="flex h-10 w-10 items-center justify-center rounded-xl border border-p-200 bg-white text-p-700 transition hover:bg-p-50"
-                        title="Thêm mới"
-                      >
-                        <Plus className="h-4 w-4" />
-                      </button>
+                  <PermissionGate>
+                    <td className="border-b border-p-100 px-4 py-4 align-top">
+                      <div className="flex items-center justify-center gap-2">
+                        <button
+                          type="button"
+                          onClick={onAdd}
+                          className="flex h-10 w-10 items-center justify-center rounded-xl border border-p-200 bg-white text-p-700 transition hover:bg-p-50"
+                          title="Thêm mới"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </button>
 
-                      <button
-                        type="button"
-                        onClick={() => onEdit(product)}
-                        className="flex h-10 w-10 items-center justify-center rounded-xl border border-amber-200 bg-amber-50 text-amber-700 transition hover:bg-amber-100"
-                        title="Sửa"
-                      >
-                        <FileEdit className="h-4 w-4" />
-                      </button>
+                        <button
+                          type="button"
+                          onClick={() => onEdit(product)}
+                          className="flex h-10 w-10 items-center justify-center rounded-xl border border-amber-200 bg-amber-50 text-amber-700 transition hover:bg-amber-100"
+                          title="Sửa"
+                        >
+                          <FileEdit className="h-4 w-4" />
+                        </button>
 
-                      <button
-                        type="button"
-                        onClick={() => onDelete(product)}
-                        className="flex h-10 w-10 items-center justify-center rounded-xl border border-rose-200 bg-rose-50 text-rose-700 transition hover:bg-rose-100"
-                        title="Xóa"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </td>
+                        <button
+                          type="button"
+                          onClick={() => onDelete(product)}
+                          className="flex h-10 w-10 items-center justify-center rounded-xl border border-rose-200 bg-rose-50 text-rose-700 transition hover:bg-rose-100"
+                          title="Xóa"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </PermissionGate>
                 </tr>
               ))}
             </tbody>

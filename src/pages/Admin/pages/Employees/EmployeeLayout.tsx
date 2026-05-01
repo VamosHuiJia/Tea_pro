@@ -26,6 +26,7 @@ function normalizeImportedEmployee(row: Record<string, unknown>) {
     avatar_url: String(row.avatar_url ?? row["Hình ảnh"] ?? "").trim(),
     roleName: String(row.roleName ?? row["Chức vụ"] ?? "Nhân viên").trim(),
     roleLevel,
+    actionPermission: String(row.actionPermission ?? row["Hành động"] ?? "Có thể chỉnh sửa").trim(),
     created_at: row.created_at
       ? String(row.created_at)
       : row["Tạo lúc"]
@@ -71,6 +72,7 @@ export default function EmployeeLayout() {
         avatar_url: c.avatar_url || "",
         roleName: c.roleName || "Nhân viên",
         roleLevel: c.role?.level || "staff",
+        actionPermission: c.actionPermission || "Có thể chỉnh sửa",
         created_at: c.created_at,
         updated_at: c.updated_at,
       }));
@@ -140,6 +142,7 @@ export default function EmployeeLayout() {
       formData.append("phone", values.phone || "");
       formData.append("roleName", values.roleName || "Nhân viên");
       formData.append("roleLevel", values.roleLevel || "staff");
+      formData.append("actionPermission", values.actionPermission || "Có thể chỉnh sửa");
 
       if (mode === "create") {
         formData.append("password", "123456");
@@ -207,6 +210,7 @@ export default function EmployeeLayout() {
         formData.append("phone", item.phone || "");
         formData.append("roleName", item.roleName || "Nhân viên");
         formData.append("roleLevel", item.roleLevel);
+        formData.append("actionPermission", item.actionPermission);
         formData.append("password", "123456");
         try {
           await createUser(formData);
@@ -233,6 +237,7 @@ export default function EmployeeLayout() {
       "Hình ảnh": employee.avatar_url || "",
       "Chức vụ": employee.roleName || "Nhân viên",
       "Quyền hạn": employee.roleLevel,
+      "Hành động": employee.actionPermission || "Có thể chỉnh sửa",
       "Tạo lúc": employee.created_at || "",
       "Cập nhật lúc": employee.updated_at || "",
     }));

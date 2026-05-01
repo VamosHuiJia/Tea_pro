@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Eye, Pencil, Search, ShieldCheck, Trash2, WalletCards, Plus } from "lucide-react";
+import PermissionGate from "../../../../components/PermissionGate";
 import type { PaymentItem, PaymentStatus, PaymentMethodKey } from "./PaymentLayout";
 
 type PaymentListProps = {
@@ -80,14 +81,16 @@ export default function PaymentList({
             <p className="text-sm font-medium text-n-500">Danh sách phương thức</p>
           </div>
 
-          <button
-            type="button"
-            onClick={onCreate}
-            className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-p-900 px-5 text-sm font-semibold text-white transition hover:bg-p-700"
-          >
-            <Plus className="h-5 w-5" />
-            Thêm mới
-          </button>
+          <PermissionGate>
+            <button
+              type="button"
+              onClick={onCreate}
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-p-900 px-5 text-sm font-semibold text-white transition hover:bg-p-700"
+            >
+              <Plus className="h-5 w-5" />
+              Thêm mới
+            </button>
+          </PermissionGate>
         </div>
 
         <div className="grid grid-cols-1 gap-3 xl:grid-cols-[minmax(0,1fr)_260px]">
@@ -138,7 +141,6 @@ export default function PaymentList({
                   "Phí (%)",
                   "Sắp xếp",
                   "Cập nhật",
-                  "Hành động",
                 ].map((label) => (
                   <th
                     key={label}
@@ -147,6 +149,9 @@ export default function PaymentList({
                     {label}
                   </th>
                 ))}
+                  <th className="border-b border-p-100 px-4 py-3.5 text-left text-sm font-semibold text-n-500">
+                    Hành động
+                  </th>
               </tr>
             </thead>
 
@@ -227,42 +232,44 @@ export default function PaymentList({
                         {new Date(payment.updated_at).toLocaleDateString("vi-VN")}
                       </td>
 
-                      <td className="border-b border-p-100 px-4 py-4 align-top">
-                        <div className="flex flex-wrap items-center justify-end gap-2">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setInternalSelectedId(payment.id);
-                              onView?.(payment);
-                            }}
-                            className="flex h-9 w-9 items-center justify-center rounded-xl border border-p-100 bg-p-50 text-n-600 transition hover:border-p-300 hover:bg-white hover:text-p-700"
-                            aria-label={`Xem ${payment.name}`}
-                          >
-                            <Eye className="h-4 w-4" />
-                          </button>
+                        <td className="border-b border-p-100 px-4 py-4 align-top">
+                          <div className="flex flex-wrap items-center justify-end gap-2">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setInternalSelectedId(payment.id);
+                                onView?.(payment);
+                              }}
+                              className="flex h-9 w-9 items-center justify-center rounded-xl border border-p-100 bg-p-50 text-n-600 transition hover:border-p-300 hover:bg-white hover:text-p-700"
+                              aria-label={`Xem ${payment.name}`}
+                            >
+                              <Eye className="h-4 w-4" />
+                            </button>
 
-                          <button
-                            type="button"
-                            onClick={() => onEdit?.(payment)}
-                            className="flex h-9 w-9 items-center justify-center rounded-xl border border-p-100 bg-white text-n-600 transition hover:border-p-300 hover:bg-p-50 hover:text-p-700"
-                            aria-label={`Sửa ${payment.name}`}
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </button>
+                            <PermissionGate>
+                              <button
+                                type="button"
+                                onClick={() => onEdit?.(payment)}
+                                className="flex h-9 w-9 items-center justify-center rounded-xl border border-p-100 bg-white text-n-600 transition hover:border-p-300 hover:bg-p-50 hover:text-p-700"
+                                aria-label={`Sửa ${payment.name}`}
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </button>
 
-                          <button
-                            type="button"
-                            onClick={() => {
-                              if (internalSelectedId === payment.id) setInternalSelectedId(undefined);
-                              onDelete?.(payment.id);
-                            }}
-                            className="flex h-9 w-9 items-center justify-center rounded-xl border border-rose-100 bg-rose-50 text-rose-600 transition hover:border-rose-200 hover:bg-rose-100"
-                            aria-label={`Xóa ${payment.name}`}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </td>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (internalSelectedId === payment.id) setInternalSelectedId(undefined);
+                                  onDelete?.(payment.id);
+                                }}
+                                className="flex h-9 w-9 items-center justify-center rounded-xl border border-rose-100 bg-rose-50 text-rose-600 transition hover:border-rose-200 hover:bg-rose-100"
+                                aria-label={`Xóa ${payment.name}`}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            </PermissionGate>
+                          </div>
+                        </td>
                     </tr>
                   );
                 })

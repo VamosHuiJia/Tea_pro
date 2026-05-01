@@ -11,6 +11,7 @@ import {
   X,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../../../contexts/AuthContext";
 
 type AdminSidebarProps = {
   mobileOpen?: boolean;
@@ -24,11 +25,15 @@ const menus = [
   { to: "/admin/payments", label: "Phương thức thanh toán", icon: CreditCard },
   { to: "/admin/categories", label: "Danh mục", icon: Tags },
   { to: "/admin/brands", label: "Thương hiệu", icon: BadgePercent },
-  { to: "/admin/employees", label: "Nhân viên", icon: UserRound },
+  { to: "/admin/employees", label: "Nhân viên", icon: UserRound, adminOnly: true },
   { to: "/admin/customers", label: "Khách hàng", icon: Users },
 ];
 
 function SidebarContent({ onClose }: { onClose?: () => void }) {
+  const { user } = useAuth();
+  const roleLvl = user?.roleLevel || user?.role?.level;
+  const isAdmin = roleLvl === "admin";
+
   return (
     <div className="flex h-full flex-col px-5 py-6">
       <div className="mb-8 flex items-start justify-between gap-4">
@@ -48,7 +53,7 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
       </div>
 
       <nav className="space-y-2">
-        {menus.map((item) => {
+        {menus.filter(item => !item.adminOnly || isAdmin).map((item) => {
           const Icon = item.icon;
           return (
             <NavLink

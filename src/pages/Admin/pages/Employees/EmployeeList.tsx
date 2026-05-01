@@ -21,8 +21,9 @@ export type EmployeeItem = {
   email: string;
   phone?: string;
   avatar_url?: string;
-  roleName: string;
   roleLevel: Extract<RoleLevel, "staff" | "admin">;
+  roleName?: string;
+  actionPermission?: string;
   created_at?: string;
   updated_at?: string;
 };
@@ -182,6 +183,7 @@ export default function EmployeeList({
                 <th className="border-b border-p-100 px-4 py-3.5 text-left text-sm font-semibold text-n-500">Số điện thoại</th>
                 <th className="border-b border-p-100 px-4 py-3.5 text-left text-sm font-semibold text-n-500">Chức vụ</th>
                 <th className="border-b border-p-100 px-4 py-3.5 text-left text-sm font-semibold text-n-500">Quyền hạn</th>
+                <th className="border-b border-p-100 px-4 py-3.5 text-left text-sm font-semibold text-n-500">Thao tác</th>
                 <th className="border-b border-p-100 px-4 py-3.5 text-left text-sm font-semibold text-n-500">Tạo lúc</th>
                 <th className="border-b border-p-100 px-4 py-3.5 text-left text-sm font-semibold text-n-500">Cập nhật lúc</th>
                 <th className="border-b border-p-100 px-4 py-3.5 text-center text-sm font-semibold text-n-500">Hành động</th>
@@ -249,6 +251,21 @@ export default function EmployeeList({
                       )}
                       {employee.roleLevel}
                     </span>
+                  </td>
+
+                  <td className="border-b border-p-100 px-4 py-4 align-top">
+                    {employee.roleLevel === "staff" ? (
+                      <span
+                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${employee.actionPermission === "Chỉ xem"
+                            ? "border border-rose-200 bg-rose-50 text-rose-700"
+                            : "border border-sky-200 bg-sky-50 text-sky-700"
+                          }`}
+                      >
+                        {employee.actionPermission || "Có thể chỉnh sửa"}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-n-400">Tất cả quyền</span>
+                    )}
                   </td>
 
                   <td className="border-b border-p-100 px-4 py-4 align-top text-sm text-n-600">

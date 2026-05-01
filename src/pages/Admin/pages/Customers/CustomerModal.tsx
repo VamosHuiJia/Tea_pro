@@ -11,6 +11,7 @@ import {
   X,
 } from "lucide-react";
 import type { CustomerItem, RoleLevel } from "./CustomerList";
+import { useAuth } from "../../../../contexts/AuthContext";
 
 export type CustomerFormValues = {
   id?: string | number;
@@ -75,6 +76,8 @@ export default function CustomerModal({
   const [form, setForm] = useState<CustomerFormValues>(defaultValues);
   const [dragging, setDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const { user } = useAuth();
+  const isAdmin = user?.roleLevel === "admin" || user?.role?.level === "admin";
 
   useEffect(() => {
     if (!open) return;
@@ -135,7 +138,7 @@ export default function CustomerModal({
       username: form.username.trim(),
       email: form.email.trim(),
       phone: form.phone.trim(),
-      roleLevel: "customer",
+      roleLevel: form.roleLevel,
       roleName: form.roleName.trim() || "Khách hàng",
     });
   };
@@ -294,11 +297,28 @@ export default function CustomerModal({
 
               <div className="xl:col-span-6">
                 <label className="mb-2 block text-sm font-semibold text-n-700">Quyền hạn</label>
-                <input
-                  value="customer"
-                  disabled
-                  className="w-full cursor-not-allowed rounded-2xl border border-p-100 bg-p-50 px-4 py-3 text-sm font-semibold lowercase text-p-700 outline-none"
-                />
+                {isAdmin ? (
+                  <select
+                    value={form.roleLevel}
+                    onChange={(event) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        roleLevel: event.target.value as RoleLevel,
+                      }))
+                    }
+                    className="w-full rounded-2xl border border-p-100 bg-white px-4 py-3 text-sm font-semibold lowercase text-p-700 outline-none transition focus:border-p-400"
+                  >
+                    <option value="customer">customer</option>
+                    <option value="staff">staff</option>
+                    <option value="admin">admin</option>
+                  </select>
+                ) : (
+                  <input
+                    value={form.roleLevel}
+                    disabled
+                    className="w-full cursor-not-allowed rounded-2xl border border-p-100 bg-p-50 px-4 py-3 text-sm font-semibold lowercase text-p-700 outline-none"
+                  />
+                )}
               </div>
 
               <div className="xl:col-span-12">
@@ -390,7 +410,7 @@ export default function CustomerModal({
 
                 <div className="absolute left-4 top-4">
                   <span className="rounded-full border border-white/30 bg-white/85 px-3 py-1 text-xs font-semibold text-p-700 backdrop-blur-sm">
-                    RoleLevel: customer
+                    RoleLevel: {form.roleLevel}
                   </span>
                 </div>
               </div>

@@ -12,6 +12,7 @@ import {
   X,
 } from "lucide-react";
 import type { EmployeeItem } from "./EmployeeList";
+import { useAuth } from "../../../../contexts/AuthContext";
 
 export type EmployeeFormValues = {
   id?: string | number;
@@ -21,7 +22,8 @@ export type EmployeeFormValues = {
   phone: string;
   avatar_url: string;
   roleName: string;
-  roleLevel: "staff" | "admin";
+  roleLevel: "customer" | "staff" | "admin";
+  actionPermission: string;
   created_at?: string;
   updated_at?: string;
 };
@@ -44,6 +46,7 @@ const defaultValues: EmployeeFormValues = {
   avatar_url: "",
   roleName: "Nhân viên bán hàng",
   roleLevel: "staff",
+  actionPermission: "Có thể chỉnh sửa",
 };
 
 function toBase64(file: File) {
@@ -76,6 +79,8 @@ export default function EmployeeModal({
   const [form, setForm] = useState<EmployeeFormValues>(defaultValues);
   const [dragging, setDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const { user } = useAuth();
+  const isAdmin = user?.roleLevel === "admin" || user?.role?.level === "admin";
 
   useEffect(() => {
     if (!open) return;
@@ -90,6 +95,7 @@ export default function EmployeeModal({
         avatar_url: initialData.avatar_url || "",
         roleName: initialData.roleName || "Nhân viên",
         roleLevel: initialData.roleLevel,
+        actionPermission: initialData.actionPermission || "Có thể chỉnh sửa",
         created_at: initialData.created_at,
         updated_at: initialData.updated_at,
       });
@@ -137,6 +143,7 @@ export default function EmployeeModal({
       email: form.email.trim(),
       phone: form.phone.trim(),
       roleName: form.roleName.trim() || "Nhân viên",
+      actionPermission: form.roleLevel === "admin" ? "Có thể chỉnh sửa" : form.actionPermission,
     });
   };
 
@@ -294,20 +301,46 @@ export default function EmployeeModal({
 
               <div className="xl:col-span-6">
                 <label className="mb-2 block text-sm font-semibold text-n-700">Quyền hạn (RoleLevel)</label>
-                <select
-                  value={form.roleLevel}
-                  onChange={(event) =>
-                    setForm((prev) => ({
-                      ...prev,
-                      roleLevel: event.target.value as "staff" | "admin",
-                    }))
-                  }
-                  className="w-full rounded-2xl border border-p-100 bg-white px-4 py-3 text-sm outline-none transition focus:border-p-400"
-                >
-                  <option value="staff">staff</option>
-                  <option value="admin">admin</option>
-                </select>
+                {isAdmin ? (
+                  <select
+                    value={form.roleLevel}
+                    onChange={(event) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        roleLevel: event.target.value as "customer" | "staff" | "admin",
+                        actionPermission: event.target.value === "admin" ? "Có thể chỉnh sửa" : prev.actionPermission,
+                      }))
+                    }
+                    className="w-full rounded-2xl border border-p-100 bg-white px-4 py-3 text-sm outline-none transition focus:border-p-400"
+                  >
+                    <option value="customer">customer</option>
+                    <option value="staff">staff</option>
+                    <option value="admin">admin</option>
+                  </select>
+                ) : (
+                  <input
+                    value={form.roleLevel}
+                    disabled
+                    className="w-full cursor-not-allowed rounded-2xl border border-p-100 bg-p-50 px-4 py-3 text-sm font-semibold text-n-700 outline-none"
+                  />
+                )}
               </div>
+
+              {form.roleLevel === "staff" && (
+                <div className="xl:col-span-6">
+                  <label className="mb-2 block text-sm font-semibold text-n-700">Quyền chỉnh sửa dữ liệu</label>
+                  <select
+                    value={form.actionPermission}
+                    onChange={(event) =>
+                      setForm((prev) => ({ ...prev, actionPermission: event.target.value }))
+                    }
+                    className="w-full rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800 outline-none transition focus:border-rose-400"
+                  >
+                    <option value="Có thể chỉnh sửa">Có thể chỉnh sửa</option>
+                    <option value="Chỉ xem">Chỉ xem</option>
+                  </select>
+                </div>
+              )}
 
               <div className="xl:col-span-12">
                 <label className="mb-2 block text-sm font-semibold text-n-700">Ảnh đại diện</label>

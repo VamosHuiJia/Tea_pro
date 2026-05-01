@@ -149,7 +149,7 @@ export default function CustomerLayout() {
       formData.append("email", values.email);
       formData.append("phone", values.phone || "");
       formData.append("roleName", values.roleName || "Khách hàng");
-      formData.append("roleLevel", "customer");
+      formData.append("roleLevel", values.roleLevel || "customer");
       
       if (mode === "create") {
          formData.append("password", "123456"); 

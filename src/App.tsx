@@ -80,7 +80,7 @@ function AppRoutes() {
           <Route path="categories" element={<Category />} />
           <Route path="products" element={<Product />} />
           <Route path="customers" element={<Customer />} />
-          <Route path="employees" element={<Employees />} />
+          <Route path="employees" element={<ProtectedRoute allowedRoles={["admin"]}><Employees /></ProtectedRoute>} />
           <Route path="orders" element={<Order />} />
           <Route path="payments" element={<Payment />} />
         </Route>
