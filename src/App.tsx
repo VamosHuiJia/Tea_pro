@@ -18,7 +18,7 @@ import Register from "./pages/Auth/Register";
 import Profile from "./pages/Profile/Profile";
 import Cart from "./pages/Cart/CartLayout";
 import Checkout from "./pages/Payment/Checkout";
-import PaymentPage from "./pages/Payment/Payment";
+import PayOSReturn from "./pages/Payment/PayOSReturn";
 
 import AdminLayout from "./pages/Admin/layout/AdminLayout";
 import Dashboard from "./pages/Admin/pages/Dashboard";
@@ -62,7 +62,8 @@ function AppRoutes() {
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
             <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
-            <Route path="/payment" element={<ProtectedRoute><PaymentPage /></ProtectedRoute>} />
+            <Route path="/payment/payos/return" element={<ProtectedRoute><PayOSReturn /></ProtectedRoute>} />
+            <Route path="/payment/payos/cancel" element={<ProtectedRoute><PayOSReturn /></ProtectedRoute>} />
           </Routes>
         </main>
       )}

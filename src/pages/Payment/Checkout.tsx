@@ -89,10 +89,10 @@ const mockPaymentMethods: PaymentMethod[] = [
   {
     id: "pm-transfer",
     code: "BANK_TRANSFER",
-    name: "Chuyển khoản / quét QR",
+    name: "Thanh toán qua PayOS",
     type: "bank_transfer",
     description:
-      "Chuyển sang trang thanh toán để quét QR MoMo, ZaloPay hoặc ngân hàng.",
+      "Chuyển sang cổng thanh toán PayOS để quét QR hoặc chuyển khoản.",
   },
   {
     id: "pm-cash",
@@ -217,25 +217,25 @@ export default function CheckoutPage() {
         return;
       }
 
-      const pendingOrder: PendingOrder = {
-        customer,
-        address: address.trim(),
-        items: items.map((item) => ({
-          productId: item.productId,
-          name: item.name,
-          image: item.image,
-          price: item.price,
-          quantity: item.quantity,
-        })),
-        subtotal,
-        shippingFee,
-        total,
-        paymentMethod: selectedPaymentMethod,
-        createdAt: new Date().toISOString(),
-      };
-
-      sessionStorage.setItem("pending-payment-order", JSON.stringify(pendingOrder));
-      navigate("/payment");
+      if (selectedPaymentMethod.type === "bank_transfer") {
+        const payload = {
+          items: items.map(item => ({
+            productId: item.productId,
+            quantity: item.quantity,
+          })),
+          shippingAddress: address.trim(),
+          phone: customer.phone,
+          method: "payos",
+        };
+        const response = await createOrder(payload);
+        
+        if (response && response.paymentUrl) {
+          window.location.href = response.paymentUrl;
+          return;
+        } else {
+          showToast("Không lấy được đường dẫn thanh toán.", "error");
+        }
+      }
     } catch {
       showToast("Có lỗi xảy ra khi xử lý đơn hàng. Vui lòng thử lại.", "error");
     } finally {
