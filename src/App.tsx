@@ -19,6 +19,7 @@ import Profile from "./pages/Profile/Profile";
 import Cart from "./pages/Cart/CartLayout";
 import Checkout from "./pages/Payment/Checkout";
 import PayOSReturn from "./pages/Payment/PayOSReturn";
+import VNPayReturn from "./pages/Payment/VNPayReturn";
 
 import AdminLayout from "./pages/Admin/layout/AdminLayout";
 import Dashboard from "./pages/Admin/pages/Dashboard";
@@ -64,6 +65,7 @@ function AppRoutes() {
             <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
             <Route path="/payment/payos/return" element={<ProtectedRoute><PayOSReturn /></ProtectedRoute>} />
             <Route path="/payment/payos/cancel" element={<ProtectedRoute><PayOSReturn /></ProtectedRoute>} />
+            <Route path="/payment/vnpay/return" element={<ProtectedRoute><VNPayReturn /></ProtectedRoute>} />
           </Routes>
         </main>
       )}

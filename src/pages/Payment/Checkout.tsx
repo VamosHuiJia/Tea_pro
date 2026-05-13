@@ -87,6 +87,13 @@ function getMockCustomer(): CheckoutCustomer {
 
 const mockPaymentMethods: PaymentMethod[] = [
   {
+    id: "pm-vnpay",
+    code: "VNPAY",
+    name: "Thanh toán qua VNPay",
+    type: "bank_transfer",
+    description: "Chuyển sang cổng thanh toán VNPay để quét mã QR hoặc dùng thẻ ATM/Visa/MasterCard.",
+  },
+  {
     id: "pm-transfer",
     code: "BANK_TRANSFER",
     name: "Thanh toán qua PayOS",
@@ -225,7 +232,7 @@ export default function CheckoutPage() {
           })),
           shippingAddress: address.trim(),
           phone: customer.phone,
-          method: "payos",
+          method: selectedPaymentMethod.id === "pm-vnpay" ? "vnpay" : "payos",
         };
         const response = await createOrder(payload);
         

@@ -4,7 +4,7 @@ import { CheckCircle2, XCircle, Home, FileText } from "lucide-react";
 import { useCart } from "../../contexts/CartContext";
 import axiosClient from "../../services/axiosClient";
 
-export default function PayOSReturn() {
+export default function VNPayReturn() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { clearCart } = useCart();
@@ -12,29 +12,29 @@ export default function PayOSReturn() {
 
   const [status, setStatus] = useState<"loading" | "success" | "failed">("loading");
 
-  // Các tham số trả về từ PayOS
-  const code = searchParams.get("code");
-  const id = searchParams.get("id");
-  const cancel = searchParams.get("cancel");
-  const orderCode = searchParams.get("orderCode");
+  // Các tham số trả về từ VNPay
+  const vnp_ResponseCode = searchParams.get("vnp_ResponseCode");
+  const vnp_TxnRef = searchParams.get("vnp_TxnRef");
+  const vnp_TransactionNo = searchParams.get("vnp_TransactionNo");
 
   useEffect(() => {
     if (verifyRef.current) return;
     verifyRef.current = true;
 
-    if (cancel === "true") {
+    if (vnp_ResponseCode !== "00") {
       setStatus("failed");
       return;
     }
 
     const verifyPayment = async () => {
       try {
-        if (!orderCode) {
+        if (!vnp_TxnRef) {
           setStatus("failed");
           return;
         }
 
-        const response: any = await axiosClient.get(`/orders/payos/return?orderCode=${orderCode}`);
+        const queryString = window.location.search;
+        const response: any = await axiosClient.get(`/orders/vnpay/return${queryString}`);
 
         if (response && response.code === "00") {
           setStatus("success");
@@ -43,13 +43,13 @@ export default function PayOSReturn() {
           setStatus("failed");
         }
       } catch (error) {
-        console.error("Lỗi xác thực thanh toán PayOS:", error);
+        console.error("Lỗi xác thực thanh toán VNPay:", error);
         setStatus("failed");
       }
     };
 
     verifyPayment();
-  }, [searchParams, clearCart, cancel, orderCode]);
+  }, [searchParams, clearCart, vnp_ResponseCode, vnp_TxnRef]);
 
   if (status === "loading") {
     return (
@@ -91,12 +91,12 @@ export default function PayOSReturn() {
           <div className="mb-8 space-y-4 rounded-2xl bg-n-50 p-5 text-sm">
             <div className="flex justify-between">
               <span className="text-n-500">Mã đơn hàng</span>
-              <span className="font-semibold text-n-800">#{orderCode}</span>
+              <span className="font-semibold text-n-800">#{vnp_TxnRef ? vnp_TxnRef.split("_")[0] : ""}</span>
             </div>
-            {id && (
+            {vnp_TransactionNo && (
               <div className="flex justify-between border-t border-n-200 pt-4">
-                <span className="text-n-500">Mã giao dịch PayOS</span>
-                <span className="font-medium text-n-800">{id}</span>
+                <span className="text-n-500">Mã giao dịch VNPay</span>
+                <span className="font-medium text-n-800">{vnp_TransactionNo}</span>
               </div>
             )}
           </div>
