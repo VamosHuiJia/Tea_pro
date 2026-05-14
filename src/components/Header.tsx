@@ -86,6 +86,7 @@ const AvatarButton = ({
     | {
       avatar?: string;
       avatarUrl?: string;
+      avatar_url?: string;
       image?: string;
       photoURL?: string;
     }
