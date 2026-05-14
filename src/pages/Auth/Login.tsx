@@ -4,6 +4,7 @@ import { AuthLayout } from "./AuthLayout";
 import { loginUser } from "../../api/shop/auth.api";
 import { useToast } from "../../contexts/ToastContext";
 import { useAuth } from "../../contexts/AuthContext";
+import { GoogleAuthButton } from "./GoogleAuthButton";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -124,18 +125,7 @@ const LoginPage = () => {
         <div className="h-px flex-1 bg-white/10" />
       </div>
 
-      <button
-        type="button"
-        className="flex w-full items-center justify-center gap-3 rounded-2xl border border-white/12 bg-white/7 px-4 py-3 text-sm font-medium text-white transition hover:border-p-300/35 hover:bg-white/10"
-      >
-        <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
-          <path
-            fill="currentColor"
-            d="M12.24 10.285V14.4h6.806c-.275 1.765-2.056 5.174-6.806 5.174-4.095 0-7.44-3.39-7.44-7.56s3.345-7.56 7.44-7.56c2.33 0 3.886.99 4.785 1.845l3.254-3.138C18.189 1.186 15.479 0 12.24 0c-6.635 0-12 5.365-12 12s5.365 12 12 12c6.926 0 11.52-4.869 11.52-11.726 0-.788-.085-1.39-.189-1.989H12.24z"
-          />
-        </svg>
-        Tiếp tục với Google
-      </button>
+      <GoogleAuthButton text="Tiếp tục với Google" setError={setError} />
     </AuthLayout>
   );
 };

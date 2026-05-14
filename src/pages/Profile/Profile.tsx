@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Eye, PackageCheck, Clock3, ShoppingBag, X } from "lucide-react";
+import { Eye, PackageCheck, Clock3, ShoppingBag, X, Pencil, Camera } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
+import axiosClient from "../../services/axiosClient";
 import { useToast } from "../../contexts/ToastContext";
 import { useConfirm } from "../../contexts/ConfirmContext";
 import { getMyOrders, cancelOrder } from "../../api/shop/order.api";
@@ -126,13 +127,78 @@ function StatCard({ icon, label, value, tone = "soft" }: StatCardProps) {
 
 export default function Profile() {
     const navigate = useNavigate();
-    const { user, logout } = useAuth();
+    const { user, logout, fetchUser } = useAuth();
     const { showToast } = useToast();
     const { confirm } = useConfirm();
 
     const [orders, setOrders] = useState<OrderItem[]>([]);
     const [selectedOrder, setSelectedOrder] = useState<OrderItem | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    // Thêm state cho Edit Profile
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isSavingProfile, setIsSavingProfile] = useState(false);
+    const [editForm, setEditForm] = useState({
+        fullName: "",
+        username: "",
+        email: "",
+        phone: "",
+    });
+    const [avatarFile, setAvatarFile] = useState<File | null>(null);
+    const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleOpenEditModal = () => {
+        if (user) {
+            setEditForm({
+                fullName: user.fullName || "",
+                username: user.username || "",
+                email: user.email || "",
+                phone: user.phone || "",
+            });
+            setAvatarPreview(user.avatar_url || null);
+            setAvatarFile(null);
+            setIsEditModalOpen(true);
+        }
+    };
+
+    const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            setAvatarFile(file);
+            setAvatarPreview(URL.createObjectURL(file));
+        }
+    };
+
+    const handleSaveProfile = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSavingProfile(true);
+        try {
+            const formData = new FormData();
+            formData.append("fullName", editForm.fullName);
+            formData.append("username", editForm.username);
+            formData.append("email", editForm.email);
+            formData.append("phone", editForm.phone);
+            if (avatarFile) {
+                formData.append("avatar", avatarFile);
+            }
+
+            await axiosClient.put("/users/update-me", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            
+            showToast("Cập nhật thông tin thành công!", "success");
+            setIsEditModalOpen(false);
+            await fetchUser(); // Reload user data
+        } catch (error) {
+            console.error("Lỗi cập nhật profile:", error);
+            showToast("Cập nhật thất bại. Vui lòng thử lại.", "error");
+        } finally {
+            setIsSavingProfile(false);
+        }
+    };
 
     useEffect(() => {
         if (user) {
@@ -201,8 +267,15 @@ export default function Profile() {
         <section className="container !pt-24 md:!pt-28">
             <div className="mx-auto max-w-[1240px]">
                 <div className="grid grid-cols-1 gap-6 xl:min-h-[calc(100vh-180px)] xl:grid-cols-[320px_minmax(0,1fr)] xl:items-stretch">
-                    <aside className="flex h-full flex-col rounded-[28px] border border-p-100 bg-gradient-to-b from-white via-white to-p-50/40 p-5 shadow-[0_14px_40px_rgba(13,71,56,0.06)]">
-                        <div className="flex flex-col items-center text-center">
+                    <aside className="relative flex h-full flex-col rounded-[28px] border border-p-100 bg-gradient-to-b from-white via-white to-p-50/40 p-5 shadow-[0_14px_40px_rgba(13,71,56,0.06)]">
+                        <button
+                            onClick={handleOpenEditModal}
+                            className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-p-50 text-p-700 transition hover:bg-p-100 hover:text-p-900"
+                            title="Chỉnh sửa thông tin"
+                        >
+                            <Pencil size={16} />
+                        </button>
+                        <div className="flex flex-col items-center text-center mt-4">
                             <div className="relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-p-100 bg-gradient-to-br from-p-50 to-p-100 shadow-inner">
                                 {user.avatar_url ? (
                                     <img src={user.avatar_url} alt="avatar" className="h-full w-full object-cover" />
@@ -418,6 +491,121 @@ export default function Profile() {
                                 <span className="text-2xl font-bold text-p-900">{formatCurrency(Number(selectedOrder.totalAmount))}</span>
                             </div>
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Edit Profile Modal */}
+            {isEditModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div
+                        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+                        onClick={() => !isSavingProfile && setIsEditModalOpen(false)}
+                    />
+                    <div className="relative z-10 w-full max-w-md overflow-hidden rounded-[28px] bg-white shadow-2xl flex flex-col max-h-[90vh]">
+                        <div className="flex items-center justify-between border-b border-p-100 px-6 py-4">
+                            <h3 className="text-xl font-bold text-n-800">
+                                Chỉnh sửa thông tin
+                            </h3>
+                            <button
+                                onClick={() => setIsEditModalOpen(false)}
+                                disabled={isSavingProfile}
+                                className="rounded-full p-2 text-n-500 hover:bg-n-100 hover:text-n-700 transition"
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleSaveProfile} className="flex-1 overflow-y-auto p-6 space-y-5">
+                            <div className="flex flex-col items-center gap-3">
+                                <div className="relative group">
+                                    <div className="h-20 w-20 overflow-hidden rounded-full border-2 border-p-200">
+                                        {avatarPreview ? (
+                                            <img src={avatarPreview} alt="Preview" className="h-full w-full object-cover" />
+                                        ) : (
+                                            <div className="flex h-full w-full items-center justify-center bg-p-50 text-2xl font-bold text-p-900">
+                                                {(editForm.fullName || editForm.username || "U").charAt(0).toUpperCase()}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => fileInputRef.current?.click()}
+                                        className="absolute bottom-0 right-0 flex h-7 w-7 items-center justify-center rounded-full border border-white bg-p-900 text-white shadow-sm transition hover:bg-p-700"
+                                    >
+                                        <Camera size={14} />
+                                    </button>
+                                </div>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    ref={fileInputRef}
+                                    onChange={handleAvatarChange}
+                                />
+                                <span className="text-xs text-n-500">Nhấn vào icon camera để đổi ảnh</span>
+                            </div>
+
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="mb-1 block text-sm font-medium text-n-700">Họ và tên</label>
+                                    <input
+                                        type="text"
+                                        value={editForm.fullName}
+                                        onChange={(e) => setEditForm({ ...editForm, fullName: e.target.value })}
+                                        className="w-full rounded-xl border border-n-200 px-4 py-2.5 outline-none transition focus:border-p-500 focus:ring-1 focus:ring-p-500"
+                                        placeholder="Nhập họ và tên"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="mb-1 block text-sm font-medium text-n-700">Tên đăng nhập</label>
+                                    <input
+                                        type="text"
+                                        value={editForm.username}
+                                        disabled
+                                        className="w-full rounded-xl border border-n-200 bg-n-50 px-4 py-2.5 text-n-500 outline-none cursor-not-allowed"
+                                        placeholder="Nhập tên đăng nhập"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="mb-1 block text-sm font-medium text-n-700">Email</label>
+                                    <input
+                                        type="email"
+                                        value={editForm.email}
+                                        onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                                        className="w-full rounded-xl border border-n-200 px-4 py-2.5 outline-none transition focus:border-p-500 focus:ring-1 focus:ring-p-500"
+                                        placeholder="Nhập email"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="mb-1 block text-sm font-medium text-n-700">Số điện thoại</label>
+                                    <input
+                                        type="text"
+                                        value={editForm.phone}
+                                        onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                                        className="w-full rounded-xl border border-n-200 px-4 py-2.5 outline-none transition focus:border-p-500 focus:ring-1 focus:ring-p-500"
+                                        placeholder="Nhập số điện thoại"
+                                    />
+                                </div>
+                            </div>
+                            
+                            <div className="pt-2">
+                                <button
+                                    type="submit"
+                                    disabled={isSavingProfile}
+                                    className="w-full rounded-xl bg-p-900 py-3 font-semibold text-white transition hover:bg-p-700 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                >
+                                    {isSavingProfile ? (
+                                        <>
+                                            <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                                            <span>Đang lưu...</span>
+                                        </>
+                                    ) : (
+                                        "Lưu thay đổi"
+                                    )}
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             )}

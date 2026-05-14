@@ -59,6 +59,17 @@ const UserIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   </svg>
 );
 
+const DefaultAvatarIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className={className}
+    aria-hidden="true"
+  >
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
+  </svg>
+);
+
 type AvatarButtonProps = {
   user: unknown;
   onClick: () => void;
@@ -83,9 +94,9 @@ const AvatarButton = ({
   const avatarSrc =
     currentUser?.avatar ||
     currentUser?.avatarUrl ||
+    currentUser?.avatar_url ||
     currentUser?.image ||
-    currentUser?.photoURL ||
-    "/images/user.png";
+    currentUser?.photoURL;
 
   return (
     <button
@@ -95,11 +106,15 @@ const AvatarButton = ({
       className={`flex h-10 w-10 items-center justify-center rounded-full border-0 bg-transparent text-p-900 transition-colors duration-200 hover:bg-p-50 ${className}`}
     >
       {user ? (
-        <img
-          src={avatarSrc}
-          alt="Ảnh tài khoản"
-          className="h-6 w-6 rounded-full object-cover"
-        />
+        avatarSrc ? (
+          <img
+            src={avatarSrc}
+            alt="Ảnh tài khoản"
+            className="h-8 w-8 rounded-full object-cover"
+          />
+        ) : (
+          <DefaultAvatarIcon className="h-8 w-8 text-n-600" />
+        )
       ) : (
         <UserIcon className="w-5 h-5" />
       )}
