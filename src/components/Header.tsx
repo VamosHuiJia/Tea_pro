@@ -162,6 +162,8 @@ const Header = () => {
     isUserDropdownOpen,
     searchValue,
     setSearchValue,
+    searchResults,
+    isFetchingProducts,
     desktopSearchRef,
     mobileSearchRef,
     userDropdownRef,
@@ -240,6 +242,43 @@ const Header = () => {
                         Tìm kiếm
                       </button>
                     </form>
+
+                    {/* Live search results */}
+                    {searchValue.trim() && (
+                      <div className="mt-4 flex flex-col gap-2 max-h-[60vh] overflow-y-auto pr-1 custom-scrollbar">
+                        {isFetchingProducts ? (
+                          <div className="py-4 text-center text-sm text-n-500 animate-pulse">Đang tải...</div>
+                        ) : searchResults.length > 0 ? (
+                          searchResults.map((product) => (
+                            <Link
+                              key={product.id}
+                              to={`/products/${product.id}`}
+                              onClick={handleLinkClick}
+                              className="flex items-center gap-3 rounded-xl p-2 hover:bg-p-50 transition-colors"
+                            >
+                              {product.urlImg || product.image ? (
+                                <img src={product.urlImg || product.image} alt={product.name} className="w-12 h-12 rounded-lg object-cover border border-n-100" />
+                              ) : (
+                                <div className="w-12 h-12 rounded-lg border border-n-100 bg-n-50 flex items-center justify-center text-xs text-n-400">No img</div>
+                              )}
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-semibold text-n-800 truncate">{product.name}</p>
+                                <p className="text-xs font-medium text-p-700 mt-0.5">
+                                  {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(product.currentPrice)}
+                                </p>
+                              </div>
+                            </Link>
+                          ))
+                        ) : (
+                          <div className="py-4 text-center text-sm text-n-500">Không tìm thấy sản phẩm nào</div>
+                        )}
+                        {searchResults.length > 0 && (
+                           <Link to={`/products?search=${encodeURIComponent(searchValue.trim())}`} onClick={handleLinkClick} className="text-center text-sm text-p-700 font-medium py-2 hover:text-p-800 mt-1 border-t border-n-100">
+                              Xem tất cả kết quả
+                           </Link>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -344,7 +383,7 @@ const Header = () => {
 
             <div
               ref={mobileSearchRef}
-              className={`overflow-hidden transition-all duration-300 ${isMobileSearchOpen ? "max-h-32 opacity-100" : "max-h-0 opacity-0"
+              className={`overflow-hidden transition-all duration-300 ${isMobileSearchOpen ? "max-h-[70vh] opacity-100" : "max-h-0 opacity-0"
                 }`}
             >
               <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 pt-2">
@@ -362,6 +401,43 @@ const Header = () => {
                   Tìm kiếm
                 </button>
               </form>
+
+              {/* Mobile Live search results */}
+              {searchValue.trim() && (
+                <div className="mt-3 flex flex-col gap-2 max-h-[50vh] overflow-y-auto pr-1 text-left custom-scrollbar bg-white rounded-2xl shadow-inner p-2 border border-n-100">
+                  {isFetchingProducts ? (
+                    <div className="py-4 text-center text-sm text-n-500 animate-pulse">Đang tải...</div>
+                  ) : searchResults.length > 0 ? (
+                    searchResults.map((product) => (
+                      <Link
+                        key={product.id}
+                        to={`/products/${product.id}`}
+                        onClick={handleLinkClick}
+                        className="flex items-center gap-3 rounded-xl p-2 hover:bg-p-50 transition-colors"
+                      >
+                        {product.urlImg || product.image ? (
+                          <img src={product.urlImg || product.image} alt={product.name} className="w-10 h-10 rounded-lg object-cover border border-n-100" />
+                        ) : (
+                          <div className="w-10 h-10 rounded-lg border border-n-100 bg-n-50 flex items-center justify-center text-xs text-n-400">No img</div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-n-800 truncate">{product.name}</p>
+                          <p className="text-xs font-medium text-p-700 mt-0.5">
+                            {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(product.currentPrice)}
+                          </p>
+                        </div>
+                      </Link>
+                    ))
+                  ) : (
+                    <div className="py-4 text-center text-sm text-n-500">Không tìm thấy sản phẩm nào</div>
+                  )}
+                  {searchResults.length > 0 && (
+                      <Link to={`/products?search=${encodeURIComponent(searchValue.trim())}`} onClick={handleLinkClick} className="text-center text-sm text-p-700 font-medium py-2 hover:text-p-800 mt-1 border-t border-n-100 block">
+                        Xem tất cả
+                      </Link>
+                  )}
+                </div>
+              )}
             </div>
 
             <Link

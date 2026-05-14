@@ -43,14 +43,6 @@ export default function AdminHeader({ onOpenMobileMenu }: AdminHeaderProps) {
         </div>
 
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-          <div className="relative hidden md:block">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-n-500" />
-            <input
-              type="text"
-              placeholder="Tìm kiếm..."
-              className="w-72 rounded-full border border-p-100 bg-p-50 py-2.5 pl-10 pr-4 text-sm outline-none transition focus:border-p-400"
-            />
-          </div>
 
           <button className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-p-100 bg-white text-n-700 sm:h-11 sm:w-11">
             <Bell className="h-5 w-5" />

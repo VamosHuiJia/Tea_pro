@@ -13,6 +13,9 @@ export function useHeader() {
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [allProducts, setAllProducts] = useState<any[]>([]);
+  const [isFetchingProducts, setIsFetchingProducts] = useState(false);
 
   const { user } = useAuth();
   
@@ -46,6 +49,38 @@ export function useHeader() {
   useOnClickOutside(desktopSearchRef, () => setIsDesktopSearchOpen(false));
   useOnClickOutside(mobileSearchRef, () => setIsMobileSearchOpen(false));
   useOnClickOutside([userDropdownRef, mobileUserDropdownRef], () => setIsUserDropdownOpen(false));
+
+  // Fetch all products when search is opened
+  useEffect(() => {
+    if ((isDesktopSearchOpen || isMobileSearchOpen) && allProducts.length === 0 && !isFetchingProducts) {
+      setIsFetchingProducts(true);
+      import("../api/shop/product.api")
+        .then(({ getAllProducts }) => getAllProducts())
+        .then((res) => {
+          setAllProducts(res);
+        })
+        .catch(console.error)
+        .finally(() => setIsFetchingProducts(false));
+    }
+  }, [isDesktopSearchOpen, isMobileSearchOpen]);
+
+  // Filter products when searchValue changes
+  useEffect(() => {
+    if (!searchValue.trim()) {
+      setSearchResults([]);
+      return;
+    }
+
+    const keyword = searchValue.toLowerCase().trim();
+    const results = allProducts.filter(
+      (product) =>
+        product.name.toLowerCase().includes(keyword) ||
+        (product.description && product.description.toLowerCase().includes(keyword))
+    );
+    
+    // Giới hạn kết quả hiển thị (ví dụ: 5 sản phẩm)
+    setSearchResults(results.slice(0, 5));
+  }, [searchValue, allProducts]);
 
   const roleLvl = user?.roleLevel || user?.role?.level;
   const isManager = roleLvl === "admin" || roleLvl === "staff";
@@ -100,7 +135,11 @@ export function useHeader() {
 
   const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Search:", searchValue);
+    if (searchValue.trim()) {
+      navigate(`/products?search=${encodeURIComponent(searchValue.trim())}`);
+      setIsDesktopSearchOpen(false);
+      setIsMobileSearchOpen(false);
+    }
   };
 
   return {
@@ -115,6 +154,8 @@ export function useHeader() {
     isUserDropdownOpen,
     searchValue,
     setSearchValue,
+    searchResults,
+    isFetchingProducts,
     desktopSearchRef,
     mobileSearchRef,
     userDropdownRef,
