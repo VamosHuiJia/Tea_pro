@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = `${import.meta.env.REACT_APP_API_URL}/api`;
+const API_BASE_URL = `${import.meta.env.VITE_API_URL}/api`;
 
 const axiosClient = axios.create({
   baseURL: API_BASE_URL,
@@ -41,7 +41,7 @@ axiosClient.interceptors.response.use(
 
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
           failedQueue.push({ resolve, reject });
         }).then(() => {
           return axiosClient(originalRequest);
@@ -65,9 +65,9 @@ axiosClient.interceptors.response.use(
         return Promise.reject(err);
       }
     }
-    
+
     if (error.response && error.response.status === 403 && !originalRequest.url?.includes('refresh-token')) {
-        window.dispatchEvent(new Event("auth-failed"));
+      window.dispatchEvent(new Event("auth-failed"));
     }
 
     return Promise.reject(error.response?.data || error.response || error);

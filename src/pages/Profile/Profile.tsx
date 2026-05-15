@@ -209,7 +209,12 @@ export default function Profile() {
     const fetchOrders = async () => {
         try {
             const data = await getMyOrders();
-            setOrders(data);
+            if (Array.isArray(data)) {
+                setOrders(data);
+            } else {
+                console.error("Expected array but got:", data);
+                setOrders([]);
+            }
         } catch (error) {
             console.error("Lỗi khi lấy đơn hàng", error);
             showToast("Không thể tải danh sách đơn hàng", "error");
