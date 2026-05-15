@@ -24,7 +24,7 @@ const Footer = () => {
                 className="transition-transform hover:scale-110"
               >
                 <img
-                  src="../../../public/images/facebook.png"
+                  src="/images/facebook.png"
                   alt="Facebook"
                   className="object-contain transition-opacity w-7 h-7 md:w-8 md:h-8 opacity-80 hover:opacity-100"
                 />
@@ -38,7 +38,7 @@ const Footer = () => {
                 className="transition-transform hover:scale-110"
               >
                 <img
-                  src="../../../public/images/instagram.png"
+                  src="/images/instagram.png"
                   alt="Instagram"
                   className="object-contain transition-opacity w-7 h-7 md:w-8 md:h-8 opacity-80 hover:opacity-100"
                 />
@@ -52,7 +52,7 @@ const Footer = () => {
                 className="transition-transform hover:scale-110"
               >
                 <img
-                  src="../../../public/images/tiktok.png"
+                  src="/images/tiktok.png"
                   alt="TikTok"
                   className="object-contain transition-opacity w-7 h-7 md:w-8 md:h-8 opacity-80 hover:opacity-100"
                 />

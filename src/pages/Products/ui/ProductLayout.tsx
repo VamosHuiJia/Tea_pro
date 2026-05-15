@@ -215,7 +215,7 @@ export default function ProductLayout() {
             <main className="container mt-10">
                 <img
                     data-aos="flip-up"
-                    src="../../../../public/images/banners/banner2.jpg"
+                    src="/images/banners/banner2.jpg"
                     alt="products banner"
                     className="h-[350px] w-full object-cover shadow-xl"
                 />

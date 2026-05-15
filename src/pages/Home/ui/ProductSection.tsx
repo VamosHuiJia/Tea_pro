@@ -76,14 +76,14 @@ const ProductSection = () => {
                                         {category.image ? (
                                             <img src={category.image} alt={category.name} className="productImg" />
                                         ) : (
-                                            <img src="../../../../public/images/product_1.jpg" alt={category.name} className="productImg" />
+                                            <img src="/images/product_1.jpg" alt={category.name} className="productImg" />
                                         )}
                                         <div>
                                             <h3>{category.title || category.name}</h3>
                                             <p>{category.description}</p>
                                             <button>
                                                 <Link to={`/products?filter-category=${category.slug || toSlug(category.name)}`} className="btn">Xem sản phẩm ngay
-                                                    <img src="../../../../public/images/right-arrow.svg" alt="right-arrow" />
+                                                    <img src="/images/right-arrow.svg" alt="right-arrow" />
                                                 </Link>
                                             </button>
                                         </div>

@@ -10,7 +10,7 @@ const HeroSection = () => {
                     data-aos-delay="100"
                     className="absolute bottom-0 right-0 z-0 overflow-hidden md:-bottom-40 xl:top-1/2 xl:-translate-y-1/2 ">
                     <img
-                        src="../../../../public/images/hero_img.png"
+                        src="/images/hero_img.png"
                         alt="hero_img"
                         className="h-full 2xl:[mask-image:linear-gradient(to_left,transparent,black_10%)]"
                     />
@@ -45,7 +45,7 @@ const HeroSection = () => {
                         <a className="btn" href="/products">
                             Tìm hiểu sản phẩm
                             <img
-                                src="../../../../public/images/right-arrow.svg"
+                                src="/images/right-arrow.svg"
                                 alt="right-arrow"
                             />
                         </a>
