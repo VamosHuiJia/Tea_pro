@@ -205,8 +205,8 @@ export default function CategoryLayout() {
       "Mô tả": category.description || "",
       "Hình ảnh": category.image || "",
       "Trạng thái": category.isActive ? "Hoạt động" : "Không hoạt động",
-      "Tạo lúc": category.create_at || "",
-      "Cập nhật lúc": category.update_at || "",
+      "Tạo lúc": category.created_at || "",
+      "Cập nhật lúc": category.updated_at || "",
     }));
 
     exportToExcel(data, "danh-sach-danh-muc.xlsx", "Categories");

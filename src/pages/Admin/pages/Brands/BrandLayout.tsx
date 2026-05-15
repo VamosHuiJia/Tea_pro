@@ -200,8 +200,8 @@ export default function BrandLayout() {
       "Mô tả": brand.description || "",
       "Hình ảnh": brand.image || "",
       "Trạng thái": brand.isActive ? "Hoạt động" : "Không hoạt động",
-      "Tạo lúc": brand.create_at || "",
-      "Cập nhật lúc": brand.update_at || "",
+      "Tạo lúc": brand.created_at || "",
+      "Cập nhật lúc": brand.updated_at || "",
     }));
 
     exportToExcel(data, "danh-sach-thuong-hieu.xlsx", "Brands");

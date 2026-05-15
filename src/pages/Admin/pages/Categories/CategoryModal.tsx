@@ -11,8 +11,8 @@ export type CategoryFormValues = {
     image: string;
     imageFile?: File;
     isActive: boolean;
-    create_at?: string;
-    update_at?: string;
+    created_at?: string;
+    updated_at?: string;
 };
 
 type CategoryModalProps = {
@@ -64,8 +64,8 @@ export default function CategoryModal({
                 description: initialData.description || "",
                 image: initialData.image || "",
                 isActive: initialData.isActive,
-                create_at: initialData.create_at,
-                update_at: initialData.update_at,
+                created_at: initialData.created_at,
+                updated_at: initialData.updated_at,
             });
             return;
         }
@@ -264,8 +264,8 @@ export default function CategoryModal({
                                         onDrop={handleDropImage}
                                         onClick={() => fileInputRef.current?.click()}
                                         className={`flex h-24 w-24 cursor-pointer items-center justify-center rounded-3xl border-2 border-dashed transition ${dragging
-                                                ? "border-p-500 bg-p-50"
-                                                : "border-p-200 bg-white"
+                                            ? "border-p-500 bg-p-50"
+                                            : "border-p-200 bg-white"
                                             }`}
                                     >
                                         <ImagePlus className="h-8 w-8 text-p-700" />
@@ -279,8 +279,8 @@ export default function CategoryModal({
 
                                     <span
                                         className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs font-semibold ${form.isActive
-                                                ? "border border-p-200 bg-p-100 text-p-700"
-                                                : "border border-rose-200 bg-rose-100 text-rose-700"
+                                            ? "border border-p-200 bg-p-100 text-p-700"
+                                            : "border border-rose-200 bg-rose-100 text-rose-700"
                                             }`}
                                     >
                                         {form.isActive ? "Hoạt động" : "Không hoạt động"}

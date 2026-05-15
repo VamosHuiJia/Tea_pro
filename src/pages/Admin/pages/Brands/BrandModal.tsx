@@ -10,8 +10,8 @@ export type BrandFormValues = {
   image: string;
   imageFile?: File;
   isActive: boolean;
-  create_at?: string;
-  update_at?: string;
+  created_at?: string;
+  updated_at?: string;
 };
 
 type BrandModalProps = {
@@ -61,8 +61,8 @@ export default function BrandModal({
         description: initialData.description || "",
         image: initialData.image || "",
         isActive: initialData.isActive,
-        create_at: initialData.create_at,
-        update_at: initialData.update_at,
+        created_at: initialData.created_at,
+        updated_at: initialData.updated_at,
       });
       return;
     }
