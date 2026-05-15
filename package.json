@@ -5,11 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run build:css && tsc -b && vite build",
+    "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "dev:css": "tailwindcss -i ./src/index.css -o ./dist/output.css --watch",
-    "build:css": "tailwindcss -i ./src/index.css -o ./dist/output.css --minify"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@react-oauth/google": "^0.13.5",
